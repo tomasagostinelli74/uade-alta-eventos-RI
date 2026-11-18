@@ -4,3 +4,4 @@ privado/
 __pycache__/
 *.har
 .env*
+dist/
