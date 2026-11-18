@@ -139,6 +139,9 @@ create policy eventos_editar_propios on public.eventos
   using (public.es_uade() and creado_por = auth.uid())
   with check (public.es_uade() and creado_por = auth.uid());
 
+-- permisos de tabla (este proyecto no los da solos a las tablas nuevas); las filas las filtra RLS
+grant select, insert, update on public.eventos to authenticated;
+grant all on public.eventos to service_role;
 -- sin policy de delete: nadie borra desde la API pública
 revoke delete on public.eventos from anon, authenticated;
 revoke all on public.eventos from anon;
