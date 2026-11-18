@@ -263,9 +263,13 @@ dialog::backdrop { background: rgba(10, 15, 30, .45); }
 .rev { display: grid; gap: 10px; max-height: min(60vh, 520px); overflow: auto; margin-top: 4px; }
 .rev-item { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: var(--surface-2); }
 .rev-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin-bottom: 6px; }
-.rev-ctx { font-size: 13.5px; word-break: break-word; margin-bottom: 8px; }
-.rev-ctx mark { background: var(--warn-soft); color: var(--warn); font-weight: 600; border-radius: 4px; padding: 0 2px;
-  text-decoration: underline wavy; text-underline-offset: 3px; }
+.rev-nota { margin: 0 0 12px; padding: 6px 10px; border-left: 3px solid var(--err); color: var(--muted); font-size: 12.5px;
+  background: var(--err-soft); border-radius: 0 6px 6px 0; }
+.rev-mal, .rev-bien { font-size: 13.5px; word-break: break-word; margin-bottom: 8px; padding: 8px 10px; border-radius: 8px; }
+.rev-mal { background: var(--err-soft); color: var(--err); border: 1px solid color-mix(in srgb, var(--err) 35%, transparent); }
+.rev-bien { background: var(--ok-soft); color: var(--ok); }
+.rev-lbl { display: block; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+.rev-mal mark { background: var(--err); color: var(--surface); font-weight: 700; border-radius: 4px; padding: 0 3px; }
 .rev-opts { display: flex; flex-wrap: wrap; gap: 6px; }
 .rev-opt {
   border: 1px solid var(--border); background: var(--surface); border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 13px;

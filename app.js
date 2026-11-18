@@ -310,6 +310,7 @@ function corregirMayusculas(titulo) {
 const LT_URL = "https://api.languagetool.org/v2/check";
 const LT_TIPOS = new Set(["misspelling", "grammar", "inconsistency"]);
 const cacheLT = new Map();
+const K_AVISOS = "uade_alta_avisos_ortografia";
 let conocidas = null;
 
 /** Palabras que el corrector no conoce pero están bien (nombres de carreras, sedes, siglas propias). */
@@ -384,22 +385,34 @@ async function revisarTextos() {
     `<button type="button" class="rev-opt" data-valor="${esc(valor)}" aria-pressed="${sel}">${esc(label)}</button>`;
   const items = [];
   if (faltanMay) {
+    // marca en rojo las palabras que quedaron en minúscula (la corrección solo cambia letras, así que los tokens coinciden)
+    const corr = tituloMay.split(/(\s+)/);
+    const marcado = ev.titulo.split(/(\s+)/).map((w, i) => (w !== corr[i] ? `<mark>${esc(w)}</mark>` : esc(w))).join("");
     items.push(`<div class="rev-item" data-rev="may">
       <div class="rev-head"><b>Mayúsculas en el título</b><span class="muted small">En la web cada palabra del título va con mayúscula (salvo de, en, y…).</span></div>
-      <div class="rev-ctx"><span class="muted small">Así queda:</span> ${esc(tituloMay)}</div>
+      <div class="rev-mal"><span class="rev-lbl">Lo escribiste así:</span> ${marcado}</div>
+      <div class="rev-bien"><span class="rev-lbl">Así queda:</span> ${esc(tituloMay)}</div>
       <div class="rev-opts">${opcion("si", "Aplicar mayúsculas", true)}${opcion("no", "Dejar así", false)}</div></div>`);
   }
   lista.forEach((e, i) => {
     items.push(`<div class="rev-item" data-rev="${i}">
       <div class="rev-head"><b>${e.ortografia ? "Ortografía" : "Gramática"} · ${CAMPO_LABEL[e.campo]}</b></div>
-      <div class="rev-ctx">${e.recorteIni ? "…" : ""}${esc(e.antes)}<mark>${esc(e.error)}</mark>${esc(e.despues)}${e.recorteFin ? "…" : ""}</div>
+      <div class="rev-mal"><span class="rev-lbl">Lo escribiste así:</span> ${e.recorteIni ? "…" : ""}${esc(e.antes)}<mark>${esc(e.error)}</mark>${esc(e.despues)}${e.recorteFin ? "…" : ""}</div>
       <div class="rev-opts">${e.sugerencias.map((s, j) => opcion(s, s, j === 0 && e.ortografia)).join("")}${opcion("", "Dejar así", !e.ortografia)}</div></div>`);
   });
+
+  // recordatorio sutil: cuenta cuántas veces se le marcaron errores en este navegador
+  let veces = 1;
+  try { veces = Number(localStorage.getItem(K_AVISOS) || 0) + 1; localStorage.setItem(K_AVISOS, veces); } catch { /* sin storage */ }
+  const recordatorio = veces > 1
+    ? `Ya te marcamos errores ${veces - 1 === 1 ? "una vez" : `${veces - 1} veces`}. Lo que cargás se publica tal cual en la web: prestá atención a la ortografía.`
+    : "Lo que cargás se publica tal cual en la web: prestá atención a la ortografía.";
 
   const n = items.length;
   const r = await dialogo({
     titulo: n === 1 ? "Revisá este detalle antes de agregar" : `Revisá estos ${n} detalles antes de agregar`,
-    html: `<p class="muted small">Elegí la corrección o dejalo como está.</p><div class="rev">${items.join("")}</div>`,
+    html: `<p class="rev-nota">${esc(recordatorio)}</p><div class="rev">${items.join("")}</div>
+      <p class="muted small" style="margin:10px 0 0">Elegí la corrección o dejalo como está.</p>`,
     botones: [{ label: "Volver a editar" }, { label: "Aplicar y agregar", primary: true }],
   });
   if (r !== 1) return false;
