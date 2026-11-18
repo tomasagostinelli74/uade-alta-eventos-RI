@@ -70,7 +70,16 @@ const LUGAR = {
   B: "Te esperamos en nuestra sede Belgrano ([[dirección]]).",
   C: "Te esperamos en nuestro Campus Costa Argentina ([[dirección]]).",
 };
-const MAIL_FACULTAD = { 176: "face@uade.edu.ar" };
+// Sector de Intranet → mail de contacto de la facultad
+const MAIL_FACULTAD = {
+  176: "face@uade.edu.ar",      // Ciencias Económicas
+  182: "faju@uade.edu.ar",      // Ciencias Jurídicas y de la Comunicación
+  322: "fasa@uade.edu.ar",      // Ciencias de la Salud
+  200: "faen@uade.edu.ar",      // Entretenimiento, Hospitalidad y Medios
+  191: "fain@uade.edu.ar",      // Ingeniería y Ciencias Exactas
+  293: "farufadi@uade.edu.ar",  // Diseño
+  1421: "farufadi@uade.edu.ar", // Arquitectura y Urbanismo
+};
 
 export function copyGeneral(tipo, sede, sector) {
   const mail = MAIL_FACULTAD[sector] || "[[mail de contacto]]";
