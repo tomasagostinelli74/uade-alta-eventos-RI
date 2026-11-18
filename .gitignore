@@ -1,0 +1,6 @@
+# Documentación interna (detalles de Intranet y mails del equipo): el repo es público
+privado/
+.claude/
+__pycache__/
+*.har
+.env*

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alta de eventos · UADE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo">UADE</span>
+      <span class="brand-sub">Alta de eventos</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab is-active" data-view="nuevo" role="tab">Nuevo evento</button>
+      <button class="tab" data-view="mis" role="tab">Mis eventos <span class="pill" id="mis-count">0</span></button>
+    </nav>
+    <div class="who" id="who"></div>
+  </header>
+
+  <div class="banner" id="banner-prueba" hidden>
+    Modo prueba: los eventos se guardan solo en este navegador y no se envían a Intranet.
+  </div>
+
+  <main>
+    <!-- ============ NUEVO EVENTO ============ -->
+    <section class="view" id="view-nuevo">
+      <form class="card form" id="form" novalidate autocomplete="off">
+        <div class="form-head">
+          <h1 id="form-title">Nuevo evento</h1>
+          <button type="button" class="link" id="btn-limpiar">Limpiar</button>
+        </div>
+
+        <!-- 1. Tipo -->
+        <fieldset class="field">
+          <legend><span class="num">1</span> Tipo de evento</legend>
+          <div class="seg" id="seg-tipo"></div>
+        </fieldset>
+
+        <!-- 2. Carreras -->
+        <fieldset class="field">
+          <legend><span class="num">2</span> Carrera<span id="carrera-opcional" class="muted" hidden> (opcional)</span></legend>
+          <div class="combo" id="combo">
+            <div class="chips" id="chips"></div>
+            <input type="text" id="buscar-carrera" placeholder="Buscá la carrera… (ej. psico, marketing, ing ind)" aria-autocomplete="list" aria-controls="sugerencias">
+            <ul class="sug" id="sugerencias" role="listbox" hidden></ul>
+          </div>
+          <p class="err" data-err="carreras"></p>
+        </fieldset>
+
+        <!-- 3. Sede -->
+        <fieldset class="field">
+          <legend><span class="num">3</span> Sede / modalidad</legend>
+          <div class="seg" id="seg-sede"></div>
+          <p class="err" data-err="sede"></p>
+        </fieldset>
+
+        <!-- 4. Cuándo -->
+        <fieldset class="field">
+          <legend><span class="num">4</span> Fecha y horario</legend>
+          <div class="row3">
+            <label>Fecha<input type="date" id="fecha"></label>
+            <label>Inicio<select id="hora-ini"></select></label>
+            <label>Fin<select id="hora-fin"></select></label>
+          </div>
+          <div class="quick" id="quick-dur">
+            <span class="muted">Duración:</span>
+            <button type="button" data-min="60">1 h</button>
+            <button type="button" data-min="90">1 h 30</button>
+            <button type="button" data-min="120">2 h</button>
+          </div>
+          <p class="err" data-err="fecha"></p>
+        </fieldset>
+
+        <!-- 5. Título y texto -->
+        <fieldset class="field">
+          <legend><span class="num">5</span> Título y descripción</legend>
+          <label class="lbl-row">
+            <span>Título <span class="muted" id="titulo-auto">· automático</span></span>
+            <span class="count" id="titulo-count">0/100</span>
+          </label>
+          <div class="with-btn">
+            <input type="text" id="titulo" maxlength="100">
+            <button type="button" class="ghost" id="btn-titulo-auto" title="Volver al título automático" hidden>↺ Automático</button>
+          </div>
+          <p class="err" data-err="titulo"></p>
+
+          <label class="lbl-row"><span>Copete <span class="muted">(opcional)</span></span></label>
+          <input type="text" id="copete" maxlength="250">
+
+          <label class="lbl-row">
+            <span>Descripción</span>
+            <span class="count" id="desc-count">0/3000</span>
+          </label>
+          <textarea id="descripcion" rows="7" maxlength="3000"></textarea>
+          <p class="err" data-err="descripcion"></p>
+        </fieldset>
+
+        <!-- 6. Más opciones -->
+        <details class="field more" id="mas-opciones">
+          <summary><span class="num">6</span> Más opciones <span class="muted" id="mas-resumen"></span></summary>
+          <div class="more-grid">
+            <div><span class="sublbl">Categoría</span><div class="checks" id="ck-categ"></div></div>
+            <div><span class="sublbl">Audiencia</span><div class="checks" id="ck-perfil"></div><p class="err" data-err="perfil"></p></div>
+            <div class="span2"><span class="sublbl">Sector organizador</span><div class="checks cols2" id="ck-sector"></div><p class="err" data-err="sector"></p></div>
+            <label>Origen CRM<select id="origen-crm"></select></label>
+            <label>Categoría CRM<select id="categ-crm"></select></label>
+            <label>Cupo <span class="muted">(opcional)</span><input type="number" id="cupo" min="1" step="1" inputmode="numeric"></label>
+            <label class="switch"><input type="checkbox" id="req-insc"><span>Requiere inscripción</span></label>
+          </div>
+        </details>
+
+        <div class="actions">
+          <button type="submit" class="primary" id="btn-agregar">Agregar a la tanda</button>
+          <span class="muted small">Podés agregar varios y confirmarlos juntos.</span>
+        </div>
+      </form>
+
+      <aside class="card tanda" id="tanda">
+        <div class="tanda-head">
+          <h2>Tanda <span class="pill" id="tanda-count">0</span></h2>
+          <button type="button" class="link" id="btn-vaciar" hidden>Vaciar</button>
+        </div>
+        <ol class="tanda-list" id="tanda-list"></ol>
+        <div class="empty" id="tanda-empty">
+          <p>Todavía no agregaste eventos.</p>
+          <p class="muted small">Completá el formulario y tocá <b>Agregar a la tanda</b>. Después confirmás todos juntos y se dan de alta solos en Intranet.</p>
+        </div>
+        <button type="button" class="primary block" id="btn-confirmar" disabled>Confirmar y dar de alta</button>
+      </aside>
+    </section>
+
+    <!-- ============ MIS EVENTOS ============ -->
+    <section class="view" id="view-mis" hidden>
+      <div class="card">
+        <div class="mis-head">
+          <h1>Mis eventos</h1>
+          <div class="filtros" id="filtros"></div>
+        </div>
+        <div class="tabla-wrap">
+          <table class="tabla" id="tabla-mis">
+            <thead><tr><th>Evento</th><th>Fecha</th><th>Sede</th><th>Estado</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="empty" id="mis-empty"><p>No hay eventos confirmados todavía.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="dlg">
+    <form method="dialog" class="dlg-body">
+      <h3 id="dlg-title"></h3>
+      <div id="dlg-content"></div>
+      <div class="dlg-actions" id="dlg-actions"></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

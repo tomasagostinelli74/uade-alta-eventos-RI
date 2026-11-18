@@ -1,0 +1,2439 @@
+{
+ "origen": "carreras_umbraco.xlsx",
+ "carreras": [
+  {
+   "base": "ABOGACÍA",
+   "corto": "Abogacía",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4523,
+     "udi": "umb://document/2cc08f9a846b48208c3f3d0181153ce4",
+     "nombre": "ABOGACÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/abogacia/"
+    },
+    "costa": {
+     "id": 4524,
+     "udi": "umb://document/cd4c3c430f5e45e893c4d467d32a47ed",
+     "nombre": "ABOGACÍA (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/abogacia-costa-argentina/"
+    },
+    "online": {
+     "id": 115139,
+     "udi": "umb://document/77a55dfd3c7a4372afad5059bed2e77c",
+     "nombre": "ABOGACÍA (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/abogacia-online/"
+    }
+   },
+   "key": "c1"
+  },
+  {
+   "base": "ARQUITECTURA",
+   "corto": "Arquitectura",
+   "facultad": "FACULTAD DE ARQUITECTURA Y URBANISMO",
+   "sector": 1421,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 105917,
+     "udi": "umb://document/5c30b2e9313a4bc386b855ff5e44a5e6",
+     "nombre": "ARQUITECTURA",
+     "url": "https://www.uade.edu.ar/facultad-de-arquitectura-y-urbanismo/arquitectura/"
+    },
+    "costa": {
+     "id": 105918,
+     "udi": "umb://document/f5f4b1af9f17493abcb88d69524982bd",
+     "nombre": "ARQUITECTURA (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-arquitectura-y-urbanismo/arquitectura-costa-argentina/"
+    }
+   },
+   "key": "c2"
+  },
+  {
+   "base": "COCINERO PROFESIONAL",
+   "corto": "Cocinero Profesional",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 11295,
+     "udi": "umb://document/e40b17059a00476a939be55ca09106ca",
+     "nombre": "COCINERO PROFESIONAL (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/cocinero-profesional-costa-argentina/"
+    }
+   },
+   "key": "c3"
+  },
+  {
+   "base": "CONTADOR PÚBLICO",
+   "corto": "Contador Público",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4446,
+     "udi": "umb://document/892ec02bfac54e54906d7f76c4dbab32",
+     "nombre": "CONTADOR PÚBLICO",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/contador-publico/"
+    },
+    "costa": {
+     "id": 4447,
+     "udi": "umb://document/89f977c753744acfa62b028b359db072",
+     "nombre": "CONTADOR PÚBLICO (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/contador-publico-costa-argentina/"
+    }
+   },
+   "key": "c4"
+  },
+  {
+   "base": "DIPLOMATURA AVANZADA EN GESTIÓN DE SERVICIOS DE SALUD",
+   "corto": "Diplomatura Avanzada en Gestión de Servicios de Salud",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "online": {
+     "id": 62374,
+     "udi": "umb://document/4e99b1276c85440faf5f283a251c63a8",
+     "nombre": "DIPLOMATURA AVANZADA EN GESTIÓN DE SERVICIOS DE SALUD (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/diplomatura-avanzada-en-gestion-de-servicios-de-salud-online/"
+    }
+   },
+   "key": "c5"
+  },
+  {
+   "base": "DIPLOMATURA DE ADMINISTRACIÓN DE NEGOCIOS GASTRONÓMICOS",
+   "corto": "Diplomatura de Administración de Negocios Gastronómicos",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 60976,
+     "udi": "umb://document/729f51c67caa44d098ff05c6bdb19eda",
+     "nombre": "DIPLOMATURA DE ADMINISTRACIÓN DE NEGOCIOS GASTRONÓMICOS (COSTA ARG.)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/diplomatura-de-administracion-de-negocios-gastronomicos-costa-arg/"
+    }
+   },
+   "key": "c6"
+  },
+  {
+   "base": "DIPLOMATURA EN ADMINISTRACIÓN CONTABLE",
+   "corto": "Diplomatura en Administración Contable",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 90056,
+     "udi": "umb://document/83e1ec447c1d40c1ad704102610661b9",
+     "nombre": "DIPLOMATURA EN ADMINISTRACIÓN CONTABLE",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/diplomatura-en-administracion-contable/"
+    }
+   },
+   "key": "c7"
+  },
+  {
+   "base": "DIPLOMATURA EN CIENCIA DE DATOS",
+   "corto": "Diplomatura en Ciencia de Datos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 29957,
+     "udi": "umb://document/2b3ff98b543e448ba56385240e4081f3",
+     "nombre": "DIPLOMATURA EN CIENCIA DE DATOS (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/diplomatura-en-ciencia-de-datos-costa-argentina/"
+    }
+   },
+   "key": "c8"
+  },
+  {
+   "base": "DIPLOMATURA EN COMUNICACIÓN POLÍTICA DIGITAL",
+   "corto": "Diplomatura en Comunicación Política Digital",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 44676,
+     "udi": "umb://document/af4f76ccb31e46d0a69950ba8747562f",
+     "nombre": "DIPLOMATURA EN COMUNICACIÓN POLÍTICA DIGITAL",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/diplomatura-en-comunicacion-politica-digital/"
+    }
+   },
+   "key": "c9"
+  },
+  {
+   "base": "DIPLOMATURA EN CRIPTOMONEDAS Y FINANZAS SUSTENTABLES",
+   "corto": "Diplomatura en Criptomonedas y Finanzas Sustentables",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 33150,
+     "udi": "umb://document/baaba85231a34c88be92c1d77078fb6c",
+     "nombre": "DIPLOMATURA EN CRIPTOMONEDAS Y FINANZAS SUSTENTABLES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/diplomatura-en-criptomonedas-y-finanzas-sustentables/"
+    }
+   },
+   "key": "c10"
+  },
+  {
+   "base": "DIPLOMATURA EN ESTILISMO Y NARRATIVAS PARA LA MODA",
+   "corto": "Diplomatura en Estilismo y Narrativas para la Moda",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 81180,
+     "udi": "umb://document/abb3842e31b2486ba622623019303872",
+     "nombre": "DIPLOMATURA EN ESTILISMO Y NARRATIVAS PARA LA MODA",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/diplomatura-en-estilismo-y-narrativas-para-la-moda/"
+    }
+   },
+   "key": "c11"
+  },
+  {
+   "base": "DIPLOMATURA EN GESTIÓN DE SERVICIOS DE SALUD",
+   "corto": "Diplomatura en Gestión de Servicios de Salud",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "online": {
+     "id": 33619,
+     "udi": "umb://document/3cb38fa2711b497e8f06ae23fb73a0e1",
+     "nombre": "DIPLOMATURA EN GESTIÓN DE SERVICIOS DE SALUD (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/diplomatura-en-gestion-de-servicios-de-salud-online/"
+    }
+   },
+   "key": "c12"
+  },
+  {
+   "base": "DIPLOMATURA EN SISTEMAS DE GESTIÓN EMPRESARIAL SAP NEXT-GEN",
+   "corto": "Diplomatura en Sistemas de Gestión Empresarial SAP Next-Gen",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 33572,
+     "udi": "umb://document/23b90d06f7094124b8e1c04e5066be06",
+     "nombre": "DIPLOMATURA EN SISTEMAS DE GESTIÓN EMPRESARIAL SAP NEXT-GEN",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/diplomatura-en-sistemas-de-gestion-empresarial-sap-next-gen/"
+    }
+   },
+   "key": "c13"
+  },
+  {
+   "base": "DIPLOMATURA EXPERTO EN PANADERÍA Y PASTELERÍA",
+   "corto": "Diplomatura Experto en Panadería y Pastelería",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 38656,
+     "udi": "umb://document/fb7f4c39095b44a7b77a7fb75a3f8bd3",
+     "nombre": "DIPLOMATURA EXPERTO EN PANADERÍA Y PASTELERÍA (COSTA ARG.)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/diplomatura-experto-en-panaderia-y-pasteleria-costa-arg/"
+    }
+   },
+   "key": "c14"
+  },
+  {
+   "base": "DIPLOMATURA EXPERTO EN VINOS Y COCTELERÍA",
+   "corto": "Diplomatura Experto en Vinos y Coctelería",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 68327,
+     "udi": "umb://document/8782c2a4fc9942b0aab54cc965d6357f",
+     "nombre": "DIPLOMATURA EXPERTO EN VINOS Y COCTELERÍA (COSTA ARG.)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/diplomatura-experto-en-vinos-y-cocteleria-costa-arg/"
+    }
+   },
+   "key": "c15"
+  },
+  {
+   "base": "DIPLOMATURA UNIVERSITARIA EN ADMINISTRACIÓN DE INVERSIONES FINANCIERAS",
+   "corto": "Diplomatura Universitaria en Administración de Inversiones Financieras",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 24223,
+     "udi": "umb://document/c60c408761c5448f8ae06510a3e3a5cc",
+     "nombre": "DIPLOMATURA UNIVERSITARIA EN ADMINISTRACIÓN DE INVERSIONES FINANCIERAS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/diplomatura-universitaria-en-administracion-de-inversiones-financieras/"
+    }
+   },
+   "key": "c16"
+  },
+  {
+   "base": "DIPLOMATURA UNIVERSITARIA EN CREACIÓN DE CONTENIDOS PARA REDES SOCIALES",
+   "corto": "Diplomatura Universitaria en Creación de Contenidos para Redes Sociales",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 28082,
+     "udi": "umb://document/eb39a757820e49ed839eb7f69bac1972",
+     "nombre": "DIPLOMATURA UNIVERSITARIA EN CREACIÓN DE CONTENIDOS PARA REDES SOCIALES",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/diplomatura-universitaria-en-creacion-de-contenidos-para-redes-sociales/"
+    }
+   },
+   "key": "c17"
+  },
+  {
+   "base": "DIPLOMATURA UNIVERSITARIA EN DESARROLLO WEB FULL STACK",
+   "corto": "Diplomatura Universitaria en Desarrollo Web Full Stack",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 29958,
+     "udi": "umb://document/64f801742dad46fb8173f4ebac240893",
+     "nombre": "DIPLOMATURA UNIVERSITARIA EN DESARROLLO WEB FULL STACK (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/diplomatura-universitaria-en-desarrollo-web-full-stack-costa-argentina/"
+    }
+   },
+   "key": "c18"
+  },
+  {
+   "base": "DIPLOMATURA UNIVERSITARIA EN FINTECH",
+   "corto": "Diplomatura Universitaria en Fintech",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 24224,
+     "udi": "umb://document/82bb95b391604291b4b83474cfb7dd7a",
+     "nombre": "DIPLOMATURA UNIVERSITARIA EN FINTECH",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/diplomatura-universitaria-en-fintech/"
+    }
+   },
+   "key": "c19"
+  },
+  {
+   "base": "DIPLOMATURA UNIVERSITARIA EN GESTIÓN DE PLATAFORMAS DE ENTRETENIMIENTO",
+   "corto": "Diplomatura Universitaria en Gestión de Plataformas de Entretenimiento",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 28083,
+     "udi": "umb://document/939dbc46767c43f88ee53607d80f2d0c",
+     "nombre": "DIPLOMATURA UNIVERSITARIA EN GESTIÓN DE PLATAFORMAS DE ENTRETENIMIENTO",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/diplomatura-universitaria-en-gestion-de-plataformas-de-entretenimiento/"
+    }
+   },
+   "key": "c20"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN ABOGACÍA Y GOBIERNO Y RELACIONES INTERNACIONALES",
+   "corto": "Doble Tit. en Abogacía y Gobierno y Relaciones Internacionales",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 24977,
+     "udi": "umb://document/1660af6f261f46be86ad555db516f596",
+     "nombre": "DOBLE TITULACIÓN EN ABOGACÍA Y GOBIERNO Y RELACIONES INTERNACIONALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/doble-titulacion-en-abogacia-y-gobierno-y-relaciones-internacionales/"
+    }
+   },
+   "key": "c21"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN ADMINISTRACIÓN DE EMPRESAS Y COMERCIO INTERNACIONAL",
+   "corto": "Doble Tit. en Administración de Empresas y Comercio Internacional",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4474,
+     "udi": "umb://document/f736841b294c418faf1b026a40cc8c51",
+     "nombre": "DOBLE TITULACIÓN EN ADMINISTRACIÓN DE EMPRESAS Y COMERCIO INTERNACIONAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-administracion-de-empresas-y-comercio-internacional/"
+    }
+   },
+   "key": "c22"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN ADMINISTRACIÓN DE EMPRESAS Y FINANZAS",
+   "corto": "Doble Tit. en Administración de Empresas y Finanzas",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4466,
+     "udi": "umb://document/4da4c952c58d4c4ea6f47873a85169a8",
+     "nombre": "DOBLE TITULACIÓN EN ADMINISTRACIÓN DE EMPRESAS Y FINANZAS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-administracion-de-empresas-y-finanzas/"
+    }
+   },
+   "key": "c23"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN ADMINISTRACIÓN DE EMPRESAS Y RECURSOS HUMANOS",
+   "corto": "Doble Tit. en Administración de Empresas y Recursos Humanos",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4472,
+     "udi": "umb://document/33b885465f9e4e398daeae167ffdfa3e",
+     "nombre": "DOBLE TITULACIÓN EN ADMINISTRACIÓN DE EMPRESAS Y RECURSOS HUMANOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-administracion-de-empresas-y-recursos-humanos/"
+    }
+   },
+   "key": "c24"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN CONTADOR PÚBLICO Y ABOGACÍA",
+   "corto": "Doble Tit. en Contador Público y Abogacía",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4469,
+     "udi": "umb://document/a861f994f9d3434297c895571600af93",
+     "nombre": "DOBLE TITULACIÓN EN CONTADOR PÚBLICO Y ABOGACÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-contador-publico-y-abogacia/"
+    }
+   },
+   "key": "c25"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN CONTADOR PÚBLICO Y ADMINISTRACIÓN DE EMPRESAS",
+   "corto": "Doble Tit. en Contador Público y Administración de Empresas",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4470,
+     "udi": "umb://document/6441dfb88c3c4f8ab28a20b457b8c9b5",
+     "nombre": "DOBLE TITULACIÓN EN CONTADOR PÚBLICO Y ADMINISTRACIÓN DE EMPRESAS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-contador-publico-y-administracion-de-empresas/"
+    },
+    "costa": {
+     "id": 4471,
+     "udi": "umb://document/e7ca6d1782434d28a7b187e65a61b32d",
+     "nombre": "DOBLE TITULACIÓN EN CONTADOR PÚBLICO Y ADMINISTRACIÓN DE EMPRESAS (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-contador-publico-y-administracion-de-empresas-costa-argentina/"
+    }
+   },
+   "key": "c26"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN CONTADOR PÚBLICO Y FINANZAS",
+   "corto": "Doble Tit. en Contador Público y Finanzas",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4468,
+     "udi": "umb://document/3c684c1703eb426aba62bdf26eab707a",
+     "nombre": "DOBLE TITULACIÓN EN CONTADOR PÚBLICO Y FINANZAS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-contador-publico-y-finanzas/"
+    }
+   },
+   "key": "c27"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN DESARROLLO DE SOFTWARE Y DE VIDEOJUEGOS",
+   "corto": "Doble Tit. en Desarrollo de Software y de Videojuegos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 4520,
+     "udi": "umb://document/bd8103d0327c4dad8cc7b3bde62a8479",
+     "nombre": "DOBLE TITULACIÓN EN DESARROLLO DE SOFTWARE Y DE VIDEOJUEGOS (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/doble-titulacion-en-desarrollo-de-software-y-de-videojuegos-costa-argentina/"
+    }
+   },
+   "key": "c28"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN DISEÑO GRÁFICO Y MULTIMEDIA Y DE INTERACCIÓN",
+   "corto": "Doble Tit. en Diseño Gráfico y Multimedia y de Interacción",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 33143,
+     "udi": "umb://document/3de39ac575904835abc85b13c602978b",
+     "nombre": "DOBLE TITULACIÓN EN DISEÑO GRÁFICO Y MULTIMEDIA Y DE INTERACCIÓN (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/doble-titulacion-en-diseno-grafico-y-multimedia-y-de-interaccion-costa-argentina/"
+    }
+   },
+   "key": "c29"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN DISEÑO MULTIMEDIA Y DE INTERACCIÓN Y DISEÑO DE PRODUCTOS INTERACTIVOS Y REALIDAD VIRTUAL",
+   "corto": "Doble Tit. en Diseño Multimedia y de Interacción y Diseño de Productos Interactivos y Realidad Virtual",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 59486,
+     "udi": "umb://document/6e1542434e5e4d71a18f6ba09579e38c",
+     "nombre": "DOBLE TITULACIÓN EN DISEÑO MULTIMEDIA Y DE INTERACCIÓN Y DISEÑO DE PRODUCTOS INTERACTIVOS Y REALIDAD VIRTUAL",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/doble-titulacion-en-diseno-multimedia-y-de-interaccion-y-diseno-de-productos-interactivos-y-realidad-virtual/"
+    }
+   },
+   "key": "c30"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN ECONOMÍA Y FINANZAS",
+   "corto": "Doble Tit. en Economía y Finanzas",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4467,
+     "udi": "umb://document/77de6a3f472c45cab49ddcb2270c0c50",
+     "nombre": "DOBLE TITULACIÓN EN ECONOMÍA Y FINANZAS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-economia-y-finanzas/"
+    }
+   },
+   "key": "c31"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN INGENIERÍA INDUSTRIAL Y ELECTROMECÁNICA",
+   "corto": "Doble Tit. en Ingeniería Industrial y Electromecánica",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4521,
+     "udi": "umb://document/d513038484f7445b9b21e8a88d5f8c53",
+     "nombre": "DOBLE TITULACIÓN EN INGENIERÍA INDUSTRIAL Y ELECTROMECÁNICA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/doble-titulacion-en-ingenieria-industrial-y-electromecanica/"
+    }
+   },
+   "key": "c32"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN LICENCIATURA EN DISEÑO GRÁFICO Y LICENCIATURA EN DISEÑO MULTIMEDIA Y DE INTERACCIÓN",
+   "corto": "Doble Tit. en Licenciatura en Diseño Gráfico y Licenciatura en Diseño Multimedia y de Interacción",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4547,
+     "udi": "umb://document/157be05447b847ca8f2dd10060890278",
+     "nombre": "DOBLE TITULACIÓN EN LICENCIATURA EN DISEÑO GRÁFICO Y LICENCIATURA EN DISEÑO MULTIMEDIA Y DE INTERACCIÓN",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/doble-titulacion-en-licenciatura-en-diseno-grafico-y-licenciatura-en-diseno-multimedia-y-de-interaccion/"
+    }
+   },
+   "key": "c33"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN MARKETING Y ADMINISTRACIÓN DE EMPRESAS",
+   "corto": "Doble Tit. en Marketing y Administración de Empresas",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 53622,
+     "udi": "umb://document/ee768bb5459445af88764bbb81d763f7",
+     "nombre": "DOBLE TITULACIÓN EN MARKETING Y ADMINISTRACIÓN DE EMPRESAS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-marketing-y-administracion-de-empresas/"
+    }
+   },
+   "key": "c34"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN MARKETING Y COMERCIO INTERNACIONAL",
+   "corto": "Doble Tit. en Marketing y Comercio Internacional",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 53623,
+     "udi": "umb://document/4a252693036a4def8273612b514de6f3",
+     "nombre": "DOBLE TITULACIÓN EN MARKETING Y COMERCIO INTERNACIONAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/doble-titulacion-en-marketing-y-comercio-internacional/"
+    }
+   },
+   "key": "c35"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN POLÍTICA Y ADMINISTRACIÓN PÚBLICA Y GOBIERNO Y RELACIONES INTERNACIONALES",
+   "corto": "Doble Tit. en Política y Administración Pública y Gobierno y Relaciones Internacionales",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4530,
+     "udi": "umb://document/218306d58f154c8ca86f5e8dd718aee1",
+     "nombre": "DOBLE TITULACIÓN EN POLÍTICA Y ADMINISTRACIÓN PÚBLICA Y GOBIERNO Y RELACIONES INTERNACIONALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/doble-titulacion-en-politica-y-administracion-publica-y-gobierno-y-relaciones-internacionales/"
+    }
+   },
+   "key": "c36"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN RELACIONES PÚBLICAS Y COMUNICACIÓN INSTITUCIONAL Y CIENCIAS DE LA COMUNICACIÓN",
+   "corto": "Doble Tit. en Relaciones Públicas y Comunicación Institucional y Ciencias de la Comunicación",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 116328,
+     "udi": "umb://document/11ae4a85fd214390ace14c836a9e2d25",
+     "nombre": "DOBLE TITULACIÓN EN RELACIONES PÚBLICAS Y COMUNICACIÓN INSTITUCIONAL Y CIENCIAS DE LA COMUNICACIÓN",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/doble-titulacion-en-relaciones-publicas-y-comunicacion-institucional-y-ciencias-de-la-comunicacion/"
+    }
+   },
+   "key": "c37"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN TECNOLOGÍA INDUSTRIAL DE LOS ALIMENTOS Y BIOTECNOLOGÍA",
+   "corto": "Doble Tit. en Tecnología Industrial de los Alimentos y Biotecnología",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4519,
+     "udi": "umb://document/59f413172c4145a2b652565e85cad5a2",
+     "nombre": "DOBLE TITULACIÓN EN TECNOLOGÍA INDUSTRIAL DE LOS ALIMENTOS Y BIOTECNOLOGÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/doble-titulacion-en-tecnologia-industrial-de-los-alimentos-y-biotecnologia/"
+    }
+   },
+   "key": "c38"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN TRADUCTORADO PÚBLICO E INTERPRETARIADO SIMULTÁNEO DE IDIOMA INGLÉS",
+   "corto": "Doble Tit. en Traductorado Público e Interpretariado Simultáneo de Idioma Inglés",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4529,
+     "udi": "umb://document/293756648d1145f79cff2c5260bc2962",
+     "nombre": "DOBLE TITULACIÓN EN TRADUCTORADO PÚBLICO E INTERPRETARIADO SIMULTÁNEO DE IDIOMA INGLÉS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/doble-titulacion-en-traductorado-publico-e-interpretariado-simultaneo-de-idioma-ingles/"
+    }
+   },
+   "key": "c39"
+  },
+  {
+   "base": "DOBLE TITULACIÓN EN TRADUCTORADO PÚBLICO Y CIENTÍFICO-TÉCNICO DE IDIOMA INGLÉS",
+   "corto": "Doble Tit. en Traductorado Público y Científico-Técnico de Idioma Inglés",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4533,
+     "udi": "umb://document/8ba3026a47504d3d8c78d6cb3d69271b",
+     "nombre": "DOBLE TITULACIÓN EN TRADUCTORADO PÚBLICO Y CIENTÍFICO-TÉCNICO DE IDIOMA INGLÉS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/doble-titulacion-en-traductorado-publico-y-cientifico-tecnico-de-idioma-ingles/"
+    }
+   },
+   "key": "c40"
+  },
+  {
+   "base": "ESPECIALIZACIÓN EN CONTABILIDAD, AUDITORÍA Y TRIBUTACIÓN INTERNACIONALES",
+   "corto": "Especialización en Contabilidad, Auditoría y Tributación Internacionales",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 76045,
+     "udi": "umb://document/a19b949ec9f546bda5db403117803741",
+     "nombre": "ESPECIALIZACIÓN EN CONTABILIDAD, AUDITORÍA Y TRIBUTACIÓN INTERNACIONALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/especializacion-en-contabilidad-auditoria-y-tributacion-internacionales/"
+    }
+   },
+   "key": "c41"
+  },
+  {
+   "base": "ESPECIALIZACIÓN EN RELACIONES LABORALES",
+   "corto": "Especialización en Relaciones Laborales",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 76046,
+     "udi": "umb://document/cbaf95bc0e494a7eaa98fb3ae8edc78f",
+     "nombre": "ESPECIALIZACIÓN EN RELACIONES LABORALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/especializacion-en-relaciones-laborales/"
+    }
+   },
+   "key": "c42"
+  },
+  {
+   "base": "INGENIERÍA ELECTROMECÁNICA",
+   "corto": "Ing. Electromecánica",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4500,
+     "udi": "umb://document/087a31b5234046f99d511bb46d3b7e52",
+     "nombre": "INGENIERÍA ELECTROMECÁNICA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/ingenieria-electromecanica/"
+    }
+   },
+   "key": "c43"
+  },
+  {
+   "base": "INGENIERÍA ELECTRÓNICA",
+   "corto": "Ing. Electrónica",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4501,
+     "udi": "umb://document/cd3de420c03442efa74899a0331f5527",
+     "nombre": "INGENIERÍA ELECTRÓNICA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/ingenieria-electronica/"
+    }
+   },
+   "key": "c44"
+  },
+  {
+   "base": "INGENIERÍA EN ALIMENTOS",
+   "corto": "Ing. en Alimentos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4503,
+     "udi": "umb://document/9ddc1a9a3ad44455ab83621a19b90401",
+     "nombre": "INGENIERÍA EN ALIMENTOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/ingenieria-en-alimentos/"
+    }
+   },
+   "key": "c45"
+  },
+  {
+   "base": "INGENIERÍA EN INFORMÁTICA",
+   "corto": "Ing. en Informática",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4505,
+     "udi": "umb://document/5119710c9a6a4854b2c7cdf170612ebb",
+     "nombre": "INGENIERÍA EN INFORMÁTICA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/ingenieria-en-informatica/"
+    }
+   },
+   "key": "c46"
+  },
+  {
+   "base": "INGENIERÍA EN TELECOMUNICACIONES",
+   "corto": "Ing. en Telecomunicaciones",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 30891,
+     "udi": "umb://document/5f7ae70a75724c71be0d9c13dfdb37fd",
+     "nombre": "INGENIERÍA EN TELECOMUNICACIONES",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/ingenieria-en-telecomunicaciones/"
+    }
+   },
+   "key": "c47"
+  },
+  {
+   "base": "INGENIERÍA INDUSTRIAL",
+   "corto": "Ing. Industrial",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4508,
+     "udi": "umb://document/12ca5a654e374ae89ca15aacbff88c26",
+     "nombre": "INGENIERÍA INDUSTRIAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/ingenieria-industrial/"
+    },
+    "costa": {
+     "id": 105915,
+     "udi": "umb://document/463cbe1b6e764bb39ff34df302813cb5",
+     "nombre": "INGENIERÍA INDUSTRIAL (COSTA ARG.)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/ingenieria-industrial-costa-arg/"
+    }
+   },
+   "key": "c48"
+  },
+  {
+   "base": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS",
+   "corto": "Lic. en Administración de Empresas",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 4452,
+     "udi": "umb://document/49c2a2f058104eca99d2f5d3485bb728",
+     "nombre": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-administracion-de-empresas-costa-argentina/"
+    },
+    "online": {
+     "id": 4453,
+     "udi": "umb://document/6b6bcb78930f445da1e7d4b1f793e1dc",
+     "nombre": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-administracion-de-empresas-online/"
+    },
+    "normal": {
+     "id": 4449,
+     "udi": "umb://document/0204d18c6c694e258d6fe77b4bcd1b47",
+     "nombre": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS (PRESENCIAL y ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-administracion-de-empresas-presencial-y-online/"
+    }
+   },
+   "key": "c49"
+  },
+  {
+   "base": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS Y BACHELOR IN BUSINESS",
+   "corto": "Lic. en Administración de Empresas y Bachelor in Business",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 57920,
+     "udi": "umb://document/1128a34734a74e73b442945b9f3561d3",
+     "nombre": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS Y BACHELOR IN BUSINESS (COSTA ARG.)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-administracion-de-empresas-y-bachelor-in-business-costa-arg/"
+    },
+    "online": {
+     "id": 59418,
+     "udi": "umb://document/a1640081e580407db04fdc745424f9bb",
+     "nombre": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS Y BACHELOR IN BUSINESS (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-administracion-de-empresas-y-bachelor-in-business-online/"
+    },
+    "normal": {
+     "id": 56565,
+     "udi": "umb://document/96398e6a1d084db6a71b68f2b49d863f",
+     "nombre": "LICENCIATURA EN ADMINISTRACIÓN DE EMPRESAS Y BACHELOR IN BUSINESS (PRESENCIAL y ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-administracion-de-empresas-y-bachelor-in-business-presencial-y-online/"
+    }
+   },
+   "key": "c50"
+  },
+  {
+   "base": "LICENCIATURA EN ARTES ESCÉNICAS",
+   "corto": "Lic. en Artes Escénicas",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4477,
+     "udi": "umb://document/f7fde168a67a4a948dac34eac3720b97",
+     "nombre": "LICENCIATURA EN ARTES ESCÉNICAS",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-artes-escenicas/"
+    }
+   },
+   "key": "c51"
+  },
+  {
+   "base": "LICENCIATURA EN BIOINFORMÁTICA",
+   "corto": "Lic. en Bioinformática",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4510,
+     "udi": "umb://document/9abc298ff1e844e89726fbd54f414b9b",
+     "nombre": "LICENCIATURA EN BIOINFORMÁTICA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-bioinformatica/"
+    }
+   },
+   "key": "c52"
+  },
+  {
+   "base": "LICENCIATURA EN BIOTECNOLOGÍA",
+   "corto": "Lic. en Biotecnología",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4511,
+     "udi": "umb://document/576f6047e34f42e99913c70c2dc68e9d",
+     "nombre": "LICENCIATURA EN BIOTECNOLOGÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-biotecnologia/"
+    }
+   },
+   "key": "c53"
+  },
+  {
+   "base": "LICENCIATURA EN CIENCIAS DE LA COMUNICACIÓN",
+   "corto": "Lic. en Ciencias de la Comunicación",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 116330,
+     "udi": "umb://document/7b1dc1e9c125466093df4d7bbca6e0fa",
+     "nombre": "LICENCIATURA EN CIENCIAS DE LA COMUNICACIÓN",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-ciencias-de-la-comunicacion/"
+    }
+   },
+   "key": "c54"
+  },
+  {
+   "base": "LICENCIATURA EN CIENCIAS DE LA COMUNICACIÓN (CICLO DE LICENCIATURA)",
+   "corto": "Lic. en Ciencias de la Comunicación (Ciclo de Licenciatura)",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 116331,
+     "udi": "umb://document/884844030c424f77ab76c32f488e3196",
+     "nombre": "LICENCIATURA EN CIENCIAS DE LA COMUNICACIÓN (CICLO DE LICENCIATURA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-ciencias-de-la-comunicacion-ciclo-de-licenciatura/"
+    },
+    "online": {
+     "id": 116332,
+     "udi": "umb://document/0b240114f1244b89b0889d3fa014bc68",
+     "nombre": "LICENCIATURA EN CIENCIAS DE LA COMUNICACIÓN (CICLO DE LICENCIATURA) (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-ciencias-de-la-comunicacion-ciclo-de-licenciatura-online/"
+    }
+   },
+   "key": "c55"
+  },
+  {
+   "base": "LICENCIATURA EN CIENCIAS DEL COMPORTAMIENTO",
+   "corto": "Lic. en Ciencias del Comportamiento",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 112791,
+     "udi": "umb://document/4d3b8ce595d44c1b89d4c7dcbb4f22f2",
+     "nombre": "LICENCIATURA EN CIENCIAS DEL COMPORTAMIENTO",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-ciencias-del-comportamiento/"
+    }
+   },
+   "key": "c56"
+  },
+  {
+   "base": "LICENCIATURA EN COMERCIO INTERNACIONAL",
+   "corto": "Lic. en Comercio Internacional",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4457,
+     "udi": "umb://document/af051a06536e4e32a685f96369610d05",
+     "nombre": "LICENCIATURA EN COMERCIO INTERNACIONAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-comercio-internacional/"
+    },
+    "costa": {
+     "id": 85700,
+     "udi": "umb://document/fb6ab5fed27844e7918449905d883aeb",
+     "nombre": "LICENCIATURA EN COMERCIO INTERNACIONAL (COSTA ARG.)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-comercio-internacional-costa-arg/"
+    }
+   },
+   "key": "c57"
+  },
+  {
+   "base": "LICENCIATURA EN COMUNICACIÓN DIGITAL E INTERACTIVA",
+   "corto": "Lic. en Comunicación Digital e Interactiva",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 116333,
+     "udi": "umb://document/07dc131e4c6242169bb9cc2e816b25c4",
+     "nombre": "LICENCIATURA EN COMUNICACIÓN DIGITAL E INTERACTIVA",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-comunicacion-digital-e-interactiva/"
+    }
+   },
+   "key": "c58"
+  },
+  {
+   "base": "LICENCIATURA EN COMUNICACIÓN GLOBAL",
+   "corto": "Lic. en Comunicación Global",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 116336,
+     "udi": "umb://document/bece4f36a696485eb95999222fe0a55d",
+     "nombre": "LICENCIATURA EN COMUNICACIÓN GLOBAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-comunicacion-global/"
+    }
+   },
+   "key": "c59"
+  },
+  {
+   "base": "LICENCIATURA EN CRIMINOLOGÍA Y CIBERDELITOS",
+   "corto": "Lic. en Criminología y Ciberdelitos",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 32953,
+     "udi": "umb://document/78989accd350413db138168b81af07de",
+     "nombre": "LICENCIATURA EN CRIMINOLOGÍA Y CIBERDELITOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-criminologia-y-ciberdelitos/"
+    }
+   },
+   "key": "c60"
+  },
+  {
+   "base": "LICENCIATURA EN DEPORTES ELECTRÓNICOS",
+   "corto": "Lic. en Deportes Electrónicos",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 43372,
+     "udi": "umb://document/2ace4cf7f38e4182bb6ddbaecd98a135",
+     "nombre": "LICENCIATURA EN DEPORTES ELECTRÓNICOS",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-deportes-electronicos/"
+    }
+   },
+   "key": "c61"
+  },
+  {
+   "base": "LICENCIATURA EN DESARROLLO DE VIDEOJUEGOS",
+   "corto": "Lic. en Desarrollo de Videojuegos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 27518,
+     "udi": "umb://document/88aeb78caf6648d28e4557ad24a4fc50",
+     "nombre": "LICENCIATURA EN DESARROLLO DE VIDEOJUEGOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-desarrollo-de-videojuegos/"
+    }
+   },
+   "key": "c62"
+  },
+  {
+   "base": "LICENCIATURA EN DIRECCIÓN DE NEGOCIOS GLOBALES",
+   "corto": "Lic. en Dirección de Negocios Globales",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4459,
+     "udi": "umb://document/78ab932016324ae19977471f01c37d9b",
+     "nombre": "LICENCIATURA EN DIRECCIÓN DE NEGOCIOS GLOBALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-direccion-de-negocios-globales/"
+    }
+   },
+   "key": "c63"
+  },
+  {
+   "base": "LICENCIATURA EN DIRECCIÓN EN FINANZAS GLOBALES",
+   "corto": "Lic. en Dirección en Finanzas Globales",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 23321,
+     "udi": "umb://document/060e0dcc38124a9882ca65935fe15f51",
+     "nombre": "LICENCIATURA EN DIRECCIÓN EN FINANZAS GLOBALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-direccion-en-finanzas-globales/"
+    }
+   },
+   "key": "c64"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO AUDIOVISUAL (REALIZACIÓN AUDIOVISUAL)",
+   "corto": "Lic. en Diseño Audiovisual (Realización Audiovisual)",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 105914,
+     "udi": "umb://document/3f81b6e54cf14d029ceb60bea4b76704",
+     "nombre": "LICENCIATURA EN DISEÑO AUDIOVISUAL (REALIZACIÓN AUDIOVISUAL)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-diseno-audiovisual-realizacion-audiovisual/"
+    }
+   },
+   "key": "c65"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO DE INTERIORES",
+   "corto": "Lic. en Diseño de Interiores",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4537,
+     "udi": "umb://document/e4c7b929db4b47a299c66da637163b42",
+     "nombre": "LICENCIATURA EN DISEÑO DE INTERIORES",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-de-interiores/"
+    }
+   },
+   "key": "c66"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO DE PRODUCTOS INTERACTIVOS Y REALIDAD VIRTUAL (Diseño XR)",
+   "corto": "Lic. en Diseño de Productos Interactivos y Realidad Virtual (Diseño XR)",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 31278,
+     "udi": "umb://document/8d53a41042f34190885b23f43804625b",
+     "nombre": "LICENCIATURA EN DISEÑO DE PRODUCTOS INTERACTIVOS Y REALIDAD VIRTUAL (Diseño XR)",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-de-productos-interactivos-y-realidad-virtual-diseno-xr/"
+    }
+   },
+   "key": "c67"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO ESTRATÉGICO",
+   "corto": "Lic. en Diseño Estratégico",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 76049,
+     "udi": "umb://document/08834b46b85944ae92e7dedbc185fc76",
+     "nombre": "LICENCIATURA EN DISEÑO ESTRATÉGICO",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-estrategico/"
+    }
+   },
+   "key": "c68"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO GRÁFICO",
+   "corto": "Lic. en Diseño Gráfico",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4540,
+     "udi": "umb://document/acfb18f607e04e07b8aa14de908ced85",
+     "nombre": "LICENCIATURA EN DISEÑO GRÁFICO",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-grafico/"
+    }
+   },
+   "key": "c69"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO INDUSTRIAL",
+   "corto": "Lic. en Diseño Industrial",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4541,
+     "udi": "umb://document/e9d679448b904936bc7f3b2634770522",
+     "nombre": "LICENCIATURA EN DISEÑO INDUSTRIAL",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-industrial/"
+    }
+   },
+   "key": "c70"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO MULTIMEDIA Y DE INTERACCIÓN",
+   "corto": "Lic. en Diseño Multimedia y de Interacción",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4542,
+     "udi": "umb://document/49d1b2f6e9db473688429f210e5599b5",
+     "nombre": "LICENCIATURA EN DISEÑO MULTIMEDIA Y DE INTERACCIÓN",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-multimedia-y-de-interaccion/"
+    }
+   },
+   "key": "c71"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO TEXTIL E INDUMENTARIA",
+   "corto": "Lic. en Diseño Textil e Indumentaria",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4544,
+     "udi": "umb://document/97bdfd1b2ed546a98f4d43bcce2f2d2a",
+     "nombre": "LICENCIATURA EN DISEÑO TEXTIL E INDUMENTARIA",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-textil-e-indumentaria/"
+    }
+   },
+   "key": "c72"
+  },
+  {
+   "base": "LICENCIATURA EN DISEÑO Y GESTIÓN DE ESTÉTICAS PARA LA MODA",
+   "corto": "Lic. en Diseño y Gestión de Estéticas para la Moda",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4545,
+     "udi": "umb://document/92b80248a3b540ad9215dc634e46e943",
+     "nombre": "LICENCIATURA EN DISEÑO Y GESTIÓN DE ESTÉTICAS PARA LA MODA",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/licenciatura-en-diseno-y-gestion-de-esteticas-para-la-moda/"
+    }
+   },
+   "key": "c73"
+  },
+  {
+   "base": "LICENCIATURA EN ECONOMÍA",
+   "corto": "Lic. en Economía",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4461,
+     "udi": "umb://document/e5c8cad0faa7436d99ca0a7486b35436",
+     "nombre": "LICENCIATURA EN ECONOMÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-economia/"
+    }
+   },
+   "key": "c74"
+  },
+  {
+   "base": "LICENCIATURA EN ECONOMÍA EMPRESARIAL",
+   "corto": "Lic. en Economía Empresarial",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 113998,
+     "udi": "umb://document/4769dd94f9504ea68c2254030381aa46",
+     "nombre": "LICENCIATURA EN ECONOMÍA EMPRESARIAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-economia-empresarial/"
+    }
+   },
+   "key": "c75"
+  },
+  {
+   "base": "LICENCIATURA EN FINANZAS",
+   "corto": "Lic. en Finanzas",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4462,
+     "udi": "umb://document/17b306d6321643bcb0f12145db2a0101",
+     "nombre": "LICENCIATURA EN FINANZAS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-finanzas/"
+    }
+   },
+   "key": "c76"
+  },
+  {
+   "base": "LICENCIATURA EN FINANZAS DIGITALES",
+   "corto": "Lic. en Finanzas Digitales",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 89920,
+     "udi": "umb://document/29de0cfcfe0942ad81bd1f8da2a4d322",
+     "nombre": "LICENCIATURA EN FINANZAS DIGITALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-finanzas-digitales/"
+    }
+   },
+   "key": "c77"
+  },
+  {
+   "base": "LICENCIATURA EN GASTRONOMÍA",
+   "corto": "Lic. en Gastronomía",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4485,
+     "udi": "umb://document/286f1b34b2ed420e81b5de494c3035e0",
+     "nombre": "LICENCIATURA EN GASTRONOMÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-gastronomia/"
+    }
+   },
+   "key": "c78"
+  },
+  {
+   "base": "LICENCIATURA EN GASTRONOMÍA (CICLO DE COMPLEMENTACIÓN CURRICULAR)",
+   "corto": "Lic. en Gastronomía (Ciclo de Complementación Curricular)",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 63180,
+     "udi": "umb://document/7f9160b9b6ea4143894eaea2cd25449c",
+     "nombre": "LICENCIATURA EN GASTRONOMÍA (CICLO DE COMPLEMENTACIÓN CURRICULAR)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-gastronomia-ciclo-de-complementacion-curricular/"
+    }
+   },
+   "key": "c79"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN AMBIENTAL",
+   "corto": "Lic. en Gestión Ambiental",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4513,
+     "udi": "umb://document/0da4edffadb44c8899e2b9d204509f5b",
+     "nombre": "LICENCIATURA EN GESTIÓN AMBIENTAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-gestion-ambiental/"
+    }
+   },
+   "key": "c80"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN DE MEDIOS Y ENTRETENIMIENTO",
+   "corto": "Lic. en Gestión de Medios y Entretenimiento",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4488,
+     "udi": "umb://document/8d8281a42d6b4633838018bbde363609",
+     "nombre": "LICENCIATURA EN GESTIÓN DE MEDIOS Y ENTRETENIMIENTO",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-gestion-de-medios-y-entretenimiento/"
+    }
+   },
+   "key": "c81"
+  },
+  {
+   "base": "LICENCIATURA EN GESTION DE MEDIOS Y ENTRETENIMIENTO (CICLO DE LICENCIATURA)",
+   "corto": "Lic. en Gestion de Medios y Entretenimiento (Ciclo de Licenciatura)",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 85335,
+     "udi": "umb://document/f092baa2ab3045c1b9568911b08e5548",
+     "nombre": "LICENCIATURA EN GESTION DE MEDIOS Y ENTRETENIMIENTO (CICLO DE LICENCIATURA)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-gestion-de-medios-y-entretenimiento-ciclo-de-licenciatura/"
+    }
+   },
+   "key": "c82"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN DE SERVICIOS DE SALUD",
+   "corto": "Lic. en Gestión de Servicios de Salud",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "online": {
+     "id": 12314,
+     "udi": "umb://document/a170f171ffa24deb85a2c809c656301a",
+     "nombre": "LICENCIATURA EN GESTIÓN DE SERVICIOS DE SALUD (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-gestion-de-servicios-de-salud-online/"
+    }
+   },
+   "key": "c83"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN DE SERVICIOS DE SALUD (CICLO DE COMPLEMENTACIÓN CURRICULAR)",
+   "corto": "Lic. en Gestión de Servicios de Salud (Ciclo de Complementación Curricular)",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "online": {
+     "id": 63182,
+     "udi": "umb://document/6d6564a1c77d4da1b34f0c5b9b828398",
+     "nombre": "LICENCIATURA EN GESTIÓN DE SERVICIOS DE SALUD (CICLO DE COMPLEMENTACIÓN CURRICULAR) (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-gestion-de-servicios-de-salud-ciclo-de-complementacion-curricular-online/"
+    }
+   },
+   "key": "c84"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN DE SERVICIOS DE SALUD (CICLO DE LICENCIATURA)",
+   "corto": "Lic. en Gestión de Servicios de Salud (Ciclo de Licenciatura)",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 25018,
+     "udi": "umb://document/52e06f44e3cf4c7ea95bff7ae29fd9b4",
+     "nombre": "LICENCIATURA EN GESTIÓN DE SERVICIOS DE SALUD (CICLO DE LICENCIATURA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-gestion-de-servicios-de-salud-ciclo-de-licenciatura/"
+    }
+   },
+   "key": "c85"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN DE TECNOLOGÍA DE LA INFORMACIÓN",
+   "corto": "Lic. en Gestión de Tecnología de la Información",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 29204,
+     "udi": "umb://document/f9355a5f3ce5481984852d92cd5e453c",
+     "nombre": "LICENCIATURA EN GESTIÓN DE TECNOLOGÍA DE LA INFORMACIÓN (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-gestion-de-tecnologia-de-la-informacion-costa-argentina/"
+    },
+    "online": {
+     "id": 37572,
+     "udi": "umb://document/95a7ae07a7b74ba4b31a9ba95e221513",
+     "nombre": "LICENCIATURA EN GESTIÓN DE TECNOLOGÍA DE LA INFORMACIÓN (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-gestion-de-tecnologia-de-la-informacion-online/"
+    },
+    "normal": {
+     "id": 4514,
+     "udi": "umb://document/9245b917cd4444c6b5c567c3e78f6b1c",
+     "nombre": "LICENCIATURA EN GESTIÓN DE TECNOLOGÍA DE LA INFORMACIÓN (PRESENCIAL Y ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-gestion-de-tecnologia-de-la-informacion-presencial-y-online/"
+    }
+   },
+   "key": "c86"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN DEPORTIVA",
+   "corto": "Lic. en Gestión Deportiva",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4490,
+     "udi": "umb://document/821f4b993b49407f90349b4e92cf9aa7",
+     "nombre": "LICENCIATURA EN GESTIÓN DEPORTIVA",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-gestion-deportiva/"
+    }
+   },
+   "key": "c87"
+  },
+  {
+   "base": "LICENCIATURA EN GESTIÓN DEPORTIVA (CICLO DE LICENCIATURA)",
+   "corto": "Lic. en Gestión Deportiva (Ciclo de Licenciatura)",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 85336,
+     "udi": "umb://document/c744b20d8d2c4e64986025eeb8dacdc9",
+     "nombre": "LICENCIATURA EN GESTIÓN DEPORTIVA (CICLO DE LICENCIATURA)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-gestion-deportiva-ciclo-de-licenciatura/"
+    }
+   },
+   "key": "c88"
+  },
+  {
+   "base": "LICENCIATURA EN GOBIERNO Y RELACIONES INTERNACIONALES",
+   "corto": "Lic. en Gobierno y Relaciones Internacionales",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4526,
+     "udi": "umb://document/fe0b74f2ed984c2c8e40ee6b50812fc2",
+     "nombre": "LICENCIATURA EN GOBIERNO Y RELACIONES INTERNACIONALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-gobierno-y-relaciones-internacionales/"
+    }
+   },
+   "key": "c89"
+  },
+  {
+   "base": "LICENCIATURA EN INTELIGENCIA ARTIFICIAL Y CIENCIA DE DATOS",
+   "corto": "Lic. en Inteligencia Artificial y Ciencia de Datos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 74243,
+     "udi": "umb://document/56b95397be4d44869fea03226f49f29f",
+     "nombre": "LICENCIATURA EN INTELIGENCIA ARTIFICIAL Y CIENCIA DE DATOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-inteligencia-artificial-y-ciencia-de-datos/"
+    }
+   },
+   "key": "c90"
+  },
+  {
+   "base": "LICENCIATURA EN MARKETING",
+   "corto": "Lic. en Marketing",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 46191,
+     "udi": "umb://document/03b3c385a1584a3a9ec297ff2504c83e",
+     "nombre": "LICENCIATURA EN MARKETING (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-marketing-costa-argentina/"
+    },
+    "online": {
+     "id": 115135,
+     "udi": "umb://document/0bcf9dcd2dc742209d70b57c22183bc0",
+     "nombre": "LICENCIATURA EN MARKETING (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-marketing-online/"
+    },
+    "normal": {
+     "id": 46190,
+     "udi": "umb://document/66e6e2acf2fa47dab179d907e513eb09",
+     "nombre": "LICENCIATURA EN MARKETING (PRESENCIAL y ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-marketing-presencial-y-online/"
+    }
+   },
+   "key": "c91"
+  },
+  {
+   "base": "LICENCIATURA EN NEGOCIOS DIGITALES",
+   "corto": "Lic. en Negocios Digitales",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 40930,
+     "udi": "umb://document/94d44d96584e485d92d5ba356401cea1",
+     "nombre": "LICENCIATURA EN NEGOCIOS DIGITALES (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-negocios-digitales-costa-argentina/"
+    },
+    "online": {
+     "id": 115136,
+     "udi": "umb://document/9adac478edad47348a5e116159fedb92",
+     "nombre": "LICENCIATURA EN NEGOCIOS DIGITALES (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-negocios-digitales-online/"
+    },
+    "normal": {
+     "id": 30805,
+     "udi": "umb://document/75008b1e40ec4a99aedfcb73699f768f",
+     "nombre": "LICENCIATURA EN NEGOCIOS DIGITALES (PRESENCIAL y ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-negocios-digitales-presencial-y-online/"
+    }
+   },
+   "key": "c92"
+  },
+  {
+   "base": "LICENCIATURA EN NUTRICIÓN",
+   "corto": "Lic. en Nutrición",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 12316,
+     "udi": "umb://document/ff7ef9dc2ce94a1fb140b233fb33272e",
+     "nombre": "LICENCIATURA EN NUTRICIÓN",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-nutricion/"
+    },
+    "online": {
+     "id": 106751,
+     "udi": "umb://document/b374ae6aaef544e1aac99a325e311153",
+     "nombre": "LICENCIATURA EN NUTRICIÓN (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-nutricion-online/"
+    }
+   },
+   "key": "c93"
+  },
+  {
+   "base": "LICENCIATURA EN POLÍTICA Y ADMINISTRACIÓN PÚBLICA",
+   "corto": "Lic. en Política y Administración Pública",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 29875,
+     "udi": "umb://document/7528aca086b842eaab946913f07ef366",
+     "nombre": "LICENCIATURA EN POLÍTICA Y ADMINISTRACIÓN PÚBLICA",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-politica-y-administracion-publica/"
+    }
+   },
+   "key": "c94"
+  },
+  {
+   "base": "LICENCIATURA EN PRODUCCIÓN Y GESTIÓN AGROPECUARIA",
+   "corto": "Lic. en Producción y Gestión Agropecuaria",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4518,
+     "udi": "umb://document/2671733ee502454ba0d6dec2a39576a6",
+     "nombre": "LICENCIATURA EN PRODUCCIÓN Y GESTIÓN AGROPECUARIA",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-produccion-y-gestion-agropecuaria/"
+    }
+   },
+   "key": "c95"
+  },
+  {
+   "base": "LICENCIATURA EN PSICOLOGÍA",
+   "corto": "Lic. en Psicología",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 12318,
+     "udi": "umb://document/c3b210ea970f4b96a0cf37e460727e24",
+     "nombre": "LICENCIATURA EN PSICOLOGÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-psicologia/"
+    },
+    "costa": {
+     "id": 25732,
+     "udi": "umb://document/1bedd3570d6d4fbda280c3099ba8f8e6",
+     "nombre": "LICENCIATURA EN PSICOLOGÍA (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-psicologia-costa-argentina/"
+    },
+    "online": {
+     "id": 104443,
+     "udi": "umb://document/66d76fc1632442e18cdf6282d44129b1",
+     "nombre": "LICENCIATURA EN PSICOLOGÍA (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-psicologia-online/"
+    }
+   },
+   "key": "c96"
+  },
+  {
+   "base": "LICENCIATURA EN PUBLICIDAD",
+   "corto": "Lic. en Publicidad",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 116339,
+     "udi": "umb://document/00a85e9fe7e4463590dd7dd3e315f1e2",
+     "nombre": "LICENCIATURA EN PUBLICIDAD",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-publicidad/"
+    }
+   },
+   "key": "c97"
+  },
+  {
+   "base": "LICENCIATURA EN RECURSOS HUMANOS",
+   "corto": "Lic. en Recursos Humanos",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "online": {
+     "id": 115137,
+     "udi": "umb://document/7ed808a8842a4eddbbe8b7c554cf9029",
+     "nombre": "LICENCIATURA EN RECURSOS HUMANOS (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-recursos-humanos-online/"
+    },
+    "normal": {
+     "id": 4465,
+     "udi": "umb://document/6f28afcc5a504ca3bd1f6c371821d677",
+     "nombre": "LICENCIATURA EN RECURSOS HUMANOS (PRESENCIAL y ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/licenciatura-en-recursos-humanos-presencial-y-online/"
+    }
+   },
+   "key": "c98"
+  },
+  {
+   "base": "LICENCIATURA EN RELACIONES PÚBLICAS Y COMUNICACIÓN INSTITUCIONAL",
+   "corto": "Lic. en Relaciones Públicas y Comunicación Institucional",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 116340,
+     "udi": "umb://document/afc4a927c567463790ae971b3f76b9a7",
+     "nombre": "LICENCIATURA EN RELACIONES PÚBLICAS Y COMUNICACIÓN INSTITUCIONAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/licenciatura-en-relaciones-publicas-y-comunicacion-institucional/"
+    }
+   },
+   "key": "c99"
+  },
+  {
+   "base": "LICENCIATURA EN TECNOLOGÍA DE DATOS CON ORIENTACIÓN EN SALUD DIGITAL",
+   "corto": "Lic. en Tecnología de Datos con Orientación en Salud Digital",
+   "facultad": "FACULTAD DE CIENCIAS DE LA SALUD",
+   "sector": 322,
+   "nivel": "grado",
+   "variantes": {
+    "online": {
+     "id": 103446,
+     "udi": "umb://document/6b1f9913311e4dc98e34d7cb607e0be2",
+     "nombre": "LICENCIATURA EN TECNOLOGÍA DE DATOS CON ORIENTACIÓN EN SALUD DIGITAL (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-de-la-salud/licenciatura-en-tecnologia-de-datos-con-orientacion-en-salud-digital-online/"
+    }
+   },
+   "key": "c100"
+  },
+  {
+   "base": "LICENCIATURA EN TECNOLOGÍA INDUSTRIAL DE LOS ALIMENTOS",
+   "corto": "Lic. en Tecnología Industrial de los Alimentos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4517,
+     "udi": "umb://document/b04520bdfe064cdfa08c950d40ace095",
+     "nombre": "LICENCIATURA EN TECNOLOGÍA INDUSTRIAL DE LOS ALIMENTOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/licenciatura-en-tecnologia-industrial-de-los-alimentos/"
+    }
+   },
+   "key": "c101"
+  },
+  {
+   "base": "LICENCIATURA EN TURISMO Y HOTELERÍA",
+   "corto": "Lic. en Turismo y Hotelería",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4494,
+     "udi": "umb://document/055036056ffc4a948cf7376515c8d107",
+     "nombre": "LICENCIATURA EN TURISMO Y HOTELERÍA",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-turismo-y-hoteleria/"
+    },
+    "costa": {
+     "id": 15466,
+     "udi": "umb://document/00b9f5d2248e422690273c0dce650467",
+     "nombre": "LICENCIATURA EN TURISMO Y HOTELERÍA (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-turismo-y-hoteleria-costa-argentina/"
+    },
+    "online": {
+     "id": 115138,
+     "udi": "umb://document/568c872a57e043f9a570ed00e61a18a1",
+     "nombre": "LICENCIATURA EN TURISMO Y HOTELERÍA (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-turismo-y-hoteleria-online/"
+    }
+   },
+   "key": "c102"
+  },
+  {
+   "base": "LICENCIATURA EN TURISMO Y HOTELERÍA (CICLO DE COMPLEMENTACIÓN CURRICULAR)",
+   "corto": "Lic. en Turismo y Hotelería (Ciclo de Complementación Curricular)",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 63181,
+     "udi": "umb://document/417b7c343720468eb4dba63fd4b1c8bf",
+     "nombre": "LICENCIATURA EN TURISMO Y HOTELERÍA (CICLO DE COMPLEMENTACIÓN CURRICULAR)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-turismo-y-hoteleria-ciclo-de-complementacion-curricular/"
+    }
+   },
+   "key": "c103"
+  },
+  {
+   "base": "LICENCIATURA EN TURISMO Y HOTELERÍA Y BACHELOR OF ARTS IN HOSPITALITY MANAGEMENT SAN IGNACIO UNIVERSITY",
+   "corto": "Lic. en Turismo y Hotelería y Bachelor of Arts in Hospitality Management San Ignacio University",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 62738,
+     "udi": "umb://document/fc9db05166274451b7c5420a9090e905",
+     "nombre": "LICENCIATURA EN TURISMO Y HOTELERÍA Y BACHELOR OF ARTS IN HOSPITALITY MANAGEMENT SAN IGNACIO UNIVERSITY (COSTA ARG.)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-turismo-y-hoteleria-y-bachelor-of-arts-in-hospitality-management-san-ignacio-university-costa-arg/"
+    },
+    "online": {
+     "id": 117630,
+     "udi": "umb://document/a5a4c49d09544f06a9fb4a109dd421a2",
+     "nombre": "LICENCIATURA EN TURISMO Y HOTELERÍA Y BACHELOR OF ARTS IN HOSPITALITY MANAGEMENT SAN IGNACIO UNIVERSITY (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-turismo-y-hoteleria-y-bachelor-of-arts-in-hospitality-management-san-ignacio-university-online/"
+    },
+    "normal": {
+     "id": 62737,
+     "udi": "umb://document/9f1ef8710e5c471d88495e911db2e465",
+     "nombre": "LICENCIATURA EN TURISMO Y HOTELERÍA Y BACHELOR OF ARTS IN HOSPITALITY MANAGEMENT SAN IGNACIO UNIVERSITY (PRESENCIAL y ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/licenciatura-en-turismo-y-hoteleria-y-bachelor-of-arts-in-hospitality-management-san-ignacio-university-presencial-y-online/"
+    }
+   },
+   "key": "c104"
+  },
+  {
+   "base": "MAESTRÍA EN CURADURÍA EN MODA, DISEÑO E INNOVACIÓN",
+   "corto": "Maestría en Curaduría en Moda, Diseño e Innovación",
+   "facultad": "FACULTAD DE DISEÑO",
+   "sector": 293,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 76050,
+     "udi": "umb://document/a954aec59a3645bda65a00581ece01e0",
+     "nombre": "MAESTRÍA EN CURADURÍA EN MODA, DISEÑO E INNOVACIÓN",
+     "url": "https://www.uade.edu.ar/facultad-de-diseno/maestria-en-curaduria-en-moda-diseno-e-innovacion/"
+    }
+   },
+   "key": "c105"
+  },
+  {
+   "base": "MAESTRÍA EN DERECHO EMPRESARIAL",
+   "corto": "Maestría en Derecho Empresarial",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 76047,
+     "udi": "umb://document/eecd54d9b1f8459aa75084fa37bf1838",
+     "nombre": "MAESTRÍA EN DERECHO EMPRESARIAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/maestria-en-derecho-empresarial/"
+    }
+   },
+   "key": "c106"
+  },
+  {
+   "base": "MARTILLERO PÚBLICO, CORREDOR Y ADMINISTRADOR DE CONSORCIOS",
+   "corto": "Martillero Público, Corredor y Administrador de Consorcios",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 12144,
+     "udi": "umb://document/fc9c9dab0999475790e6a70f4181ff0a",
+     "nombre": "MARTILLERO PÚBLICO, CORREDOR Y ADMINISTRADOR DE CONSORCIOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/martillero-publico-corredor-y-administrador-de-consorcios/"
+    },
+    "costa": {
+     "id": 12145,
+     "udi": "umb://document/eb6637f085704a5fbd025d9e26fc05f4",
+     "nombre": "MARTILLERO PÚBLICO, CORREDOR Y ADMINISTRADOR DE CONSORCIOS (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/martillero-publico-corredor-y-administrador-de-consorcios-costa-argentina/"
+    },
+    "online": {
+     "id": 30892,
+     "udi": "umb://document/fdf977c02c9b46f4b489aabb655e7bcb",
+     "nombre": "MARTILLERO PÚBLICO, CORREDOR Y ADMINISTRADOR DE CONSORCIOS (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/martillero-publico-corredor-y-administrador-de-consorcios-online/"
+    }
+   },
+   "key": "c107"
+  },
+  {
+   "base": "PROGRAMA CORTO DE ACTUACIÓN",
+   "corto": "Programa Corto de Actuación",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 11296,
+     "udi": "umb://document/e977af366f15451d9aa896fea46cb90e",
+     "nombre": "PROGRAMA CORTO DE ACTUACIÓN",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/programa-corto-de-actuacion/"
+    }
+   },
+   "key": "c108"
+  },
+  {
+   "base": "PROGRAMA CORTO DE ORGANIZACIÓN DE EVENTOS",
+   "corto": "Programa Corto de Organización de Eventos",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 11297,
+     "udi": "umb://document/e7bddd413a0443bd972f4fde7f36a670",
+     "nombre": "PROGRAMA CORTO DE ORGANIZACIÓN DE EVENTOS",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/programa-corto-de-organizacion-de-eventos/"
+    }
+   },
+   "key": "c109"
+  },
+  {
+   "base": "PROGRAMA CORTO DE PRODUCCIÓN DE ESPECTÁCULOS ARTÍSTICOS Y MUSICALES",
+   "corto": "Programa Corto de Producción de Espectáculos Artísticos y Musicales",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 11298,
+     "udi": "umb://document/99afe653291c42e096d2a78345191560",
+     "nombre": "PROGRAMA CORTO DE PRODUCCIÓN DE ESPECTÁCULOS ARTÍSTICOS Y MUSICALES",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/programa-corto-de-produccion-de-espectaculos-artisticos-y-musicales/"
+    }
+   },
+   "key": "c110"
+  },
+  {
+   "base": "PROGRAMA CORTO EN DIGITAL STRATEGY",
+   "corto": "Programa Corto en Digital Strategy",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 118001,
+     "udi": "umb://document/af1337b1b0eb4dbba086f25306d076bb",
+     "nombre": "PROGRAMA CORTO EN DIGITAL STRATEGY",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/programa-corto-en-digital-strategy/"
+    }
+   },
+   "key": "c111"
+  },
+  {
+   "base": "PROGRAMA CORTO EN PEOPLE & TALENT STRATEGY",
+   "corto": "Programa Corto en People & Talent Strategy",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 118002,
+     "udi": "umb://document/d266d68606794d629c853c7c6c25230f",
+     "nombre": "PROGRAMA CORTO EN PEOPLE & TALENT STRATEGY",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/programa-corto-en-people-talent-strategy/"
+    }
+   },
+   "key": "c112"
+  },
+  {
+   "base": "PROGRAMA CORTO EN TAX MANAGEMENT",
+   "corto": "Programa Corto en Tax Management",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 118003,
+     "udi": "umb://document/9a2e6548938a4114a83892c1f0b261d1",
+     "nombre": "PROGRAMA CORTO EN TAX MANAGEMENT",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/programa-corto-en-tax-management/"
+    }
+   },
+   "key": "c113"
+  },
+  {
+   "base": "TECNICATURA EN CIENCIA DE DATOS",
+   "corto": "Tec. en Ciencia de Datos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 108882,
+     "udi": "umb://document/472967af255e43f7b71dd12f38554a27",
+     "nombre": "TECNICATURA EN CIENCIA DE DATOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-en-ciencia-de-datos/"
+    }
+   },
+   "key": "c114"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN ARTE CULINARIO",
+   "corto": "Tec. Univ. en Arte Culinario",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 4498,
+     "udi": "umb://document/f8015577cd4f4f7a97e382c84904f81f",
+     "nombre": "TECNICATURA UNIVERSITARIA EN ARTE CULINARIO (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/tecnicatura-universitaria-en-arte-culinario-costa-argentina/"
+    }
+   },
+   "key": "c115"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN COMERCIO ELECTRÓNICO E INNOVACIÓN DIGITAL",
+   "corto": "Tec. Univ. en Comercio Electrónico e Innovación Digital",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 74240,
+     "udi": "umb://document/b860e045f6234b6a8ff7c23ea3cb35e4",
+     "nombre": "TECNICATURA UNIVERSITARIA EN COMERCIO ELECTRÓNICO E INNOVACIÓN DIGITAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/tecnicatura-universitaria-en-comercio-electronico-e-innovacion-digital/"
+    }
+   },
+   "key": "c116"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN DESARROLLO DE SOFTWARE",
+   "corto": "Tec. Univ. en Desarrollo de Software",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 12140,
+     "udi": "umb://document/ad614464bac34108b7942e86b10d20df",
+     "nombre": "TECNICATURA UNIVERSITARIA EN DESARROLLO DE SOFTWARE",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-universitaria-en-desarrollo-de-software/"
+    },
+    "costa": {
+     "id": 12141,
+     "udi": "umb://document/083eccfbe9964ed0abd5052dddfae452",
+     "nombre": "TECNICATURA UNIVERSITARIA EN DESARROLLO DE SOFTWARE (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-universitaria-en-desarrollo-de-software-costa-argentina/"
+    },
+    "online": {
+     "id": 105722,
+     "udi": "umb://document/d9bf5e320b2744d994640360a47cf429",
+     "nombre": "TECNICATURA UNIVERSITARIA EN DESARROLLO DE SOFTWARE (ONLINE)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-universitaria-en-desarrollo-de-software-online/"
+    }
+   },
+   "key": "c117"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN DESARROLLO DE VIDEOJUEGOS",
+   "corto": "Tec. Univ. en Desarrollo de Videojuegos",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 12142,
+     "udi": "umb://document/bcf73998a07b46bc931702177e61617b",
+     "nombre": "TECNICATURA UNIVERSITARIA EN DESARROLLO DE VIDEOJUEGOS",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-universitaria-en-desarrollo-de-videojuegos/"
+    },
+    "costa": {
+     "id": 28611,
+     "udi": "umb://document/1064e5f0b58145a1bf31e5bd840c5449",
+     "nombre": "TECNICATURA UNIVERSITARIA EN DESARROLLO DE VIDEOJUEGOS (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-universitaria-en-desarrollo-de-videojuegos-costa-argentina/"
+    }
+   },
+   "key": "c118"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN FINANZAS DIGITALES",
+   "corto": "Tec. Univ. en Finanzas Digitales",
+   "facultad": "FACULTAD DE CIENCIAS ECONÓMICAS",
+   "sector": 176,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 65292,
+     "udi": "umb://document/981946c776ee4a31ba7a0018100fd086",
+     "nombre": "TECNICATURA UNIVERSITARIA EN FINANZAS DIGITALES",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-economicas/tecnicatura-universitaria-en-finanzas-digitales/"
+    }
+   },
+   "key": "c119"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN HOTELERÍA",
+   "corto": "Tec. Univ. en Hotelería",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "costa": {
+     "id": 62373,
+     "udi": "umb://document/363e9a04b3ca42aeb0946638fa980701",
+     "nombre": "TECNICATURA UNIVERSITARIA EN HOTELERÍA (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/tecnicatura-universitaria-en-hoteleria-costa-argentina/"
+    }
+   },
+   "key": "c120"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN PERIODISMO DEPORTIVO",
+   "corto": "Tec. Univ. en Periodismo Deportivo",
+   "facultad": "FACULTAD DE ENTRETENIMIENTO, HOSPITALIDAD Y MEDIOS",
+   "sector": 200,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 12139,
+     "udi": "umb://document/8e333d3d014b42beba20234537e485cd",
+     "nombre": "TECNICATURA UNIVERSITARIA EN PERIODISMO DEPORTIVO",
+     "url": "https://www.uade.edu.ar/facultad-de-entretenimiento-hospitalidad-y-medios/tecnicatura-universitaria-en-periodismo-deportivo/"
+    }
+   },
+   "key": "c121"
+  },
+  {
+   "base": "TECNICATURA UNIVERSITARIA EN PRODUCCIÓN Y GESTIÓN ANIMAL",
+   "corto": "Tec. Univ. en Producción y Gestión Animal",
+   "facultad": "FACULTAD DE INGENIERÍA Y CIENCIAS EXACTAS",
+   "sector": 191,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 114803,
+     "udi": "umb://document/c3e74f69cfac4a52bc04da9d32cfe651",
+     "nombre": "TECNICATURA UNIVERSITARIA EN PRODUCCIÓN Y GESTIÓN ANIMAL",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-universitaria-en-produccion-y-gestion-animal/"
+    },
+    "costa": {
+     "id": 118004,
+     "udi": "umb://document/c22cee16f16f4066b5387235f9ddc26b",
+     "nombre": "TECNICATURA UNIVERSITARIA EN PRODUCCIÓN Y GESTIÓN ANIMAL (COSTA ARGENTINA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ingenieria-y-ciencias-exactas/tecnicatura-universitaria-en-produccion-y-gestion-animal-costa-argentina/"
+    }
+   },
+   "key": "c122"
+  },
+  {
+   "base": "TRADUCTORADO PÚBLICO EN IDIOMA INGLÉS",
+   "corto": "Traductorado Público en Idioma Inglés",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 4532,
+     "udi": "umb://document/7dfab921463944a4af813f817e221850",
+     "nombre": "TRADUCTORADO PÚBLICO EN IDIOMA INGLÉS",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/traductorado-publico-en-idioma-ingles/"
+    }
+   },
+   "key": "c123"
+  },
+  {
+   "base": "TRADUCTORADO PÚBLICO EN IDIOMA INGLÉS (CICLO DE LICENCIATURA)",
+   "corto": "Traductorado Público en Idioma Inglés (Ciclo de Licenciatura)",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 68912,
+     "udi": "umb://document/2fb2be78b76f428eb3610257f17a03e7",
+     "nombre": "TRADUCTORADO PÚBLICO EN IDIOMA INGLÉS (CICLO DE LICENCIATURA)",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/traductorado-publico-en-idioma-ingles-ciclo-de-licenciatura/"
+    }
+   },
+   "key": "c124"
+  },
+  {
+   "base": "TRADUCTORADO PÚBLICO EN IDIOMA INGLÉS - CICLO DE COMPLEMENTACIÓN CURRICULAR",
+   "corto": "Traductorado Público en Idioma Inglés - Ciclo de Complementación Curricular",
+   "facultad": "FACULTAD DE CIENCIAS JURÍDICAS Y DE LA COMUNICACIÓN",
+   "sector": 182,
+   "nivel": "grado",
+   "variantes": {
+    "normal": {
+     "id": 89922,
+     "udi": "umb://document/75fb15bc12be4067bda0d59ff36ba346",
+     "nombre": "TRADUCTORADO PÚBLICO EN IDIOMA INGLÉS - CICLO DE COMPLEMENTACIÓN CURRICULAR",
+     "url": "https://www.uade.edu.ar/facultad-de-ciencias-juridicas-y-de-la-comunicacion/traductorado-publico-en-idioma-ingles-ciclo-de-complementacion-curricular/"
+    }
+   },
+   "key": "c125"
+  },
+  {
+   "base": "ESPECIALIZACIÓN EN COMUNICACIÓN CORPORATIVA",
+   "corto": "Especialización en Comunicación Corporativa",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76052,
+     "udi": "umb://document/5bd814ea86cb4010a7ba57bc158ae1c5",
+     "nombre": "ESPECIALIZACIÓN EN COMUNICACIÓN CORPORATIVA",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/especializacion-en-comunicacion-corporativa/"
+    }
+   },
+   "key": "c126"
+  },
+  {
+   "base": "ESPECIALIZACIÓN EN DIRECCIÓN DE EMPRESAS",
+   "corto": "Especialización en Dirección de Empresas",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 22650,
+     "udi": "umb://document/7dd600f516114f2b920fdf7e56aa17bb",
+     "nombre": "ESPECIALIZACIÓN EN DIRECCIÓN DE EMPRESAS",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/especializacion-en-direccion-de-empresas/"
+    },
+    "online": {
+     "id": 89923,
+     "udi": "umb://document/0b74957a033f46838b1676c68b8e2472",
+     "nombre": "ESPECIALIZACIÓN EN DIRECCIÓN DE EMPRESAS (ONLINE)",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/especializacion-en-direccion-de-empresas-online/"
+    }
+   },
+   "key": "c127"
+  },
+  {
+   "base": "ESPECIALIZACIÓN EN DIRECCIÓN DE MARKETING",
+   "corto": "Especialización en Dirección de Marketing",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76054,
+     "udi": "umb://document/36290021f86940d0b684b701afa70660",
+     "nombre": "ESPECIALIZACIÓN EN DIRECCIÓN DE MARKETING",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/especializacion-en-direccion-de-marketing/"
+    }
+   },
+   "key": "c128"
+  },
+  {
+   "base": "ESPECIALIZACIÓN EN DIRECCIÓN DE SISTEMAS DE INFORMACIÓN",
+   "corto": "Especialización en Dirección de Sistemas de Información",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76056,
+     "udi": "umb://document/f3e7dcb297e94ea48d05bf0875145e63",
+     "nombre": "ESPECIALIZACIÓN EN DIRECCIÓN DE SISTEMAS DE INFORMACIÓN",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/especializacion-en-direccion-de-sistemas-de-informacion/"
+    }
+   },
+   "key": "c129"
+  },
+  {
+   "base": "ESPECIALIZACIÓN EN FINANZAS",
+   "corto": "Especialización en Finanzas",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76058,
+     "udi": "umb://document/b25e547acd0944008860285eedd7e757",
+     "nombre": "ESPECIALIZACIÓN EN FINANZAS",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/especializacion-en-finanzas/"
+    }
+   },
+   "key": "c130"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN COMERCIAL",
+   "corto": "Maestría en Dirección Comercial",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76059,
+     "udi": "umb://document/3ffe30cd28e34453b31438b8d3d1f404",
+     "nombre": "MAESTRÍA EN DIRECCIÓN COMERCIAL",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-comercial/"
+    },
+    "online": {
+     "id": 94587,
+     "udi": "umb://document/83c245976fc64231b0f67012389e06da",
+     "nombre": "MAESTRÍA EN DIRECCIÓN COMERCIAL (ONLINE)",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-comercial-online/"
+    }
+   },
+   "key": "c131"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN DE COMUNICACIONES INSTITUCIONALES",
+   "corto": "Maestría en Dirección de Comunicaciones Institucionales",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76063,
+     "udi": "umb://document/0afeafc24447469596f564cfe8ad582d",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE COMUNICACIONES INSTITUCIONALES",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-comunicaciones-institucionales/"
+    }
+   },
+   "key": "c132"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN DE EMPRESAS",
+   "corto": "Maestría en Dirección de Empresas",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76065,
+     "udi": "umb://document/64f0efd066864042ac708831594ca61f",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE EMPRESAS",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-empresas/"
+    },
+    "online": {
+     "id": 76067,
+     "udi": "umb://document/bc23b19735dd41499d05e4fb83574460",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE EMPRESAS (ONLINE)",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-empresas-online/"
+    }
+   },
+   "key": "c133"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN DE EMPRESAS - INTERNACIONAL",
+   "corto": "Maestría en Dirección de Empresas - Internacional",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "online": {
+     "id": 76068,
+     "udi": "umb://document/1eda9559246c4e74869388c7866559e2",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE EMPRESAS - INTERNACIONAL (ONLINE)",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-empresas-internacional-online/"
+    }
+   },
+   "key": "c134"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN DE EMPRESAS - JOVEN",
+   "corto": "Maestría en Dirección de Empresas - Joven",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 117365,
+     "udi": "umb://document/3f067a4a38eb47ea97c352c6c100a1cf",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE EMPRESAS - JOVEN",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-empresas-joven/"
+    }
+   },
+   "key": "c135"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN DE FINANZAS Y CONTROL CON ORIENTACIÓN EN FINANZAS DE EMPRESAS",
+   "corto": "Maestría en Dirección de Finanzas y Control con Orientación en Finanzas de Empresas",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76069,
+     "udi": "umb://document/8954f830d1ca4ccebc5e63995310e3cd",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE FINANZAS Y CONTROL CON ORIENTACIÓN EN FINANZAS DE EMPRESAS",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-finanzas-y-control-con-orientacion-en-finanzas-de-empresas/"
+    }
+   },
+   "key": "c136"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN DE FINANZAS Y CONTROL CON ORIENTACIÓN EN MERCADO DE CAPITALES",
+   "corto": "Maestría en Dirección de Finanzas y Control con Orientación en Mercado de Capitales",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76070,
+     "udi": "umb://document/d7905db1108c44978b98ba8e676bbcd4",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE FINANZAS Y CONTROL CON ORIENTACIÓN EN MERCADO DE CAPITALES",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-finanzas-y-control-con-orientacion-en-mercado-de-capitales/"
+    }
+   },
+   "key": "c137"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN DE RECURSOS HUMANOS",
+   "corto": "Maestría en Dirección de Recursos Humanos",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76071,
+     "udi": "umb://document/0f6bd0547e92433abac857e41eeedd49",
+     "nombre": "MAESTRÍA EN DIRECCIÓN DE RECURSOS HUMANOS",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-de-recursos-humanos/"
+    }
+   },
+   "key": "c138"
+  },
+  {
+   "base": "MAESTRÍA EN DIRECCIÓN ESTRATÉGICA DE LA INFORMACIÓN",
+   "corto": "Maestría en Dirección Estratégica de la Información",
+   "facultad": "ESCUELA DE DIRECCIÓN DE EMPRESAS",
+   "sector": 174,
+   "nivel": "posgrado",
+   "variantes": {
+    "normal": {
+     "id": 76072,
+     "udi": "umb://document/b0478843fcd14f98a2532157a2146b53",
+     "nombre": "MAESTRÍA EN DIRECCIÓN ESTRATÉGICA DE LA INFORMACIÓN",
+     "url": "https://www.uade.edu.ar/escuela-de-direccion-de-empresas/maestria-en-direccion-estrategica-de-la-informacion/"
+    }
+   },
+   "key": "c139"
+  }
+ ]
+}
