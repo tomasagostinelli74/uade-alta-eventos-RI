@@ -4,11 +4,13 @@ Uso (desde la carpeta del proyecto):
     py scripts/crear_usuarios.py privado/rens.xlsx            # crea las cuentas que falten
     py scripts/crear_usuarios.py --reset nombre@uade.edu.ar   # nueva contraseña para una cuenta
 
-- El Excel tiene una columna "Mail" (y opcionalmente "Nombre").
-- Las contraseñas se generan acá, al azar, y se guardan SOLO en privado/cuentas_<fecha>.xlsx (no se sube a GitHub).
-  Pasáselas a cada REN por un canal privado.
-- Necesita la clave secreta de Supabase en privado/.env:   SUPABASE_SECRET_KEY=sb_secret_...
-  (Supabase → Project Settings → API Keys → Secret keys). Nunca va en el código ni en el navegador.
+- El Excel tiene una columna "Mail" (y opcionalmente "Nombre" y "Contraseña").
+- Contraseña de cada cuenta nueva, en este orden: la columna "Contraseña" del Excel; si no hay,
+  CLAVE_INICIAL de privado/.env; si tampoco, una al azar. Queda anotada SOLO en privado/cuentas_<fecha>.xlsx.
+- Sumar gente: agregá la fila al Excel y volvé a correrlo; las cuentas que ya existen no se tocan.
+- privado/.env (no se sube a GitHub):
+      SUPABASE_SECRET_KEY=sb_secret_...   (Supabase → Project Settings → API Keys → Secret keys)
+      CLAVE_INICIAL=...                   (opcional)
 """
 import json
 import secrets
@@ -25,16 +27,20 @@ RAIZ = Path(__file__).resolve().parent.parent
 URL = "https://kigfmductmgcccvcploe.supabase.co"
 
 
-def clave_secreta():
+def leer_env():
     env = RAIZ / "privado" / ".env"
+    out = {}
     if env.exists():
-        for linea in env.read_text(encoding="utf-8").splitlines():
-            if linea.strip().startswith("SUPABASE_SECRET_KEY="):
-                return linea.split("=", 1)[1].strip()
-    sys.exit("Falta SUPABASE_SECRET_KEY en privado/.env")
+        for linea in env.read_text(encoding="utf-8-sig").splitlines():
+            if "=" in linea and not linea.strip().startswith("#"):
+                k, v = linea.split("=", 1)
+                out[k.strip()] = v.strip()
+    return out
 
 
-KEY = clave_secreta()
+ENV = leer_env()
+KEY = ENV.get("SUPABASE_SECRET_KEY") or sys.exit("Falta SUPABASE_SECRET_KEY en privado/.env")
+CLAVE_INICIAL = ENV.get("CLAVE_INICIAL", "")
 
 
 def api(metodo, ruta, cuerpo=None):
@@ -89,6 +95,7 @@ def crear(excel):
     if "mail" not in cab:
         sys.exit('El Excel tiene que tener una columna "Mail".')
     i_mail, i_nom = cab.index("mail"), (cab.index("nombre") if "nombre" in cab else None)
+    i_clave = cab.index("contraseña") if "contraseña" in cab else None
     existentes = usuarios_existentes()
     salida = []
     for f in filas[1:]:
@@ -102,7 +109,7 @@ def crear(excel):
         if mail in existentes:
             salida.append([mail, nombre, "", "Ya existía (no se cambió la contraseña)"])
             continue
-        clave = nueva_clave()
+        clave = (str(f[i_clave] or "").strip() if i_clave is not None else "") or CLAVE_INICIAL or nueva_clave()
         st, data = api("POST", "/auth/v1/admin/users",
                        {"email": mail, "password": clave, "email_confirm": True, "user_metadata": {"nombre": nombre}})
         ok = st in (200, 201)
