@@ -260,6 +260,18 @@ dialog::backdrop { background: rgba(10, 15, 30, .45); }
 .dlg-body h3 { margin: 0 0 10px; font-size: 17px; }
 .dlg-body ul { padding-left: 18px; margin: 8px 0; }
 .dlg-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.rev { display: grid; gap: 10px; max-height: min(60vh, 520px); overflow: auto; margin-top: 4px; }
+.rev-item { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: var(--surface-2); }
+.rev-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin-bottom: 6px; }
+.rev-ctx { font-size: 13.5px; word-break: break-word; margin-bottom: 8px; }
+.rev-ctx mark { background: var(--warn-soft); color: var(--warn); font-weight: 600; border-radius: 4px; padding: 0 2px;
+  text-decoration: underline wavy; text-underline-offset: 3px; }
+.rev-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.rev-opt {
+  border: 1px solid var(--border); background: var(--surface); border-radius: 999px; padding: 5px 12px; cursor: pointer; font-size: 13px;
+}
+.rev-opt:hover { border-color: var(--accent); }
+.rev-opt[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
 .kv { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; font-size: 13px; }
 .kv dt { color: var(--muted); }
 .kv dd { margin: 0; white-space: pre-wrap; word-break: break-word; }

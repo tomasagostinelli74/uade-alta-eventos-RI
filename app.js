@@ -206,7 +206,6 @@ function render() {
 }
 
 /* ================= combo de carreras ================= */
-const CONECTORES = new Set(["de", "del", "la", "las", "los", "y", "e", "en"]);
 const facultadCorta = (f) => f.replace(/^FACULTAD DE /, "Fac. de ").toLowerCase()
   .replace(/\S+/g, (w, i) => (i > 0 && CONECTORES.has(w) ? w : w[0].toUpperCase() + w.slice(1)));
 
@@ -284,6 +283,141 @@ function mostrarErrores(err) {
 }
 function limpiarError(k) { const p = $(`[data-err="${k}"]`); if (p) p.textContent = ""; if (k === "carreras") $("#combo").classList.remove("is-invalid"); }
 
+/* ================= revisión de mayúsculas y ortografía ================= */
+// Misma regla que usamos al cargar en Umbraco: cada palabra del título con mayúscula, salvo los conectores.
+const CONECTORES = new Set(["a", "al", "de", "del", "e", "el", "en", "la", "las", "lo", "los", "o", "u", "y", "con",
+  "para", "por", "sin", "sobre", "entre", "in", "of", "and", "the", "for"]);
+const PALABRA = /\p{L}[\p{L}\p{N}'.]*/gu;
+const esMinuscula = (c) => c !== c.toUpperCase() && c === c.toLowerCase();
+
+function corregirMayusculas(titulo) {
+  // Si el título es una pregunta o exclamación ("Charla: ¿Cómo ...?"), solo se corrige lo que va antes de ":".
+  let cabeza = titulo, frase = "";
+  if (/[¿?¡!]/.test(titulo)) {
+    const sep = [":", " - "].find((s) => titulo.includes(s));
+    if (!sep) return titulo;
+    const i = titulo.indexOf(sep);
+    cabeza = titulo.slice(0, i); frase = titulo.slice(i);
+  }
+  let primera = true;
+  return cabeza.replace(PALABRA, (w) => {
+    const esPrimera = primera; primera = false;
+    if (esMinuscula(w[0]) && (esPrimera || !CONECTORES.has(w.toLowerCase().replace(/\.$/, "")))) return w[0].toUpperCase() + w.slice(1);
+    return w;
+  }) + frase;
+}
+
+const LT_URL = "https://api.languagetool.org/v2/check";
+const LT_TIPOS = new Set(["misspelling", "grammar", "inconsistency"]);
+const cacheLT = new Map();
+let conocidas = null;
+
+/** Palabras que el corrector no conoce pero están bien (nombres de carreras, sedes, siglas propias). */
+function palabrasConocidas() {
+  if (conocidas) return conocidas;
+  conocidas = new Set(["uade", "ubs", "online", "campus", "webinar", "workshop"]);
+  const sumar = (s) => (String(s || "").match(PALABRA) || []).forEach((w) => conocidas.add(w.replace(/\.$/, "").toLowerCase()));
+  CARRERAS.forEach((c) => { sumar(c.base); sumar(c.corto); Object.values(c.variantes || {}).forEach((v) => sumar(v?.nombre)); });
+  SEDES.forEach((s) => sumar(s.label));
+  return conocidas;
+}
+
+/** Devuelve los errores de ortografía/gramática de cada campo, o null si el corrector no respondió. */
+async function revisarOrtografia(campos) {
+  const claves = Object.keys(campos).filter((k) => campos[k].trim());
+  if (!claves.length) return [];
+  let texto = ""; const inicio = {};
+  claves.forEach((k) => { inicio[k] = texto.length; texto += campos[k] + "\n\n"; });
+
+  let matches = cacheLT.get(texto);
+  if (!matches) {
+    const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 8000);
+    try {
+      const r = await fetch(LT_URL, { method: "POST", signal: ctrl.signal, body: new URLSearchParams({ language: "es-AR", text: texto }) });
+      if (!r.ok) return null;
+      matches = (await r.json()).matches || [];
+      cacheLT.set(texto, matches);
+    } catch { return null; } finally { clearTimeout(t); }
+  }
+
+  const conocidas = palabrasConocidas();
+  const errores = [];
+  for (const m of matches) {
+    if (!LT_TIPOS.has(m.rule?.issueType) || m.rule?.category?.id === "CASING" || !m.replacements?.length) continue;
+    const campo = [...claves].reverse().find((k) => inicio[k] <= m.offset);
+    const valor = campos[campo];
+    const ini = m.offset - inicio[campo];
+    if (ini + m.length > valor.length) continue;
+    const error = valor.slice(ini, ini + m.length);
+    const ortografia = m.rule.issueType === "misspelling";
+    if (ortografia && (/[\d@/]/.test(error) || /\p{Lu}.*\p{Lu}/u.test(error) || conocidas.has(error.toLowerCase()))) continue;
+    errores.push({
+      campo, ini, largo: m.length, error, ortografia,
+      sugerencias: [...new Set(m.replacements.slice(0, 3).map((r) => r.value))],
+      antes: valor.slice(Math.max(0, ini - 30), ini), despues: valor.slice(ini + m.length, ini + m.length + 30),
+      recorteIni: ini > 30, recorteFin: ini + m.length + 30 < valor.length,
+    });
+  }
+  return errores;
+}
+
+const CAMPO_LABEL = { titulo: "Título", copete: "Copete", descripcion: "Descripción" };
+
+/** Antes de agregar: avisa mayúsculas y errores de ortografía. true = seguir, false = volver a editar. */
+async function revisarTextos() {
+  const campos = { copete: ev.copete || "" };
+  if (ev.titulo_manual || ev.tipo === "otro") campos.titulo = ev.titulo;
+  if (ev.desc_manual) campos.descripcion = ev.descripcion;
+
+  const btn = $("#btn-agregar"), txt = btn.textContent;
+  btn.disabled = true; btn.textContent = "Revisando ortografía…";
+  const errores = await revisarOrtografia(campos);
+  btn.disabled = false; btn.textContent = txt;
+  if (errores === null) toast("No se pudo revisar la ortografía: revisala a ojo.");
+
+  const lista = errores || [];
+  const tituloMay = corregirMayusculas(ev.titulo);
+  const faltanMay = tituloMay !== ev.titulo;
+  if (!faltanMay && !lista.length) return true;
+
+  const opcion = (valor, label, sel) =>
+    `<button type="button" class="rev-opt" data-valor="${esc(valor)}" aria-pressed="${sel}">${esc(label)}</button>`;
+  const items = [];
+  if (faltanMay) {
+    items.push(`<div class="rev-item" data-rev="may">
+      <div class="rev-head"><b>Mayúsculas en el título</b><span class="muted small">En la web cada palabra del título va con mayúscula (salvo de, en, y…).</span></div>
+      <div class="rev-ctx"><span class="muted small">Así queda:</span> ${esc(tituloMay)}</div>
+      <div class="rev-opts">${opcion("si", "Aplicar mayúsculas", true)}${opcion("no", "Dejar así", false)}</div></div>`);
+  }
+  lista.forEach((e, i) => {
+    items.push(`<div class="rev-item" data-rev="${i}">
+      <div class="rev-head"><b>${e.ortografia ? "Ortografía" : "Gramática"} · ${CAMPO_LABEL[e.campo]}</b></div>
+      <div class="rev-ctx">${e.recorteIni ? "…" : ""}${esc(e.antes)}<mark>${esc(e.error)}</mark>${esc(e.despues)}${e.recorteFin ? "…" : ""}</div>
+      <div class="rev-opts">${e.sugerencias.map((s, j) => opcion(s, s, j === 0 && e.ortografia)).join("")}${opcion("", "Dejar así", !e.ortografia)}</div></div>`);
+  });
+
+  const n = items.length;
+  const r = await dialogo({
+    titulo: n === 1 ? "Revisá este detalle antes de agregar" : `Revisá estos ${n} detalles antes de agregar`,
+    html: `<p class="muted small">Elegí la corrección o dejalo como está.</p><div class="rev">${items.join("")}</div>`,
+    botones: [{ label: "Volver a editar" }, { label: "Aplicar y agregar", primary: true }],
+  });
+  if (r !== 1) return false;
+
+  const elegido = (k) => $(`#dlg-content [data-rev="${k}"] .rev-opt[aria-pressed="true"]`)?.dataset.valor;
+  // ortografía primero (las posiciones son del texto original), de atrás para adelante en cada campo
+  const nuevos = { ...campos };
+  lista.map((e, i) => ({ ...e, valor: elegido(i) })).filter((e) => e.valor)
+    .sort((a, b) => b.ini - a.ini)
+    .forEach((e) => { const s = nuevos[e.campo]; nuevos[e.campo] = s.slice(0, e.ini) + e.valor + s.slice(e.ini + e.largo); });
+  if (nuevos.copete !== undefined) ev.copete = nuevos.copete;
+  if (nuevos.descripcion !== undefined) ev.descripcion = nuevos.descripcion;
+  if (nuevos.titulo !== undefined) ev.titulo = nuevos.titulo;
+  if (faltanMay && elegido("may") === "si") ev.titulo = corregirMayusculas(ev.titulo);
+  if (ev.tipo !== "otro" && ev.titulo !== tituloAuto(ev)) ev.titulo_manual = true;
+  return true;
+}
+
 /* ================= tanda ================= */
 function guardarTanda() { tandaStore.set(tanda); }
 
@@ -336,6 +470,7 @@ async function onSubmit(evt) {
   const err = validar(ev, ev.id);
   mostrarErrores(err);
   if (Object.keys(err).length) return;
+  if (!(await revisarTextos())) return;
 
   const limpio = structuredClone(ev);
   if (editando?.origen === "mis") {
@@ -546,6 +681,11 @@ function conectar() {
   $("#categ-crm").onchange = (e) => { ev.categ_crm = Number(e.target.value); ev.tocados.push("categ_crm"); render(); };
   $("#cupo").addEventListener("input", (e) => { const n = parseInt(e.target.value, 10); ev.cupo = n > 0 ? n : null; });
   $("#req-insc").onchange = (e) => (ev.requiere_inscripcion = e.target.checked);
+
+  $("#dlg-content").addEventListener("click", (e) => {
+    const b = e.target.closest(".rev-opt"); if (!b) return;
+    b.closest(".rev-opts").querySelectorAll(".rev-opt").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  });
 
   $("#btn-limpiar").onclick = () => limpiarFormulario();
   $("#btn-confirmar").onclick = confirmarTanda;
