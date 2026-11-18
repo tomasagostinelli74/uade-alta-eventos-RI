@@ -203,6 +203,15 @@ input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); }
 .link { border: 0; background: none; color: var(--accent); cursor: pointer; padding: 4px; font-weight: 500; }
 .link.danger { color: var(--err); }
 
+/* ---------- login ---------- */
+#view-login { display: grid; place-items: center; min-height: calc(100vh - 140px); }
+.login { width: min(400px, 100%); padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+.login p { margin: 0; }
+input[type=email], input[type=password] {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); outline: none;
+}
+
 /* ---------- tanda ---------- */
 .tanda { position: sticky; top: 76px; padding: 18px; max-height: calc(100vh - 100px); display: flex; flex-direction: column; }
 .tanda-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }

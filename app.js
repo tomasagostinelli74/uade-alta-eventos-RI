@@ -98,6 +98,7 @@ let editando = null; // { origen: "tanda" | "mis", id }
 let tanda = tandaStore.get();
 let misEventos = [];
 let filtroMis = "todos";
+let alcance = "mios"; // "mios" | "todos" (los eventos de todos los RENs)
 
 function tituloAuto(e) {
   const fecha = ddmm(e.fecha);
@@ -419,29 +420,31 @@ function chipEstado(e) {
 
 async function cargarMis() {
   misEventos = await store.listar();
-  $("#mis-count").textContent = misEventos.filter((e) => e.estado !== "cancelado").length;
+  $("#mis-count").textContent = misEventos.filter((e) => e.propio && e.estado !== "cancelado").length;
   renderMis();
 }
 
 function renderMis() {
-  $("#filtros").innerHTML = FILTROS.map((f) => {
-    const n = misEventos.filter(f.f).length;
+  const base = misEventos.filter((e) => alcance === "todos" || e.propio);
+  const toggle = modoPrueba ? "" : `<button type="button" data-alcance="${alcance === "mios" ? "todos" : "mios"}" aria-pressed="${alcance === "todos"}">${alcance === "todos" ? "De todos los RENs" : "Solo míos"}</button>`;
+  $("#filtros").innerHTML = toggle + FILTROS.map((f) => {
+    const n = base.filter(f.f).length;
     return `<button type="button" data-f="${f.code}" aria-pressed="${f.code === filtroMis}">${f.label} <span class="muted">${n}</span></button>`;
   }).join("");
-  const lista = misEventos.filter(FILTROS.find((f) => f.code === filtroMis).f)
+  const lista = base.filter(FILTROS.find((f) => f.code === filtroMis).f)
     .sort((a, b) => (a.fecha + a.hora_ini).localeCompare(b.fecha + b.hora_ini));
   $("#mis-empty").hidden = lista.length > 0;
   $("#tabla-mis").hidden = lista.length === 0;
   $("#tabla-mis tbody").innerHTML = lista.map((e) => `
     <tr data-id="${e.id}">
-      <td><div>${esc(e.titulo)}</div><div class="t-sub">${esc(e.carreras.map((c) => c.nombre).join(" · ") || "Sin carrera")}</div>
+      <td><div>${esc(e.titulo)}</div><div class="t-sub">${esc(e.carreras.map((c) => c.nombre).join(" · ") || "Sin carrera")}${alcance === "todos" && e.creado_email ? ` · cargó ${esc(e.creado_email.split("@")[0])}` : ""}</div>
         ${e.error ? `<div class="t-sub" style="color:var(--err)">${esc(e.error)}</div>` : ""}</td>
       <td>${esc(fechaLarga(e.fecha))}<div class="t-sub">${e.hora_ini}–${e.hora_fin}</div></td>
       <td>${esc(sedeLabel(e.sede))}</td>
       <td>${chipEstado(e)}</td>
       <td>
         <button type="button" class="link" data-acc="ver">Ver</button>
-        ${e.estado !== "cancelado" && e.fecha >= hoyISO() ? `<button type="button" class="link" data-acc="editar">Editar</button>
+        ${e.propio && e.estado !== "cancelado" && e.fecha >= hoyISO() ? `<button type="button" class="link" data-acc="editar">Editar</button>
         <button type="button" class="link danger" data-acc="cancelar">Cancelar</button>` : ""}
       </td>
     </tr>`).join("");
@@ -472,6 +475,8 @@ function verEvento(e) {
 /* ================= navegación y eventos ================= */
 function irA(vista) {
   $$(".tab").forEach((t) => t.classList.toggle("is-active", t.dataset.view === vista));
+  $("#tabs").hidden = vista === "login";
+  $("#view-login").hidden = vista !== "login";
   $("#view-nuevo").hidden = vista !== "nuevo";
   $("#view-mis").hidden = vista !== "mis";
   if (vista === "mis") renderMis();
@@ -566,7 +571,10 @@ function conectar() {
     }
   });
 
-  $("#filtros").addEventListener("click", (e) => { const b = e.target.closest("[data-f]"); if (b) { filtroMis = b.dataset.f; renderMis(); } });
+  $("#filtros").addEventListener("click", (e) => {
+    const a = e.target.closest("[data-alcance]"); if (a) { alcance = a.dataset.alcance; renderMis(); return; }
+    const b = e.target.closest("[data-f]"); if (b) { filtroMis = b.dataset.f; renderMis(); }
+  });
   $("#tabla-mis").addEventListener("click", async (e) => {
     const b = e.target.closest("[data-acc]"); if (!b) return;
     const item = misEventos.find((x) => x.id === b.closest("[data-id]").dataset.id);
@@ -594,13 +602,47 @@ async function init() {
   const r = await fetch("data/carreras.json");
   CARRERAS = (await r.json()).carreras;
 
-  const u = await store.usuario();
-  $("#who").textContent = u.email || (modoPrueba ? "Modo prueba" : "");
-
   conectar();
+  conectarLogin();
   recalcular();
   render();
+
+  const u = await store.sesion();
+  if (u) await entrar(u); else irA("login");
+}
+
+let dejarDeEscuchar = () => {};
+async function entrar(u) {
+  $("#who").textContent = u.email || (modoPrueba ? "Modo prueba" : "");
+  $("#btn-salir").hidden = modoPrueba;
+  irA("nuevo");
   await cargarMis();
+  let t;
+  dejarDeEscuchar = store.escuchar(() => { clearTimeout(t); t = setTimeout(cargarMis, 400); });
+}
+
+function conectarLogin() {
+  $("#form-login").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("#btn-entrar");
+    $("#login-err").textContent = "";
+    btn.disabled = true; btn.textContent = "Entrando…";
+    try {
+      await entrar(await store.entrar($("#login-email").value, $("#login-clave").value));
+      $("#login-clave").value = "";
+    } catch (err) {
+      $("#login-err").textContent = err.message;
+    } finally {
+      btn.disabled = false; btn.textContent = "Entrar";
+    }
+  });
+  $("#btn-salir").onclick = async () => {
+    dejarDeEscuchar();
+    await store.salir();
+    misEventos = [];
+    $("#who").textContent = ""; $("#btn-salir").hidden = true;
+    irA("login");
+  };
 }
 
 init().catch((e) => {

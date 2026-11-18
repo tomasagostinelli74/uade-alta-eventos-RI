@@ -1,7 +1,8 @@
 // Configuración del formulario. Lo que cambie el negocio se toca acá, no en app.js.
 export const SUPABASE = {
-  url: "",      // ej. https://xxxx.supabase.co  — vacío = modo prueba (se guarda en este navegador)
-  anonKey: "",  // clave pública (anon). Nunca la service_role.
+  // Vacío = modo prueba (se guarda en este navegador). Agregá ?prueba a la URL para forzarlo.
+  url: new URLSearchParams(location.search).has("prueba") ? "" : "https://kigfmductmgcccvcploe.supabase.co",
+  anonKey: "sb_publishable_Q9VItQ8FcsbWwMrmd_u5Ug_XM3dvWIM", // clave publicable: va en el navegador a propósito. Nunca la secreta.
 };
 
 export const SEDES = [

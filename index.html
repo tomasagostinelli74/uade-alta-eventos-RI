@@ -15,11 +15,11 @@
       <span class="logo">UADE</span>
       <span class="brand-sub">Alta de eventos</span>
     </div>
-    <nav class="tabs" role="tablist">
+    <nav class="tabs" role="tablist" id="tabs" hidden>
       <button class="tab is-active" data-view="nuevo" role="tab">Nuevo evento</button>
       <button class="tab" data-view="mis" role="tab">Mis eventos <span class="pill" id="mis-count">0</span></button>
     </nav>
-    <div class="who" id="who"></div>
+    <div class="who"><span id="who"></span> <button type="button" class="link" id="btn-salir" hidden>Salir</button></div>
   </header>
 
   <div class="banner" id="banner-prueba" hidden>
@@ -27,8 +27,21 @@
   </div>
 
   <main>
+    <!-- ============ LOGIN ============ -->
+    <section class="view" id="view-login" hidden>
+      <form class="card login" id="form-login" novalidate>
+        <h1>Ingresá</h1>
+        <p class="muted">Con tu mail de UADE y la contraseña que te pasaron.</p>
+        <label>Mail<input type="email" id="login-email" autocomplete="username" placeholder="nombre@uade.edu.ar" required></label>
+        <label>Contraseña<input type="password" id="login-clave" autocomplete="current-password" required></label>
+        <p class="err" id="login-err"></p>
+        <button type="submit" class="primary block" id="btn-entrar">Entrar</button>
+        <p class="muted small">¿Te olvidaste la contraseña? Pedile a Marketing que te la cambie.</p>
+      </form>
+    </section>
+
     <!-- ============ NUEVO EVENTO ============ -->
-    <section class="view" id="view-nuevo">
+    <section class="view" id="view-nuevo" hidden>
       <form class="card form" id="form" novalidate autocomplete="off">
         <div class="form-head">
           <h1 id="form-title">Nuevo evento</h1>
