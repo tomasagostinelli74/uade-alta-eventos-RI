@@ -24,6 +24,7 @@
 
   <div class="banner" id="banner-prueba" hidden>
     Modo prueba: los eventos se guardan solo en este navegador y no se envían a Intranet.
+    <label class="simular">Probar como <select id="simular-cuenta"></select></label>
   </div>
 
   <main>
@@ -48,15 +49,25 @@
           <button type="button" class="link" id="btn-limpiar">Limpiar</button>
         </div>
 
+        <ol class="pasos" id="pasos">
+          <li><button type="button" data-paso="1"><span class="num">1</span><span class="paso-txt">Tipo</span></button></li>
+          <li><button type="button" data-paso="2"><span class="num">2</span><span class="paso-txt">Carrera</span></button></li>
+          <li><button type="button" data-paso="3"><span class="num">3</span><span class="paso-txt">Datos para Intranet</span></button></li>
+          <li><button type="button" data-paso="4"><span class="num">4</span><span class="paso-txt">Dónde y cuándo</span></button></li>
+          <li><button type="button" data-paso="5"><span class="num">5</span><span class="paso-txt">Título y textos</span></button></li>
+        </ol>
+
         <!-- 1. Tipo -->
-        <fieldset class="field">
+        <fieldset class="field paso" data-paso="1">
           <legend><span class="num">1</span> Tipo de evento</legend>
           <div class="seg" id="seg-tipo"></div>
+          <p class="muted small" id="tipo-cuenta"></p>
         </fieldset>
 
         <!-- 2. Carreras -->
-        <fieldset class="field">
+        <fieldset class="field paso" data-paso="2" hidden>
           <legend><span class="num">2</span> Carrera<span id="carrera-opcional" class="muted" hidden> (opcional)</span></legend>
+          <p class="muted small ayuda">Elegí la carrera y su versión (presencial, online o Costa). Es la página de la carrera en la web a la que se asocia el evento; no cambia según dónde se haga la reunión.</p>
           <div class="combo" id="combo">
             <div class="chips" id="chips"></div>
             <input type="text" id="buscar-carrera" placeholder="Buscá la carrera… (ej. psico, marketing, ing ind)" aria-autocomplete="list" aria-controls="sugerencias">
@@ -65,33 +76,38 @@
           <p class="err" data-err="carreras"></p>
         </fieldset>
 
-        <!-- 3. Sede -->
-        <fieldset class="field">
-          <legend><span class="num">3</span> Sede / modalidad</legend>
-          <div class="seg" id="seg-sede"></div>
-          <p class="err" data-err="sede"></p>
+        <!-- 3. Datos para Intranet -->
+        <fieldset class="field paso" data-paso="3" hidden>
+          <legend><span class="num">3</span> Datos para Intranet</legend>
+          <div class="more-grid">
+            <div><span class="sublbl">Categoría</span><div class="fijo" id="categ-fija"></div></div>
+            <div><span class="sublbl">Audiencia</span><div class="checks" id="ck-perfil"></div><p class="err" data-err="perfil"></p></div>
+            <div class="span2"><span class="sublbl">Sector organizador</span><div class="checks cols2" id="ck-sector"></div><p class="err" data-err="sector"></p></div>
+            <label>Origen CRM<select id="origen-crm"></select></label>
+            <label>Categoría CRM<select id="categ-crm"></select></label>
+            <div><span class="sublbl">Requiere inscripción</span><div class="fijo" id="insc-fija"></div></div>
+            <label>Cupo <span class="muted">(opcional)</span><input type="number" id="cupo" min="1" step="1" inputmode="numeric"></label>
+          </div>
         </fieldset>
 
-        <!-- 4. Cuándo -->
-        <fieldset class="field">
-          <legend><span class="num">4</span> Fecha y horario</legend>
-          <div class="row3">
+        <!-- 4. Dónde y cuándo -->
+        <fieldset class="field paso" data-paso="4" hidden>
+          <legend><span class="num">4</span> Dónde y cuándo</legend>
+          <span class="sublbl">Modalidad y lugar de la reunión</span>
+          <p class="muted small ayuda">Dónde se hace este evento. Una RI de una carrera presencial puede ser online.</p>
+          <div class="seg" id="seg-sede"></div>
+          <p class="err" data-err="sede"></p>
+          <div class="row3" style="margin-top:16px">
             <label>Fecha<input type="date" id="fecha"></label>
             <label>Inicio<select id="hora-ini"></select></label>
             <label>Fin<select id="hora-fin"></select></label>
           </div>
-          <div class="quick" id="quick-dur">
-            <span class="muted">Duración:</span>
-            <button type="button" data-min="60">1 h</button>
-            <button type="button" data-min="90">1 h 30</button>
-            <button type="button" data-min="120">2 h</button>
-          </div>
           <p class="err" data-err="fecha"></p>
         </fieldset>
 
-        <!-- 5. Título y texto -->
-        <fieldset class="field">
-          <legend><span class="num">5</span> Título y descripción</legend>
+        <!-- 5. Título y textos -->
+        <fieldset class="field paso" data-paso="5" hidden>
+          <legend><span class="num">5</span> Título y textos</legend>
           <label class="lbl-row">
             <span>Título <span class="muted" id="titulo-auto">· automático</span></span>
             <span class="count" id="titulo-count">0/100</span>
@@ -102,8 +118,9 @@
           </div>
           <p class="err" data-err="titulo"></p>
 
-          <label class="lbl-row"><span>Copete <span class="muted">(opcional)</span></span></label>
+          <label class="lbl-row"><span id="copete-lbl">Copete <span class="muted">(opcional)</span></span></label>
           <input type="text" id="copete" maxlength="250" spellcheck="true" lang="es-AR">
+          <p class="err" data-err="copete"></p>
 
           <label class="lbl-row">
             <span>Descripción</span>
@@ -113,23 +130,11 @@
           <p class="err" data-err="descripcion"></p>
         </fieldset>
 
-        <!-- 6. Más opciones -->
-        <details class="field more" id="mas-opciones">
-          <summary><span class="num">6</span> Más opciones <span class="muted" id="mas-resumen"></span></summary>
-          <div class="more-grid">
-            <div><span class="sublbl">Categoría</span><div class="checks" id="ck-categ"></div></div>
-            <div><span class="sublbl">Audiencia</span><div class="checks" id="ck-perfil"></div><p class="err" data-err="perfil"></p></div>
-            <div class="span2"><span class="sublbl">Sector organizador</span><div class="checks cols2" id="ck-sector"></div><p class="err" data-err="sector"></p></div>
-            <label>Origen CRM<select id="origen-crm"></select></label>
-            <label>Categoría CRM<select id="categ-crm"></select></label>
-            <label>Cupo <span class="muted">(opcional)</span><input type="number" id="cupo" min="1" step="1" inputmode="numeric"></label>
-            <label class="switch"><input type="checkbox" id="req-insc"><span>Requiere inscripción</span></label>
-          </div>
-        </details>
-
         <div class="actions">
+          <button type="button" class="ghost btn-nav" id="btn-anterior">← Anterior</button>
+          <button type="button" class="primary" id="btn-siguiente">Siguiente →</button>
           <button type="submit" class="primary" id="btn-agregar">Agregar a la tanda</button>
-          <span class="muted small">Podés agregar varios y confirmarlos juntos.</span>
+          <span class="muted small" id="paso-de"></span>
         </div>
       </form>
 

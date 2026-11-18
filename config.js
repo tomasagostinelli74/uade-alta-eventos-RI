@@ -16,14 +16,30 @@ export const SEDES = [
 export const TIPOS = [
   { code: "ri_grado", label: "RI de grado", hint: "Reunión Informativa de carreras de grado" },
   { code: "ri_posgrado", label: "RI de posgrado", hint: "MBA, especializaciones, maestrías" },
-  { code: "otro", label: "Otro evento", hint: "Charlas, talleres, experiencias" },
+  { code: "ovo", label: "Taller OVO", hint: "Orientación vocacional (sin inscripción)" },
+  { code: "otro", label: "Evento", hint: "Charlas, talleres, experiencias" },
 ];
 
+// Qué puede cargar cada cuenta (la parte del mail antes de @). Las facultades no están: usan CUENTA_DEFECTO.
+// nivel: grado | posgrado | todos · variante: versión de la carrera que se propone primero.
+export const CUENTAS = {
+  ubs: { nivel: "posgrado", variante: "normal", nombre: "UBS (posgrado)" },
+  online: { nivel: "grado", variante: "online", nombre: "Online" },
+  costa: { nivel: "grado", variante: "costa", nombre: "Costa" },
+  "prueba.formulario": { nivel: "todos", variante: "normal", nombre: "Prueba (todo)" },
+};
+export const CUENTA_DEFECTO = { nivel: "grado", variante: "normal", nombre: "Facultad (grado)" };
+export const TIPOS_POR_NIVEL = {
+  grado: ["ri_grado", "ovo", "otro"],
+  posgrado: ["ri_posgrado", "otro"],
+  todos: ["ri_grado", "ri_posgrado", "ovo", "otro"],
+};
+export const perfilDe = (email) => CUENTAS[String(email || "").split("@")[0].toLowerCase()] || CUENTA_DEFECTO;
+
 // Opciones de Intranet (código = valor que espera GRABA_ACTIV.ASP)
+// Categoría de Intranet: el equipo pidió "Charlas" para todos los eventos (fija, no se elige).
 export const CATEG = [
-  { code: 12, label: "Reuni. Infor." },
-  { code: 53, label: "Reunión Info. Online" },
-  { code: 39, label: "Charla" },
+  { code: 8, label: "Charlas" },
 ];
 export const PERFIL = [
   { code: 3, label: "Alumnos" },
@@ -47,21 +63,22 @@ export const ORIGEN_CRM = [
   { code: "O", label: "OVO" },
 ];
 export const CATEG_CRM = [
-  { code: 12, label: "Reuni. Infor." },
   { code: 8, label: "Charlas" },
-  { code: 13, label: "Talleres" },
-  { code: 56, label: "Taller OVO Colegios" },
-  { code: 57, label: "Taller OVO EXPO UADE" },
+  { code: 12, label: "Reuni. Infor." },
   { code: 38, label: "Taller Orientación Vocacional" },
-  { code: 59, label: "EXPO UADE" },
 ];
 
-// Valores propuestos por tipo de evento (el REN los puede cambiar en "Más opciones")
-export function defaultsPara(tipo, sede) {
-  const online = sede === "O";
-  if (tipo === "otro") return { categ: [39], perfil: [3, 100], origen_crm: "A", categ_crm: 8 };
-  return { categ: [online ? 53 : 12], perfil: [3, 100], origen_crm: "R", categ_crm: 12 };
+// Valores propuestos por tipo de evento (el REN puede cambiar audiencia, sector y los de CRM en el paso 3)
+export function defaultsPara(tipo) {
+  const base = { categ: [8], perfil: [3, 100] };
+  if (tipo === "ovo") return { ...base, origen_crm: "O", categ_crm: 38 };
+  if (tipo === "otro") return { ...base, origen_crm: "A", categ_crm: 8 };
+  return { ...base, origen_crm: "R", categ_crm: 12 };
 }
+// Inscripción: los Talleres OVO no llevan; todo lo demás, siempre.
+export const requiereInscripcion = (tipo) => tipo !== "ovo";
+// Sector cuando no hay carrera de donde sacarlo
+export const SECTOR_SIN_CARRERA = { ovo: 159, posgrado: 174 };
 
 // Copy general. [[...]] = dato que el REN tiene que completar antes de confirmar.
 const LUGAR = {
@@ -84,7 +101,7 @@ const MAIL_FACULTAD = {
 export function copyGeneral(tipo, sede, sector) {
   const mail = MAIL_FACULTAD[sector] || "[[mail de contacto]]";
   const online = sede === "O";
-  if (tipo === "otro") return "";
+  if (tipo === "otro" || tipo === "ovo") return "";
   if (tipo === "ri_posgrado") {
     return [
       `UADE Business School te invita a una Reunión Informativa ${online ? "Online" : "Presencial"}. Conocé nuestra propuesta, modalidad de cursada y plan de estudios.`,

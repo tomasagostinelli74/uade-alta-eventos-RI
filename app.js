@@ -1,5 +1,6 @@
 import {
   SEDES, TIPOS, CATEG, PERFIL, SECTORES, ORIGEN_CRM, CATEG_CRM, defaultsPara, copyGeneral,
+  CUENTAS, CUENTA_DEFECTO, TIPOS_POR_NIVEL, perfilDe, requiereInscripcion, SECTOR_SIN_CARRERA,
 } from "./config.js";
 import { store, tanda as tandaStore, uid, modoPrueba } from "./store.js";
 
@@ -42,22 +43,23 @@ function dialogo({ titulo, html, botones }) {
 let CARRERAS = [];
 const VAR_LABEL = { normal: "Presencial", online: "Online", costa: "Costa" };
 
-/** Elige el nodo de Umbraco según la sede (regla: si no existe la variante, va la normal con nota). */
-function resolverVariante(c, sede) {
+/**
+ * Versión de la carrera (página de Umbraco) que se propone al elegirla. NO depende de dónde se hace la reunión:
+ * sale de la cuenta (Online → online, Costa → costa, el resto → presencial). El REN la cambia en el chip.
+ */
+function resolverVariante(c, preferida = perfil.variante) {
   const v = c.variantes;
-  const pref = sede === "O" ? ["online", "normal", "costa"] : sede === "C" ? ["costa", "normal", "online"] : ["normal", "costa", "online"];
-  const elegida = pref.find((p) => v[p]);
+  const elegida = [preferida, "normal", "costa", "online"].find((p) => v[p]);
   let nota = "";
-  if (elegida !== pref[0]) {
-    nota = sede === "O" ? "No tiene versión Online: se usa la " + VAR_LABEL[elegida].toLowerCase()
-      : sede === "C" ? "No tiene versión Costa: se usa la " + VAR_LABEL[elegida].toLowerCase()
-      : `Solo existe la versión ${VAR_LABEL[elegida]}`;
+  if (elegida !== preferida) {
+    nota = preferida === "normal" ? `Solo existe la versión ${VAR_LABEL[elegida]}`
+      : `No tiene versión ${VAR_LABEL[preferida]}: se usa la ${VAR_LABEL[elegida].toLowerCase()}`;
   }
   return { variante: elegida, nota };
 }
 
-function carreraSeleccion(c, sede, variante) {
-  const r = variante && c.variantes[variante] ? { variante, nota: "" } : resolverVariante(c, sede);
+function carreraSeleccion(c, variante, nota = "") {
+  const r = variante && c.variantes[variante] ? { variante, nota } : resolverVariante(c);
   const nodo = c.variantes[r.variante];
   return {
     key: c.key, corto: c.corto, base: c.base, facultad: c.facultad, sector: c.sector, nivel: c.nivel,
@@ -65,11 +67,16 @@ function carreraSeleccion(c, sede, variante) {
   };
 }
 
+/** Nivel de carreras que se puede elegir: el de la RI, o el de la cuenta en Talleres OVO y Eventos. */
+const nivelCarreras = (tipo) => (tipo === "ri_grado" || tipo === "ovo") ? "grado" : tipo === "ri_posgrado" ? "posgrado"
+  : perfil.nivel === "todos" ? null : perfil.nivel;
+
 function buscarCarreras(q, tipo, excluir) {
   const tokens = norm(q).split(/\s+/).filter(Boolean);
-  const nivel = tipo === "ri_posgrado" ? "posgrado" : "grado";
+  const soloNivel = nivelCarreras(tipo);
+  const nivel = soloNivel || "grado";
   return CARRERAS
-    .filter((c) => !excluir.has(c.key))
+    .filter((c) => !excluir.has(c.key) && (!soloNivel || c.nivel === soloNivel))
     .map((c) => {
       const hay = norm(c.corto + " " + c.base);
       if (!tokens.every((t) => hay.includes(t))) return null;
@@ -86,9 +93,13 @@ function buscarCarreras(q, tipo, excluir) {
 }
 
 /* ================= estado del formulario ================= */
+let perfil = CUENTA_DEFECTO; // qué puede cargar la cuenta (grado / posgrado / todos)
+const tiposPermitidos = () => TIPOS.filter((t) => TIPOS_POR_NIVEL[perfil.nivel].includes(t.code));
+const esRI = (tipo) => tipo === "ri_grado" || tipo === "ri_posgrado";
+
 const vacio = () => ({
-  id: null, tipo: "ri_grado", carreras: [], sede: "", fecha: "", hora_ini: "", hora_fin: "",
-  categ: [12], perfil: [3, 100], sector: [], origen_crm: "R", categ_crm: 12, requiere_inscripcion: false,
+  id: null, tipo: tiposPermitidos()[0].code, carreras: [], sede: "", fecha: "", hora_ini: "", hora_fin: "",
+  categ: [8], perfil: [3, 100], sector: [], origen_crm: "R", categ_crm: 12, requiere_inscripcion: true,
   titulo: "", titulo_manual: false, copete: "", descripcion: "", desc_manual: false, cupo: null,
   tocados: [], // campos de "Más opciones" que el REN cambió a mano (no se recalculan solos)
 });
@@ -99,32 +110,42 @@ let tanda = tandaStore.get();
 let misEventos = [];
 let filtroMis = "todos";
 let alcance = "mios"; // "mios" | "todos" (los eventos de todos los RENs)
+let paso = 1;          // paso visible del formulario (1 a 5)
+const PASOS = 5;
+// En qué paso está cada campo (para saltar al error)
+const PASO_DE = { carreras: 2, perfil: 3, sector: 3, sede: 4, fecha: 4, titulo: 5, copete: 5, descripcion: 5 };
 
 function tituloAuto(e) {
   const fecha = ddmm(e.fecha);
-  if (e.tipo === "otro") return "";
-  const prefijo = e.sede === "O" ? "Reunión Informativa Online" : "Reunión Informativa";
-  const nombres = e.carreras.map((c) => c.corto + (c.variante === "online" ? " Online" : c.variante === "costa" ? " Costa" : ""));
+  if (!esRI(e.tipo)) return "";
+  const online = e.sede === "O";
+  const prefijo = online ? "Reunión Informativa Online" : "Reunión Informativa";
+  // la versión de la carrera se aclara solo si suma: "Online" no se repite si la reunión ya es online
+  const nombres = e.carreras.map((c) => c.corto + (c.variante === "costa" ? " Costa" : c.variante === "online" && !online ? " Online" : ""));
   return `${prefijo}: ${nombres.join(" + ") || "[carrera]"} (${fecha})`;
 }
 
 function sectoresAuto(e) {
   const s = [...new Set(e.carreras.map((c) => c.sector).filter(Boolean))];
+  if (!s.length && e.tipo === "ovo") s.push(SECTOR_SIN_CARRERA.ovo);
+  if (!s.length && (e.tipo === "ri_posgrado" || perfil.nivel === "posgrado")) s.push(SECTOR_SIN_CARRERA.posgrado);
   if (e.sede === "C" && !s.includes(257)) s.push(257);
   return s;
 }
 
 /** Recalcula todo lo automático que el REN no tocó a mano. */
 function recalcular() {
-  const d = defaultsPara(ev.tipo, ev.sede);
-  for (const k of ["categ", "perfil", "origen_crm", "categ_crm"]) if (!ev.tocados.includes(k)) ev[k] = structuredClone(d[k]);
+  const d = defaultsPara(ev.tipo);
+  ev.categ = [...d.categ]; // fija
+  for (const k of ["perfil", "origen_crm", "categ_crm"]) if (!ev.tocados.includes(k)) ev[k] = structuredClone(d[k]);
+  ev.requiere_inscripcion = requiereInscripcion(ev.tipo); // fija según el tipo
   if (!ev.tocados.includes("sector")) ev.sector = sectoresAuto(ev);
   ev.carreras = ev.carreras.map((c) => {
     const cat = CARRERAS.find((x) => x.key === c.key);
-    return cat ? carreraSeleccion(cat, ev.sede, c.variante_manual ? c.variante : null) : c;
+    return cat ? carreraSeleccion(cat, c.variante, c.nota) : c;
   });
   if (!ev.titulo_manual) ev.titulo = tituloAuto(ev);
-  if (!ev.desc_manual) ev.descripcion = ev.sede || ev.tipo === "otro" ? copyGeneral(ev.tipo, ev.sede, ev.sector[0]) : "";
+  if (!ev.desc_manual) ev.descripcion = ev.sede || !esRI(ev.tipo) ? copyGeneral(ev.tipo, ev.sede, ev.sector[0]) : "";
 }
 
 /* ================= render del formulario ================= */
@@ -164,10 +185,20 @@ function renderChips() {
   }).join("");
 }
 
+const NIVEL_TXT = { grado: "Tu cuenta carga eventos de carreras de grado.", posgrado: "Tu cuenta carga eventos de posgrado.",
+  todos: "Tu cuenta puede cargar eventos de grado y de posgrado." };
+
 function render() {
-  segmentado($("#seg-tipo"), TIPOS, ev.tipo, (v) => { ev.tipo = v; recalcular(); render(); }, true);
-  segmentado($("#seg-sede"), SEDES, ev.sede, (v) => { ev.sede = v; recalcular(); render(); limpiarError("sede"); });
-  $("#carrera-opcional").hidden = ev.tipo !== "otro";
+  segmentado($("#seg-tipo"), tiposPermitidos(), ev.tipo, (v) => {
+    if (v === ev.tipo) return;
+    ev.tipo = v;
+    const nivel = nivelCarreras(v); // si cambia de grado a posgrado, las carreras elegidas ya no sirven
+    if (nivel) ev.carreras = ev.carreras.filter((c) => c.nivel === nivel);
+    recalcular(); render();
+  }, true);
+  $("#tipo-cuenta").textContent = NIVEL_TXT[perfil.nivel];
+  segmentado($("#seg-sede"), SEDES, ev.sede, (v) => { ev.sede = v; recalcular(); render(); limpiarError("sede"); limpiarError("copete"); });
+  $("#carrera-opcional").hidden = esRI(ev.tipo);
   renderChips();
 
   $("#fecha").value = ev.fecha;
@@ -176,33 +207,70 @@ function render() {
 
   const t = $("#titulo");
   if (document.activeElement !== t) t.value = ev.titulo;
-  t.placeholder = ev.tipo === "otro" ? "Ej. Fashion Watch + Talk (27/11)" : "";
+  t.placeholder = esRI(ev.tipo) ? "" : "Ej. Fashion Watch + Talk (27/11)";
   $("#titulo-count").textContent = `${ev.titulo.length}/100`;
-  $("#titulo-auto").textContent = ev.tipo === "otro" ? "" : ev.titulo_manual ? "· editado a mano" : "· automático";
-  $("#btn-titulo-auto").hidden = !(ev.titulo_manual && ev.tipo !== "otro");
+  $("#titulo-auto").textContent = !esRI(ev.tipo) ? "" : ev.titulo_manual ? "· editado a mano" : "· automático";
+  $("#btn-titulo-auto").hidden = !(ev.titulo_manual && esRI(ev.tipo));
 
-  $("#copete").value = ev.copete;
+  const online = ev.sede === "O";
+  $("#copete-lbl").innerHTML = online ? 'Link de la reunión online <span class="muted">(obligatorio)</span>' : 'Copete <span class="muted">(opcional)</span>';
+  $("#copete").placeholder = online ? "https://… (Zoom, Teams o Meet)" : "";
+  $("#copete").spellcheck = !online;
+  if (document.activeElement !== $("#copete")) $("#copete").value = ev.copete;
   const d = $("#descripcion");
   if (document.activeElement !== d) d.value = ev.descripcion;
   $("#desc-count").textContent = `${ev.descripcion.length}/3000`;
 
-  checks($("#ck-categ"), CATEG, ev.categ, "categ");
+  $("#categ-fija").textContent = ev.categ.map((c) => CATEG.find((o) => o.code === c)?.label || c).join(", ");
+  $("#insc-fija").textContent = ev.requiere_inscripcion ? "Sí (siempre, salvo en Talleres OVO)" : "No (los Talleres OVO no llevan inscripción)";
   checks($("#ck-perfil"), PERFIL, ev.perfil, "perfil");
   checks($("#ck-sector"), SECTORES, ev.sector, "sector");
   options($("#origen-crm"), ORIGEN_CRM, ev.origen_crm);
   options($("#categ-crm"), CATEG_CRM, ev.categ_crm);
   $("#cupo").value = ev.cupo ?? "";
-  $("#req-insc").checked = ev.requiere_inscripcion;
 
-  const lab = (lista, codes) => codes.map((c) => lista.find((o) => o.code === c)?.label).filter(Boolean).join(", ");
-  $("#mas-resumen").textContent = `· ${lab(CATEG, ev.categ) || "sin categoría"} · ${lab(PERFIL, ev.perfil) || "sin audiencia"} · ` +
-    `${ev.sector.length ? lab(SECTORES, ev.sector) : "sin sector"}`;
 
   $("#form-title").textContent = editando ? "Editar evento" : "Nuevo evento";
   $("#btn-agregar").textContent = editando?.origen === "mis" ? "Guardar y reenviar"
     : editando ? "Guardar cambios" : "Agregar a la tanda";
   $("#btn-limpiar").textContent = editando ? "Cancelar edición" : "Limpiar";
+  renderPaso();
   renderTanda();
+}
+
+/* ================= pasos ================= */
+function renderPaso() {
+  $$(".paso").forEach((f) => (f.hidden = Number(f.dataset.paso) !== paso));
+  $$("#pasos button").forEach((b) => {
+    const n = Number(b.dataset.paso);
+    b.setAttribute("aria-current", n === paso ? "step" : "false");
+    b.classList.toggle("hecho", n < paso);
+  });
+  $("#btn-anterior").hidden = paso === 1;
+  $("#btn-siguiente").hidden = paso === PASOS;
+  // al editar se puede guardar desde cualquier paso; al cargar uno nuevo, al final
+  $("#btn-agregar").hidden = paso !== PASOS && !editando;
+  $("#paso-de").textContent = `Paso ${paso} de ${PASOS}`;
+}
+
+function irAPaso(n, enfocar = true) {
+  paso = Math.min(Math.max(n, 1), PASOS);
+  renderPaso();
+  if (enfocar) $("#form").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/** Errores de un paso (para no dejar avanzar con algo mal). */
+function erroresDelPaso(n) {
+  leerTextos();
+  const err = validar(ev, ev.id);
+  return Object.fromEntries(Object.entries(err).filter(([k]) => PASO_DE[k] === n));
+}
+
+/** Toma lo escrito en los campos de texto (con UADE en mayúsculas). */
+function leerTextos() {
+  ev.titulo = uadeMayus($("#titulo").value.trim());
+  ev.copete = uadeMayus($("#copete").value.trim());
+  ev.descripcion = uadeMayus($("#descripcion").value);
 }
 
 /* ================= combo de carreras ================= */
@@ -228,7 +296,7 @@ function abrirSugerencias(forzar = false) {
 function elegirSugerencia(i) {
   const c = sugActual[i];
   if (!c) return;
-  ev.carreras.push(carreraSeleccion(c, ev.sede, null));
+  ev.carreras.push(carreraSeleccion(c));
   $("#buscar-carrera").value = "";
   $("#sugerencias").hidden = true;
   recalcular(); render(); limpiarError("carreras");
@@ -245,7 +313,7 @@ function moverSug(delta) {
 /* ================= validación ================= */
 function validar(e, idPropio) {
   const err = {};
-  if ((e.tipo === "ri_grado" || e.tipo === "ri_posgrado") && !e.carreras.length) err.carreras = "Elegí al menos una carrera.";
+  if (esRI(e.tipo) && !e.carreras.length) err.carreras = "Elegí al menos una carrera.";
   if (!e.sede) err.sede = "Elegí la sede o modalidad.";
   if (!e.fecha) err.fecha = "Poné la fecha.";
   else if (e.fecha < hoyISO()) err.fecha = "La fecha ya pasó.";
@@ -255,6 +323,8 @@ function validar(e, idPropio) {
   if (t.length < 3) err.titulo = "El título es muy corto.";
   else if (t.length > 100) err.titulo = "El título no puede pasar los 100 caracteres.";
   else if (/\[carrera\]|dd\/mm/.test(t)) err.titulo = "Al título le falta la carrera o la fecha.";
+  if (e.sede === "O" && !/^https?:\/\/\S+\.\S+$/i.test((e.copete || "").trim()))
+    err.copete = "Pegá el link de la reunión online (empieza con https://).";
   if (e.descripcion.length > 3000) err.descripcion = "La descripción no puede pasar los 3000 caracteres.";
   const ph = e.descripcion.match(/\[\[([^\]]+)\]\]/);
   if (ph) err.descripcion = `Completá "${ph[1]}" en la descripción (está entre [[ ]]).`;
@@ -271,17 +341,43 @@ function validar(e, idPropio) {
   return err;
 }
 
-function mostrarErrores(err) {
+function mostrarErrores(err, saltar = true) {
   $$("[data-err]").forEach((p) => { p.textContent = err[p.dataset.err] || ""; });
   $("#combo").classList.toggle("is-invalid", !!err.carreras);
   $("#titulo").classList.toggle("is-invalid", !!err.titulo);
+  $("#copete").classList.toggle("is-invalid", !!err.copete);
   $("#descripcion").classList.toggle("is-invalid", !!err.descripcion);
   $("#fecha").classList.toggle("is-invalid", !!err.fecha && !ev.fecha);
-  if (err.perfil || err.sector) $("#mas-opciones").open = true;
-  const primero = Object.keys(err)[0];
-  if (primero) $(`[data-err="${primero}"]`)?.closest(".field")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  // marca en rojo los pasos con errores y lleva al primero
+  const conError = new Set(Object.keys(err).map((k) => PASO_DE[k]).filter(Boolean));
+  $$("#pasos button").forEach((b) => b.classList.toggle("con-error", conError.has(Number(b.dataset.paso))));
+  if (saltar && conError.size) {
+    const primero = Math.min(...conError);
+    irAPaso(primero, false);
+    const k = Object.keys(err).find((x) => PASO_DE[x] === primero);
+    $(`[data-err="${k}"]`)?.closest(".paso")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
-function limpiarError(k) { const p = $(`[data-err="${k}"]`); if (p) p.textContent = ""; if (k === "carreras") $("#combo").classList.remove("is-invalid"); }
+function limpiarError(k) {
+  const p = $(`[data-err="${k}"]`); if (p) p.textContent = "";
+  if (k === "carreras") $("#combo").classList.remove("is-invalid");
+  if (k === "copete") $("#copete").classList.remove("is-invalid");
+  const n = PASO_DE[k];
+  if (n && !$$(`.paso[data-paso="${n}"] .err`).some((x) => x.textContent)) $(`#pasos button[data-paso="${n}"]`)?.classList.remove("con-error");
+}
+
+/* ================= UADE siempre en mayúsculas ================= */
+// "uade" suelto → "UADE". No toca mails ni webs (face@uade.edu.ar, www.uade.edu.ar).
+const RX_UADE = /(?<![\p{L}\p{N}@./_-])uade(?![\p{L}\p{N}@_-]|\.[\p{L}])/giu;
+const uadeMayus = (s) => String(s ?? "").replace(RX_UADE, "UADE");
+/** Corrige "uade" mientras se escribe, sin mover el cursor (el largo no cambia). */
+function uadeEnVivo(el) {
+  const v = uadeMayus(el.value);
+  if (v === el.value) return;
+  const a = el.selectionStart, b = el.selectionEnd;
+  el.value = v;
+  try { el.setSelectionRange(a, b); } catch { /* campos sin cursor */ }
+}
 
 /* ================= revisión de mayúsculas y ortografía ================= */
 // Misma regla que usamos al cargar en Umbraco: cada palabra del título con mayúscula, salvo los conectores.
@@ -302,6 +398,7 @@ function corregirMayusculas(titulo) {
   let primera = true;
   return cabeza.replace(PALABRA, (w) => {
     const esPrimera = primera; primera = false;
+    if (w.toLowerCase() === "uade") return "UADE";
     if (esMinuscula(w[0]) && (esPrimera || !CONECTORES.has(w.toLowerCase().replace(/\.$/, "")))) return w[0].toUpperCase() + w.slice(1);
     return w;
   }) + frase;
@@ -366,8 +463,8 @@ const CAMPO_LABEL = { titulo: "Título", copete: "Copete", descripcion: "Descrip
 
 /** Antes de agregar: avisa mayúsculas y errores de ortografía. true = seguir, false = volver a editar. */
 async function revisarTextos() {
-  const campos = { copete: ev.copete || "" };
-  if (ev.titulo_manual || ev.tipo === "otro") campos.titulo = ev.titulo;
+  const campos = ev.sede === "O" ? {} : { copete: ev.copete || "" }; // si es online, el copete es un link
+  if (ev.titulo_manual || !esRI(ev.tipo)) campos.titulo = ev.titulo;
   if (ev.desc_manual) campos.descripcion = ev.descripcion;
 
   const btn = $("#btn-agregar"), txt = btn.textContent;
@@ -427,7 +524,7 @@ async function revisarTextos() {
   if (nuevos.descripcion !== undefined) ev.descripcion = nuevos.descripcion;
   if (nuevos.titulo !== undefined) ev.titulo = nuevos.titulo;
   if (faltanMay && elegido("may") === "si") ev.titulo = corregirMayusculas(ev.titulo);
-  if (ev.tipo !== "otro" && ev.titulo !== tituloAuto(ev)) ev.titulo_manual = true;
+  if (esRI(ev.tipo) && ev.titulo !== tituloAuto(ev)) ev.titulo_manual = true;
   return true;
 }
 
@@ -438,30 +535,40 @@ function resumenEvento(e) {
   return `${fechaLarga(e.fecha)} · ${e.hora_ini}–${e.hora_fin} · ${sedeLabel(e.sede)}`;
 }
 
+/** Primer error de un evento de la tanda (o null). */
+function errorTanda(e) { return Object.values(validar(e, e.id))[0] || null; }
+
 function renderTanda() {
   $("#tanda-count").textContent = tanda.length;
   $("#tanda-empty").hidden = tanda.length > 0;
   $("#btn-vaciar").hidden = tanda.length === 0;
   $("#btn-confirmar").disabled = tanda.length === 0 || editando?.origen === "tanda";
   $("#btn-confirmar").textContent = tanda.length > 1 ? `Confirmar ${tanda.length} eventos` : "Confirmar y dar de alta";
-  $("#tanda-list").innerHTML = tanda.map((e) => `
-    <li class="tanda-item ${editando?.id === e.id ? "is-editing" : ""}" data-id="${e.id}">
+  $("#tanda-list").innerHTML = tanda.map((e) => {
+    const er = errorTanda(e);
+    return `
+    <li class="tanda-item ${editando?.id === e.id ? "is-editing" : ""} ${er ? "con-error" : ""}" data-id="${e.id}">
       <div class="ti-title">${esc(e.titulo)}</div>
       <div class="ti-meta">${esc(resumenEvento(e))}</div>
+      ${er ? `<div class="ti-error">⚠ ${esc(er)}</div>` : ""}
       <div class="ti-actions">
-        <button type="button" class="link" data-acc="editar">Editar</button>
+        <button type="button" class="link ${er ? "corregir" : ""}" data-acc="editar">${er ? "Corregir" : "Editar"}</button>
         <button type="button" class="link" data-acc="duplicar">Duplicar</button>
         <button type="button" class="link danger" data-acc="quitar">Quitar</button>
       </div>
-    </li>`).join("");
+    </li>`;
+  }).join("");
 }
 
 function cargarEnFormulario(e, origen) {
   ev = { ...vacio(), ...structuredClone(e) };
   editando = { origen, id: e.id };
-  mostrarErrores({});
+  paso = 1;
   render();
-  $("#form").scrollIntoView({ behavior: "smooth", block: "start" });
+  // si tiene errores, se muestran y se va directo al paso donde está el primero
+  const err = validar(ev, ev.id);
+  mostrarErrores(err);
+  if (!Object.keys(err).length) $("#form").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function limpiarFormulario(conservar = false) {
@@ -471,6 +578,7 @@ function limpiarFormulario(conservar = false) {
   }
   ev = base;
   editando = null;
+  paso = 1;
   recalcular();
   mostrarErrores({});
   render();
@@ -478,8 +586,7 @@ function limpiarFormulario(conservar = false) {
 
 async function onSubmit(evt) {
   evt.preventDefault();
-  ev.titulo = $("#titulo").value.trim();
-  ev.descripcion = $("#descripcion").value;
+  leerTextos();
   const err = validar(ev, ev.id);
   mostrarErrores(err);
   if (Object.keys(err).length) return;
@@ -506,17 +613,20 @@ async function onSubmit(evt) {
   }
   guardarTanda();
   limpiarFormulario(true);
-  $("#buscar-carrera").focus();
 }
 
 async function confirmarTanda() {
   const conError = tanda.map((e) => [e, validar(e, e.id)]).filter(([, er]) => Object.keys(er).length);
   if (conError.length) {
-    await dialogo({
-      titulo: "Hay eventos para corregir",
-      html: `<ul>${conError.map(([e, er]) => `<li><b>${esc(e.titulo)}</b>: ${esc(Object.values(er)[0])}</li>`).join("")}</ul>`,
-      botones: [{ label: "Entendido", primary: true }],
+    renderTanda(); // los marca en rojo en la tanda
+    const n = conError.length;
+    const r = await dialogo({
+      titulo: n === 1 ? "Hay 1 evento para corregir" : `Hay ${n} eventos para corregir`,
+      html: `<p>No se confirmó nada. ${n === 1 ? "Está marcado" : "Están marcados"} en rojo en la tanda.</p>
+        <ul class="lista-err">${conError.map(([e, er]) => `<li><b>${esc(e.titulo)}</b><br><span class="ti-error">⚠ ${esc(Object.values(er)[0])}</span></li>`).join("")}</ul>`,
+      botones: [{ label: "Cerrar" }, { label: n === 1 ? "Corregirlo ahora" : "Corregir el primero", primary: true }],
     });
+    if (r === 1) cargarEnFormulario(conError[0][0], "tanda");
     return;
   }
   const r = await dialogo({
@@ -656,7 +766,7 @@ function conectar() {
     const s = e.target.closest("select[data-i]");
     if (!s) return;
     const c = ev.carreras[Number(s.dataset.i)];
-    c.variante = s.value; c.variante_manual = true;
+    c.variante = s.value; c.variante_manual = true; c.nota = "";
     recalcular(); render();
   });
 
@@ -668,24 +778,19 @@ function conectar() {
     render(); limpiarError("fecha");
   });
   $("#hora-fin").addEventListener("change", (e) => { ev.hora_fin = e.target.value; limpiarError("fecha"); });
-  $("#quick-dur").addEventListener("click", (e) => {
-    const b = e.target.closest("button[data-min]");
-    if (!b) return;
-    if (!ev.hora_ini) { toast("Primero elegí la hora de inicio."); $("#hora-ini").focus(); return; }
-    ev.hora_fin = aHHMM(Math.min(aMin(ev.hora_ini) + Number(b.dataset.min), 23 * 60 + 45));
-    render();
-  });
 
   $("#titulo").addEventListener("input", (e) => {
-    ev.titulo = e.target.value; ev.titulo_manual = ev.tipo !== "otro" ? e.target.value !== tituloAuto(ev) : true;
+    uadeEnVivo(e.target);
+    ev.titulo = e.target.value; ev.titulo_manual = esRI(ev.tipo) ? e.target.value !== tituloAuto(ev) : true;
     $("#titulo-count").textContent = `${ev.titulo.length}/100`;
-    $("#btn-titulo-auto").hidden = !(ev.titulo_manual && ev.tipo !== "otro");
-    $("#titulo-auto").textContent = ev.tipo === "otro" ? "" : ev.titulo_manual ? "· editado a mano" : "· automático";
+    $("#btn-titulo-auto").hidden = !(ev.titulo_manual && esRI(ev.tipo));
+    $("#titulo-auto").textContent = !esRI(ev.tipo) ? "" : ev.titulo_manual ? "· editado a mano" : "· automático";
     limpiarError("titulo");
   });
   $("#btn-titulo-auto").onclick = () => { ev.titulo_manual = false; recalcular(); render(); };
-  $("#copete").addEventListener("input", (e) => (ev.copete = e.target.value));
+  $("#copete").addEventListener("input", (e) => { uadeEnVivo(e.target); ev.copete = e.target.value; limpiarError("copete"); });
   $("#descripcion").addEventListener("input", (e) => {
+    uadeEnVivo(e.target);
     ev.descripcion = e.target.value; ev.desc_manual = true;
     $("#desc-count").textContent = `${ev.descripcion.length}/3000`;
     limpiarError("descripcion");
@@ -693,7 +798,16 @@ function conectar() {
   $("#origen-crm").onchange = (e) => { ev.origen_crm = e.target.value; ev.tocados.push("origen_crm"); render(); };
   $("#categ-crm").onchange = (e) => { ev.categ_crm = Number(e.target.value); ev.tocados.push("categ_crm"); render(); };
   $("#cupo").addEventListener("input", (e) => { const n = parseInt(e.target.value, 10); ev.cupo = n > 0 ? n : null; });
-  $("#req-insc").onchange = (e) => (ev.requiere_inscripcion = e.target.checked);
+
+  // pasos: Siguiente solo avanza si el paso está bien; los números de arriba llevan a cualquier paso
+  $("#btn-siguiente").onclick = () => {
+    const err = erroresDelPaso(paso);
+    mostrarErrores(err, false);
+    if (Object.keys(err).length) return;
+    irAPaso(paso + 1);
+  };
+  $("#btn-anterior").onclick = () => irAPaso(paso - 1);
+  $("#pasos").addEventListener("click", (e) => { const b = e.target.closest("[data-paso]"); if (b) { leerTextos(); irAPaso(Number(b.dataset.paso)); } });
 
   $("#dlg-content").addEventListener("click", (e) => {
     const b = e.target.closest(".rev-opt"); if (!b) return;
@@ -751,6 +865,18 @@ async function init() {
   $("#hora-fin").innerHTML = horas;
   $("#fecha").min = hoyISO();
   $("#banner-prueba").hidden = !modoPrueba;
+  if (modoPrueba) { // en el modo prueba se elige qué cuenta simular
+    const opciones = [["", CUENTA_DEFECTO.nombre], ...Object.entries(CUENTAS).map(([k, v]) => [k, v.nombre])];
+    let guardada = ""; try { guardada = localStorage.getItem("uade_alta_simular") || ""; } catch { /* sin storage */ }
+    $("#simular-cuenta").innerHTML = opciones.map(([k, n]) => `<option value="${k}" ${k === guardada ? "selected" : ""}>${esc(n)}</option>`).join("");
+    perfil = CUENTAS[guardada] || CUENTA_DEFECTO;
+    ev = vacio();
+    $("#simular-cuenta").onchange = (e) => {
+      try { localStorage.setItem("uade_alta_simular", e.target.value); } catch { /* sin storage */ }
+      perfil = CUENTAS[e.target.value] || CUENTA_DEFECTO;
+      limpiarFormulario();
+    };
+  }
 
   const r = await fetch("data/carreras.json");
   CARRERAS = (await r.json()).carreras;
@@ -766,6 +892,7 @@ async function init() {
 
 let dejarDeEscuchar = () => {};
 async function entrar(u) {
+  if (u.email) { perfil = perfilDe(u.email); limpiarFormulario(); }
   $("#who").textContent = u.email || (modoPrueba ? "Modo prueba" : "");
   $("#btn-salir").hidden = modoPrueba;
   irA("nuevo");

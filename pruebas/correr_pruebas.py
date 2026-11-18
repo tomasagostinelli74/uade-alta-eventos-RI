@@ -56,9 +56,15 @@ def caso(cid, modo="prueba"):
 # ---------------------------------------------------------------- helpers del formulario
 class F:
     def __init__(s, page): s.p = page
-    def tipo(s, code): s.p.click(f"#seg-tipo button[data-v='{code}']")
-    def sede(s, code): s.p.click(f"#seg-sede button[data-v='{code}']")
-    def buscar(s, q): s.p.fill("#buscar-carrera", q)
+    def paso(s, n):
+        if s.p.get_attribute(f"#pasos button[data-paso='{n}']", "aria-current") != "step":
+            s.p.click(f"#pasos button[data-paso='{n}']")
+    def paso_actual(s): return int(s.p.get_attribute("#pasos button[aria-current='step']", "data-paso"))
+    def cuenta(s, k): s.p.select_option("#simular-cuenta", k)
+    def tipo(s, code): s.paso(1); s.p.click(f"#seg-tipo button[data-v='{code}']")
+    def tipos(s): return s.p.eval_on_selector_all("#seg-tipo button", "l => l.map(b => b.dataset.v)")
+    def sede(s, code): s.paso(4); s.p.click(f"#seg-sede button[data-v='{code}']")
+    def buscar(s, q): s.paso(2); s.p.fill("#buscar-carrera", q)
     def sug(s): return s.p.locator("#sugerencias li[data-i]")
     def sug_nombres(s): return s.p.eval_on_selector_all("#sugerencias li[data-i] > span:first-child", "els => els.map(e => e.firstChild.textContent.trim())")
     def carrera(s, q, nombre):
@@ -66,13 +72,17 @@ class F:
         s.p.locator("#sugerencias li[data-i]").filter(
             has=s.p.locator(f"xpath=./span[1][normalize-space(text())='{nombre}']")).first.click()
     def chips(s): return s.p.eval_on_selector_all("#chips .chip-name", "els => els.map(e => e.textContent)")
-    def fecha(s, iso): s.p.fill("#fecha", iso)
-    def ini(s, h): s.p.select_option("#hora-ini", h)
-    def fin(s, h): s.p.select_option("#hora-fin", h)
+    def fecha(s, iso): s.paso(4); s.p.fill("#fecha", iso)
+    def ini(s, h): s.paso(4); s.p.select_option("#hora-ini", h)
+    def fin(s, h): s.paso(4); s.p.select_option("#hora-fin", h)
     def titulo(s): return s.p.input_value("#titulo")
-    def escribir_titulo(s, t): s.p.fill("#titulo", t)
-    def agregar(s): s.p.click("#btn-agregar")
-    def err(s, k): return s.p.locator(f"[data-err='{k}']").inner_text().strip()
+    def escribir_titulo(s, t): s.paso(5); s.p.fill("#titulo", t)
+    def copete(s, t): s.paso(5); s.p.fill("#copete", t)
+    def descripcion(s, t): s.paso(5); s.p.fill("#descripcion", t)
+    def agregar(s):
+        if s.p.is_hidden("#btn-agregar"): s.paso(5)
+        s.p.click("#btn-agregar")
+    def err(s, k): return (s.p.locator(f"[data-err='{k}']").text_content() or "").strip()
     def toast(s): return s.p.locator("#toast")
     def tanda_n(s): return int(s.p.inner_text("#tanda-count"))
     def tanda(s): return s.p.evaluate("JSON.parse(localStorage.getItem('uade_alta_tanda') || '[]')")
@@ -81,8 +91,7 @@ class F:
     def dlg_boton(s, label):
         s.p.evaluate("document.querySelector('#toast').textContent = ''")  # que no quede el aviso del paso anterior
         s.p.locator("#dlg-actions button", has_text=label).click()
-    def abrir_mas(s):
-        if not s.p.evaluate("document.querySelector('#mas-opciones').open"): s.p.click("#mas-opciones summary")
+    def abrir_mas(s): s.paso(3)
     def destildar(s, sel):
         # cada clic vuelve a dibujar las casillas: se hace un clic por vez y se vuelve a buscar
         while s.p.locator(f"{sel} input:checked").count(): s.p.locator(f"{sel} input:checked").first.click()
@@ -98,6 +107,7 @@ class F:
         if sede: s.sede(sede)
         s.fecha(fecha or dia(7))
         if hora: s.ini(hora)
+        if sede == "O": s.copete("https://zoom.us/j/1234567890")
     def agregar_ok(s, n_antes=None):
         n = s.tanda_n() if n_antes is None else n_antes
         s.agregar()
@@ -163,7 +173,7 @@ def _(f):
 
 @caso("CAR-02")
 def _(f):
-    f.p.click("#buscar-carrera")
+    f.paso(2); f.p.click("#buscar-carrera")
     expect(f.p.locator("#sugerencias")).to_be_hidden()
     f.buscar("ing ind")
     expect(f.p.locator("#sugerencias")).to_be_visible()
@@ -220,15 +230,15 @@ def _(f):
 
 @caso("CAR-09")
 def _(f):
-    f.tipo("otro")
+    f.tipo("otro"); f.paso(2)
     expect(f.p.locator("#carrera-opcional")).to_be_visible()
     f.sede("M"); f.fecha(dia(8)); f.ini("18:00"); f.escribir_titulo("Fashion Watch + Talk")
     f.agregar()
     assert f.err("sector") == "Elegí el sector organizador.", f.err("sector")
-    assert f.p.evaluate("document.querySelector('#mas-opciones').open")
+    assert f.paso_actual() == 3
     f.sector(159); f.agregar_ok()
-    return ("Deja avanzar sin carrera, pero pide elegir el sector organizador (sin carrera no hay de dónde sacarlo): "
-            "se abre 'Más opciones' solo con el aviso 'Elegí el sector organizador.'")
+    return ("Deja avanzar sin carrera, pero en 'Evento' pide elegir el sector organizador (sin carrera no hay de dónde "
+            "sacarlo): vuelve solo al paso 3 con el aviso 'Elegí el sector organizador.'")
 
 @caso("SED-01")
 def _(f):
@@ -236,45 +246,46 @@ def _(f):
 
 def variante(f): return f.p.locator("#chips select").input_value() if f.p.locator("#chips select").count() else f.p.inner_text("#chips .tag")
 
+CAMBIO_SEDE = ("Regla nueva (pedido del equipo, punto 3): la versión de la carrera ya NO cambia con la modalidad de la "
+               "reunión; se propone según la cuenta y el REN la cambia en el chip.")
+
 @caso("SED-02")
 def _(f):
-    f.carrera("abogacia", "Abogacía"); f.sede("O")
+    f.cuenta("online"); f.carrera("abogacia", "Abogacía")
     assert variante(f) == "online"; expect(f.p.locator("#chips .chip-node")).to_contain_text("ABOGACÍA (ONLINE)")
+    return "Cuenta Online → versión Online. " + CAMBIO_SEDE
 
 @caso("SED-03")
 def _(f):
-    f.carrera("abogacia", "Abogacía"); f.sede("C")
+    f.cuenta("costa"); f.carrera("abogacia", "Abogacía")
     assert variante(f) == "costa"; expect(f.p.locator("#chips .chip-node")).to_contain_text("ABOGACÍA (COSTA ARGENTINA)")
+    return "Cuenta Costa → versión Costa. " + CAMBIO_SEDE
 
 @caso("SED-04")
 def _(f):
-    f.carrera("abogacia", "Abogacía"); f.sede("M")
-    assert variante(f) == "normal"
+    f.carrera("abogacia", "Abogacía"); assert variante(f) == "normal"
+    for s_ in "OCM":
+        f.sede(s_); assert variante(f) == "normal", (s_, variante(f))
+    return "Cuenta de facultad → presencial, y sigue presencial aunque la reunión sea Online o en Costa. " + CAMBIO_SEDE
 
 @caso("SED-05")
 def _(f):
-    f.carrera("contador", "Contador Público"); f.sede("O")
+    f.cuenta("online"); f.carrera("contador", "Contador Público")
     assert variante(f) == "normal"
     expect(f.p.locator("#chips .note")).to_have_text("· No tiene versión Online: se usa la presencial")
-    return ("Probado con Contador Público: Lic. en Psicología (dato del caso) SÍ tiene versión Online, "
-            "así que con esa carrera no aparece la nota.")
+    return "Cuenta Online + Contador Público (no tiene versión Online). Lic. en Psicología sí tiene Online."
 
 @caso("SED-06")
 def _(f):
-    f.tipo("ri_posgrado"); f.carrera("comunicacion corporativa", "Especialización en Comunicación Corporativa"); f.sede("O")
-    expect(f.p.locator("#chips .note")).to_have_text("· No tiene versión Online: se usa la presencial")
-    f.p.locator("#chips .chip-x").click(); f.tipo("ri_grado"); f.sede("M")
     f.carrera("gastronomicos", "Diplomatura de Administración de Negocios Gastronómicos")
     expect(f.p.locator("#chips .note")).to_have_text("· Solo existe la versión Costa")
-    return ("El texto esperado del caso no coincide con la regla: con sede Online o Costa la nota es 'No tiene versión "
-            "Online/Costa: se usa la presencial'. 'Solo existe la versión X' sale cuando la sede es presencial y la "
-            "carrera no tiene versión presencial (probado con la Diplomatura de Negocios Gastronómicos → Costa).")
+    return "'Solo existe la versión X' sale cuando la carrera no tiene versión presencial (ej. Diplomatura de Negocios Gastronómicos)."
 
 @caso("SED-07")
 def _(f):
-    f.carrera("abogacia", "Abogacía"); f.sede("M")
+    f.carrera("abogacia", "Abogacía")
     f.p.select_option("#chips select", "online")
-    f.sede("C"); assert variante(f) == "online", variante(f)
+    f.sede("C"); f.sede("M"); assert variante(f) == "online", variante(f)
     expect(f.p.locator("#chips .chip-node")).to_contain_text("ABOGACÍA (ONLINE)")
 
 @caso("FCH-01")
@@ -295,14 +306,13 @@ def _(f):
 
 @caso("FCH-04")
 def _(f):
-    f.ini("09:00"); f.p.click("#quick-dur button[data-min='90']")
-    assert f.p.input_value("#hora-fin") == "10:30"
-    f.p.click("#quick-dur button[data-min='120']"); assert f.p.input_value("#hora-fin") == "11:00"
-    f.p.click("#quick-dur button[data-min='60']"); assert f.p.input_value("#hora-fin") == "10:00"
+    assert f.p.locator("#quick-dur").count() == 0
+    raise NoAplica("Se quitaron los botones de duración (pedido del equipo, punto 4): el fin se elige en la lista. "
+                   "Sigue proponiendo 1 h al elegir el inicio.")
 
 @caso("FCH-05")
 def _(f):
-    f.ini("23:00"); f.p.click("#quick-dur button[data-min='120']")
+    f.ini("23:00")
     assert f.p.input_value("#hora-fin") == "23:45", f.p.input_value("#hora-fin")
     opciones = f.p.eval_on_selector_all("#hora-fin option", "o => o.map(x => x.value)")
     assert opciones[-1] == "23:45"
@@ -313,8 +323,8 @@ def _(f):
 
 @caso("FCH-06")
 def _(f):
-    f.p.click("#quick-dur button[data-min='60']")
-    expect(f.toast()).to_have_text("Primero elegí la hora de inicio.")
+    assert f.p.locator("#quick-dur").count() == 0
+    raise NoAplica("Se quitaron los botones de duración (pedido del equipo, punto 4).")
 
 @caso("FCH-07")
 def _(f):
@@ -331,9 +341,12 @@ def _(f):
 
 @caso("TIT-02")
 def _(f):
-    d = dia(9); f.valido(sede="O", fecha=d)
-    t = f.titulo(); assert t.startswith("Reunión Informativa Online:"), t
-    return f"Título obtenido: «{t}»."
+    d = dia(9); f.valido(sede="O", fecha=d); f.paso(2)
+    t = f.titulo(); assert t == f"Reunión Informativa Online: Abogacía ({ddmm(d)})", t
+    f.p.select_option("#chips select", "online")
+    t2 = f.titulo(); assert t2 == f"Reunión Informativa Online: Abogacía ({ddmm(d)})", t2
+    f.sede("M"); t3 = f.titulo(); assert t3 == f"Reunión Informativa: Abogacía Online ({ddmm(d)})", t3
+    return f"«{t}». Ya no repite 'Online' si la carrera también es la online; si la reunión es presencial y la carrera online: «{t3}»."
 
 @caso("TIT-03")
 def _(f):
@@ -372,14 +385,14 @@ def _(f):
     f.otro(hora="19:00")
     cien = ("Charla Abierta " * 10)[:99] + "X"; assert len(cien) == 100
     f.escribir_titulo(cien); expect(f.p.locator("#titulo-count")).to_have_text("100/100"); f.agregar_ok()
-    f.p.fill("#titulo", ""); f.p.type("#titulo", cien + "Z")
+    f.escribir_titulo(""); f.p.type("#titulo", cien + "Z")
     assert len(f.titulo()) == 100, "deja escribir más de 100"
     return "Aceptó 3 y 100 caracteres; un carácter más no se puede escribir."
 
 @caso("TIT-08")
 def _(f):
     f.valido(); txt = "Conocé la carrera. " * 14
-    f.p.fill("#copete", ""); f.p.type("#copete", txt[:255])
+    f.copete(""); f.p.type("#copete", txt[:255])
     assert len(f.p.input_value("#copete")) == 250
     f.agregar_ok(); assert len(f.tanda()[0]["copete"]) == 250
 
@@ -402,7 +415,7 @@ def _(f):
 @caso("TIT-11")
 def _(f):
     f.valido()
-    f.p.fill("#descripcion", "Texto de prueba"); expect(f.p.locator("#desc-count")).to_have_text("15/3000")
+    f.descripcion("Texto de prueba"); expect(f.p.locator("#desc-count")).to_have_text("15/3000")
     f.p.fill("#descripcion", "x" * 2995); f.p.press("#descripcion", "End"); f.p.type("#descripcion", "y" * 10)
     assert len(f.p.input_value("#descripcion")) == 3000
     assert f.p.get_attribute("#descripcion", "spellcheck") == "true" and f.p.get_attribute("#descripcion", "lang") == "es-AR"
@@ -410,37 +423,41 @@ def _(f):
 
 @caso("OPT-01")
 def _(f):
-    assert not f.p.evaluate("document.querySelector('#mas-opciones').open")
-    expect(f.p.locator("#mas-resumen")).to_have_text("· Reuni. Infor. · Alumnos, Web · sin sector")
-    f.carrera("abogacia", "Abogacía")
-    expect(f.p.locator("#mas-resumen")).to_have_text("· Reuni. Infor. · Alumnos, Web · Fac. de Ciencias Jurídicas y de la Comunicación")
+    expect(f.p.locator("#pasos button[data-paso='3']")).to_contain_text("Datos para Intranet")
+    f.carrera("abogacia", "Abogacía"); f.paso(3)
+    expect(f.p.locator("#categ-fija")).to_have_text("Charlas")
+    raise NoAplica("Ya no hay sección plegada: 'Más opciones' pasó a ser el paso 3 'Datos para Intranet' (pedido del equipo, punto 5).")
 
 @caso("OPT-02")
 def _(f):
     f.valido(); f.abrir_mas(); f.destildar("#ck-perfil")
-    f.p.click("#mas-opciones summary")
-    assert not f.p.evaluate("document.querySelector('#mas-opciones').open")
     f.agregar()
-    assert f.p.evaluate("document.querySelector('#mas-opciones').open")
+    assert f.paso_actual() == 3, f.paso_actual()
+    expect(f.p.locator("#pasos button[data-paso='3']")).to_have_class(re.compile("con-error"))
     assert f.err("perfil") == "Elegí al menos una audiencia."
+    return "Al agregar vuelve solo al paso 3, que queda marcado en rojo con el aviso."
 
 def marcados(f, sel): return f.p.eval_on_selector_all(f"{sel} input:checked", "l => l.map(x => Number(x.value))")
 
 @caso("OPT-03")
 def _(f):
     f.carrera("abogacia", "Abogacía"); f.carrera("contador", "Contador Público"); f.sede("M"); f.abrir_mas()
-    assert marcados(f, "#ck-categ") == [12]; assert marcados(f, "#ck-perfil") == [3, 100]
+    expect(f.p.locator("#categ-fija")).to_have_text("Charlas"); assert marcados(f, "#ck-perfil") == [3, 100]
     assert sorted(marcados(f, "#ck-sector")) == [176, 182], marcados(f, "#ck-sector")
-    f.sede("O"); assert marcados(f, "#ck-categ") == [53]
-    f.sede("C"); assert 257 in marcados(f, "#ck-sector")
-    return "También: Online cambia la categoría a 'Reunión Info. Online' y Costa suma el sector UADE Costa Argentina."
+    f.sede("O"); f.abrir_mas(); expect(f.p.locator("#categ-fija")).to_have_text("Charlas")
+    f.sede("C"); f.abrir_mas(); assert 257 in marcados(f, "#ck-sector")
+    return "Categoría fija 'Charlas' (pedido del equipo, punto 9). Costa suma el sector UADE Costa Argentina."
 
 @caso("OPT-04")
 def _(f):
     assert f.p.input_value("#origen-crm") == "R" and f.p.input_value("#categ-crm") == "12"
     f.tipo("otro")
     assert f.p.input_value("#origen-crm") == "A" and f.p.input_value("#categ-crm") == "8"
-    assert marcados(f, "#ck-categ") == [39]
+    f.tipo("ovo")
+    assert f.p.input_value("#origen-crm") == "O" and f.p.input_value("#categ-crm") == "38"
+    opciones = f.p.eval_on_selector_all("#categ-crm option", "l => l.map(o => o.text)")
+    assert opciones == ["Charlas", "Reuni. Infor.", "Taller Orientación Vocacional"], opciones
+    return "RI → RI / Reuni. Infor.; Evento → Actividades Agenda / Charlas; Taller OVO → OVO / Taller Orientación Vocacional. Categoría CRM solo con las 3 opciones pedidas."
 
 @caso("OPT-05")
 def _(f):
@@ -453,19 +470,22 @@ def _(f):
 @caso("OPT-06")
 def _(f):
     f.valido(); f.abrir_mas()
-    assert not f.p.is_checked("#req-insc")
-    f.p.locator("#req-insc").check(force=True); f.agregar_ok()
-    assert f.tanda()[0]["requiere_inscripcion"] is True
+    expect(f.p.locator("#insc-fija")).to_have_text("Sí (siempre, salvo en Talleres OVO)")
+    f.agregar_ok(); assert f.tanda()[0]["requiere_inscripcion"] is True
+    f.tipo("ovo"); f.abrir_mas()
+    expect(f.p.locator("#insc-fija")).to_have_text("No (los Talleres OVO no llevan inscripción)")
+    f.sede("M"); f.fecha(dia(9)); f.ini("10:00"); f.escribir_titulo("Taller de Orientación Vocacional"); f.agregar_ok()
+    assert f.tanda()[1]["requiere_inscripcion"] is False and f.tanda()[1]["tipo"] == "ovo"
+    return "Ya no es un interruptor: Sí siempre, No en Talleres OVO (pedido del equipo, punto 11)."
 
 @caso("VAL-01")
 def _(f):
     f.sede("M"); f.fecha(dia(7)); f.ini("10:00")
-    f.p.evaluate("window.scrollTo(0, document.body.scrollHeight)")
     f.agregar()
     assert f.err("carreras") == "Elegí al menos una carrera."
-    f.p.wait_for_timeout(900)
-    caja = f.p.locator("#combo").bounding_box(); alto = f.p.viewport_size["height"]
-    assert 0 <= caja["y"] <= alto, "no se desplazó al error"
+    assert f.paso_actual() == 2
+    expect(f.p.locator("#combo")).to_be_visible()
+    return "Vuelve solo al paso 2 (Carrera), marcado en rojo."
 
 @caso("VAL-02")
 def _(f):
@@ -506,7 +526,7 @@ def _(f):
     f.carrera("abogacia", "Abogacía"); f.sede("M"); f.ini("10:00")
     f.agregar()
     assert f.err("fecha") == "Poné la fecha." and f.err("titulo") == "Al título le falta la carrera o la fecha.", f.err("titulo")
-    f.p.locator("#chips .chip-x").click(); f.fecha(dia(7)); f.agregar()
+    f.paso(2); f.p.locator("#chips .chip-x").click(); f.fecha(dia(7)); f.agregar()
     assert f.err("titulo") == "Al título le falta la carrera o la fecha."
 
 @caso("VAL-10")
@@ -581,8 +601,8 @@ def _(f):
     if f.dlg().count(): f.dlg_boton("Volver a editar")
     titulo_mal(f, "charla abierta: ¿cómo estudiar en uade?", fecha=dia(9)); f.agregar()
     expect(f.dlg()).to_be_visible(timeout=12000)
-    expect(f.p.locator("#dlg [data-rev='may'] .rev-bien")).to_have_text("Así queda: Charla Abierta: ¿cómo estudiar en uade?")
-    return "Sin ':' o ' - ' no toca la pregunta; con ':' corrige solo lo de antes ('Charla Abierta: ¿cómo estudiar en uade?')."
+    expect(f.p.locator("#dlg [data-rev='may'] .rev-bien")).to_have_text("Así queda: Charla Abierta: ¿cómo estudiar en UADE?")
+    return "Sin ':' o ' - ' no toca la pregunta; con ':' corrige solo lo de antes ('Charla Abierta: ¿cómo estudiar en UADE?'; 'uade' ya se pasa a mayúsculas al escribir)."
 
 @caso("REV-05", modo="lt")
 def _(f):
@@ -593,13 +613,13 @@ def _(f):
 
 @caso("REV-06", modo="lt")
 def _(f):
-    f.valido(); f.p.fill("#copete", "Escribinos a UADE para consultar por la carrera"); f.agregar()
+    f.valido(); f.copete("Escribinos a UADE para consultar por la carrera"); f.agregar()
     expect(f.p.locator("#tanda-count")).to_have_text("1", timeout=12000)
     assert f.dlg().count() == 0
 
 @caso("REV-07", modo="lt")
 def _(f):
-    f.valido(); f.p.fill("#copete", "Vení a conoser la facultad"); f.agregar()
+    f.valido(); f.copete("Vení a conoser la facultad"); f.agregar()
     expect(f.dlg()).to_be_visible(timeout=12000)
     item = f.p.locator("#dlg .rev-item[data-rev='0']")
     expect(item.locator(".rev-head")).to_contain_text("Ortografía · Copete")
@@ -618,7 +638,7 @@ def _(f):
             "offset": 0, "length": 3, "replacements": [{"value": "Los"}],
             "rule": {"issueType": "grammar", "category": {"id": "GRAMMAR"}}}]}))
     f.p.route(LT, gram)
-    f.valido(); f.p.fill("#copete", "Las alumnos vienen"); f.agregar()
+    f.valido(); f.copete("Las alumnos vienen"); f.agregar()
     expect(f.dlg()).to_be_visible()
     item = f.p.locator("#dlg .rev-item[data-rev='0']")
     expect(item.locator(".rev-head")).to_contain_text("Gramática · Copete")
@@ -636,7 +656,7 @@ def _(f):
 
 @caso("REV-10", modo="lt")
 def _(f):
-    titulo_mal(f); f.p.fill("#copete", "Vení a conoser a los egresados"); f.agregar()
+    titulo_mal(f); f.copete("Vení a conoser a los egresados"); f.agregar()
     expect(f.dlg()).to_be_visible(timeout=12000); f.dlg_boton("Aplicar y agregar")
     expect(f.p.locator("#tanda-count")).to_have_text("1")
     t = f.tanda()[0]
@@ -665,7 +685,7 @@ def _(f):
 
 @caso("REV-13", modo="lt")
 def _(f):
-    f.valido(); f.p.fill("#copete", "Conocé la carrera y su plan de estudios")
+    f.valido(); f.copete("Conocé la carrera y su plan de estudios")
     f.p.evaluate("""() => { window.__log = []; const b = document.querySelector('#btn-agregar');
       new MutationObserver(() => __log.push([b.textContent, b.disabled])).observe(b, {attributes: true, childList: true, characterData: true, subtree: true}); }""")
     f.agregar(); expect(f.p.locator("#tanda-count")).to_have_text("1", timeout=12000)
@@ -726,7 +746,7 @@ def _(f):
 
 @caso("TND-07")
 def _(f):
-    f.valido(sede="B"); f.p.fill("#descripcion", "Te esperamos en Belgrano."); f.agregar_ok()
+    f.valido(sede="B"); f.descripcion("Te esperamos en Belgrano."); f.agregar_ok()
     expect(f.p.locator("#seg-sede button[data-v='B']")).to_have_attribute("aria-pressed", "true")
     expect(f.p.locator("#seg-tipo button[data-v='ri_grado']")).to_have_attribute("aria-pressed", "true")
     assert f.chips() == [] and f.p.input_value("#fecha") == "" and f.p.input_value("#hora-ini") == ""
@@ -744,10 +764,20 @@ def _(f):
 def _(f):
     f.valido(); f.agregar_ok()
     f.p.evaluate("d => { const t = JSON.parse(localStorage.getItem('uade_alta_tanda')); t[0].fecha = d; localStorage.setItem('uade_alta_tanda', JSON.stringify(t)); }", dia(-2))
-    f.p.reload(); f.p.click("#btn-confirmar")
-    expect(f.p.locator("#dlg-title")).to_have_text("Hay eventos para corregir")
+    f.p.reload()
+    item = f.p.locator("#tanda-list .tanda-item").first
+    expect(item).to_have_class(re.compile("con-error")); expect(item.locator(".ti-error")).to_have_text("⚠ La fecha ya pasó.")
+    f.p.click("#btn-confirmar")
+    expect(f.p.locator("#dlg-title")).to_have_text("Hay 1 evento para corregir")
     expect(f.p.locator("#dlg-content li")).to_contain_text("La fecha ya pasó.")
-    return "Simulado con un evento de la tanda que quedó con fecha vencida (pasa si se deja la tanda abierta de un día para otro)."
+    f.dlg_boton("Corregirlo ahora")
+    expect(f.p.locator("#pasos button[data-paso='4']")).to_have_attribute("aria-current", "step")
+    assert f.err("fecha") == "La fecha ya pasó."
+    expect(f.p.locator("#pasos button[data-paso='4']")).to_have_class(re.compile("con-error"))
+    f.fecha(dia(10)); f.agregar(); expect(f.toast()).to_have_text("Evento actualizado en la tanda.")
+    expect(item).not_to_have_class(re.compile("con-error"))
+    return ("Pedido del equipo, punto 2: el evento con error queda en rojo en la tanda con el motivo; 'Corregirlo ahora' "
+            "lo abre directo en el paso del error (marcado en rojo). Simulado con una fecha vencida.")
 
 @caso("CNF-03")
 def _(f):
@@ -788,13 +818,14 @@ def _(f):
     claves = f.p.eval_on_selector_all("#dlg dt", "l => l.map(x => x.textContent)")
     assert claves == ["Estado", "Carreras (Umbraco)", "Fecha", "Sede", "Categoría", "Audiencia", "Sector",
                       "Origen / Categ. CRM", "Inscripción / cupo", "Copete", "Descripción"], claves
-    expect(f.p.locator("#dlg dd").nth(8)).to_have_text("No / 40")
+    expect(f.p.locator("#dlg dd").nth(8)).to_have_text("Sí / 40")
 
 @caso("EVT-09")
 def _(f):
     f.valido(); f.agregar_ok(); f.confirmar()
     f.p.locator("#tabla-mis [data-acc='editar']").click()
     expect(f.p.locator("#btn-agregar")).to_have_text("Guardar y reenviar")
+    expect(f.p.locator("#btn-agregar")).to_be_visible()
     f.ini("16:00"); f.agregar()
     expect(f.toast()).to_have_text("Cambios guardados: se reenvían a Intranet.")
     expect(f.p.locator("#view-mis")).to_be_visible()
@@ -816,6 +847,66 @@ def _(f):
     f.confirmar(); expect(f.p.locator("#mis-count")).to_have_text("3")
     f.p.locator("#tabla-mis [data-acc='cancelar']").first.click(); f.dlg_boton("Cancelar evento")
     expect(f.p.locator("#mis-count")).to_have_text("2")
+
+# ---------- cambios pedidos por el equipo (casos nuevos)
+NUEVOS = {
+    "NUE-01": ("Cuentas", "Tipos de evento según la cuenta", "Facultades/Online/Costa: RI de grado, Taller OVO y Evento; UBS: RI de posgrado y Evento; las carreras se filtran por nivel."),
+    "NUE-02": ("Pasos", "Carga por pasos con Siguiente/Anterior", "Siguiente no avanza si el paso tiene errores; los números de arriba llevan a cualquier paso."),
+    "NUE-03": ("Dónde y cuándo", "Link obligatorio si la reunión es online", "Con modalidad Online el copete pasa a 'Link de la reunión online' y exige https://."),
+    "NUE-04": ("Textos", "UADE siempre en mayúsculas", "Al escribir 'uade' en título, copete o descripción queda 'UADE'; no toca mails ni webs."),
+    "NUE-05": ("Taller OVO", "Taller OVO completo", "Sin inscripción, Origen OVO, Categoría CRM Taller Orientación Vocacional, sector Admisiones, carrera opcional."),
+    "NUE-06": ("Taller OVO", "Taller OVO se graba en Supabase", "Modo real: el tipo 'ovo' se guarda con sus valores."),
+}
+
+@caso("NUE-01")
+def _(f):
+    assert f.tipos() == ["ri_grado", "ovo", "otro"], f.tipos()
+    f.cuenta("ubs"); assert f.tipos() == ["ri_posgrado", "otro"], f.tipos()
+    f.buscar("abogacia"); expect(f.p.locator("#sugerencias li.vacio")).to_be_visible()
+    f.buscar("marketing"); assert f.sug_nombres() == ["Especialización en Dirección de Marketing"], f.sug_nombres()
+    f.cuenta("online"); assert f.tipos() == ["ri_grado", "ovo", "otro"]
+    f.buscar("marketing"); assert all(not n.startswith("Especialización") for n in f.sug_nombres())
+    f.cuenta("prueba.formulario"); assert f.tipos() == ["ri_grado", "ri_posgrado", "ovo", "otro"]
+    return "En modo prueba se elige la cuenta arriba ('Probar como'); en modo real sale del mail con el que entra."
+
+@caso("NUE-02")
+def _(f):
+    assert f.paso_actual() == 1 and f.p.is_hidden("#btn-agregar") and f.p.is_hidden("#btn-anterior")
+    f.p.click("#btn-siguiente"); assert f.paso_actual() == 2
+    f.p.click("#btn-siguiente"); assert f.paso_actual() == 2 and f.err("carreras") == "Elegí al menos una carrera."
+    f.carrera("abogacia", "Abogacía"); f.p.click("#btn-siguiente"); assert f.paso_actual() == 3
+    f.p.click("#btn-siguiente"); assert f.paso_actual() == 4
+    f.p.click("#btn-siguiente"); assert f.paso_actual() == 4 and f.err("sede") == "Elegí la sede o modalidad."
+    f.sede("M"); f.fecha(dia(7)); f.ini("10:00"); f.p.click("#btn-siguiente"); assert f.paso_actual() == 5
+    assert f.p.is_visible("#btn-agregar") and f.p.is_hidden("#btn-siguiente")
+    f.p.click("#btn-anterior"); assert f.paso_actual() == 4
+    f.agregar_ok(); assert f.paso_actual() == 1
+
+@caso("NUE-03")
+def _(f):
+    f.carrera("abogacia", "Abogacía"); f.sede("O"); f.fecha(dia(7)); f.ini("10:00"); f.paso(5)
+    expect(f.p.locator("#copete-lbl")).to_have_text("Link de la reunión online (obligatorio)")
+    f.agregar(); assert f.err("copete") == "Pegá el link de la reunión online (empieza con https://)."
+    f.copete("zoom punto com"); f.agregar(); assert f.err("copete").startswith("Pegá el link")
+    f.copete("https://teams.microsoft.com/l/meetup-join/abc"); f.agregar_ok()
+    f.sede("M"); f.paso(5); expect(f.p.locator("#copete-lbl")).to_have_text("Copete (opcional)")
+
+@caso("NUE-04")
+def _(f):
+    f.tipo("otro"); f.escribir_titulo("charla en uade")
+    assert f.titulo() == "charla en UADE", f.titulo()
+    f.copete("Vení a uade, escribinos a face@uade.edu.ar o mirá www.uade.edu.ar")
+    assert f.p.input_value("#copete") == "Vení a UADE, escribinos a face@uade.edu.ar o mirá www.uade.edu.ar", f.p.input_value("#copete")
+    f.descripcion("Uade te invita. Uade.")
+    assert f.p.input_value("#descripcion") == "UADE te invita. UADE.", f.p.input_value("#descripcion")
+
+@caso("NUE-05")
+def _(f):
+    f.tipo("ovo"); f.paso(2); expect(f.p.locator("#carrera-opcional")).to_be_visible()
+    f.sede("M"); f.fecha(dia(8)); f.ini("10:00"); f.escribir_titulo("Taller de Orientación Vocacional"); f.agregar_ok()
+    t = f.tanda()[0]
+    assert (t["tipo"], t["requiere_inscripcion"], t["origen_crm"], t["categ_crm"], t["sector"], t["categ"]) == ("ovo", False, "O", 38, [159], [8]), t
+    return "Intranet no tiene un sector 'Taller OVO': lo OVO va en Origen CRM = OVO. Sector propuesto: Admisiones (se puede cambiar)."
 
 # ---------- responsive y modo oscuro
 @caso("RES-01", modo="res")
@@ -847,7 +938,7 @@ def _(f):
     fondo = f.p.evaluate("getComputedStyle(document.body).backgroundColor")
     nums = [int(x) for x in re.findall(r"\d+", fondo)[:3]]
     assert sum(nums) / 3 < 80, fondo
-    f.valido(); f.agregar_ok(); titulo_mal(f); f.p.fill("#copete", "Vení a conoser la facultad"); f.agregar()
+    f.valido(); f.agregar_ok(); titulo_mal(f); f.copete("Vení a conoser la facultad"); f.agregar()
     expect(f.dlg()).to_be_visible(timeout=12000)
     f.p.screenshot(path=str(CAPTURAS / "oscuro_aviso.png"))
     f.dlg_boton("Volver a editar")
@@ -945,7 +1036,8 @@ def _(f):
     expect(f.p.locator(".tab")).to_have_text(["Nuevo evento", re.compile(r"^Mis eventos")])
     expect(f.p.locator("#who")).to_have_text(MAIL_PRUEBA)
     assert f.p.is_hidden("#banner-prueba")
-    return "Probado con la cuenta prueba.formulario@ (la del caso no existe)."
+    assert f.tipos() == ["ri_grado", "ri_posgrado", "ovo", "otro"], f.tipos()
+    return "Probado con la cuenta prueba.formulario@ (la del caso no existe); esa cuenta ve los 4 tipos."
 
 @caso("LOG-06", modo="real")
 def _(f):
@@ -1017,6 +1109,15 @@ def _(f):
     assert len(r) == 2 and len({x["tanda_id"] for x in r}) == 1, r
     assert all(x["estado"] == "confirmado" and x["accion_pendiente"] == "alta" and x["creado_email"] == MAIL_PRUEBA for x in r), r
     return "Grabó 2 filas en Supabase con el mismo tanda_id, estado 'confirmado' y acción 'alta'."
+
+@caso("NUE-06", modo="real")
+def _(f):
+    f.p.click(".tab[data-view='nuevo']"); f.p.route(LT, lt_vacio)
+    f.tipo("ovo"); f.sede("M"); f.fecha(dia(33)); f.ini("10:00"); f.escribir_titulo("Taller de Orientación Vocacional"); f.agregar_ok()
+    f.confirmar()
+    st, r = svc("GET", f"/rest/v1/eventos?select=tipo,requiere_inscripcion,origen_crm,categ_crm,sector,categ&creado_por=eq.{CTX['yo']}&fecha=eq.{dia(33)}")
+    assert r == [{"tipo": "ovo", "requiere_inscripcion": False, "origen_crm": "O", "categ_crm": 38, "sector": [159], "categ": [8]}], r
+    return "Supabase acepta el tipo nuevo (sql/03_taller_ovo.sql) y guarda los valores del Taller OVO."
 
 @caso("EVT-09", modo="real")
 def _(f):
@@ -1203,6 +1304,16 @@ def escribir_excel(origen, destino):
         fila_[10].fill = PatternFill("solid", fgColor=COLORES[estado]); fila_[10].font = Font(bold=True)
         fila_[11].alignment = Alignment(wrap_text=True, vertical="top")
     ws.column_dimensions["L"].width = 70
+    ultima = max(r for r in range(1, ws.max_row + 1) if ws.cell(r, 1).value)
+    for cid, (mod, tit, esp) in NUEVOS.items():
+        r = combinar(cid)
+        if not r: continue
+        ultima += 1
+        modo = "Real" if cid == "NUE-06" else "Ambos"
+        for col, v in enumerate([cid, mod, tit, "Cambio pedido por el equipo", "", "", esp, "Alta", "Positivo", modo], 1):
+            ws.cell(ultima, col, v).alignment = Alignment(wrap_text=True, vertical="top")
+        ws.cell(ultima, 11, r[0]).fill = PatternFill("solid", fgColor=COLORES[r[0]]); ws.cell(ultima, 11).font = Font(bold=True)
+        ws.cell(ultima, 12, r[1] or None).alignment = Alignment(wrap_text=True, vertical="top")
     humo = wb["Set de Humo (10)"]
     for fila_ in humo.iter_rows(min_row=2):
         if not fila_[1].value: continue
