@@ -69,6 +69,7 @@ SUPABASE.url = "";  // siempre modo prueba
 
 
 catalogo = json.dumps(json.loads(leer("data/carreras.json")), ensure_ascii=False, separators=(",", ":"))
+armadas = {}
 for html_nombre, principal, salida_nombre in PAGINAS:
     html = leer(html_nombre)
     css_tag = '<link rel="stylesheet" href="styles.css">'
@@ -78,10 +79,37 @@ for html_nombre, principal, salida_nombre in PAGINAS:
     html = html.replace(js_tag,
                         "<script>window.__CATALOGO__ = " + catalogo.replace("</", "<\\/") + ";</script>\n"
                         + '  <script type="module">' + modulo(principal).replace("</script", "<\\/script") + "</script>")
-    # los links entre páginas apuntan a las versiones de prueba
-    html = html.replace('href="panel.html"', 'href="Panel de control (prueba).html"')
-    html = html.replace('href="index.html"', 'href="Alta de eventos (prueba).html"')
-    salida = RAIZ / "dist" / salida_nombre
-    salida.parent.mkdir(exist_ok=True)
-    salida.write_text(html, encoding="utf-8")
-    print(f"Listo: {salida} ({salida.stat().st_size // 1024} KB)")
+    armadas[principal] = html
+    # sueltas (las usa la batería de pruebas): los links apuntan a la otra página suelta
+    suelta = (html.replace('href="panel.html"', 'href="Panel de control (prueba).html"')
+              .replace('href="index.html"', 'href="Alta de eventos (prueba).html"'))
+    salida = RAIZ / "dist" / "separados" / salida_nombre
+    salida.parent.mkdir(parents=True, exist_ok=True)
+    salida.write_text(suelta, encoding="utf-8")
+
+# Un solo archivo con las dos páginas: así comparten lo guardado aunque se abra desde un adjunto o el celular.
+# Cambia de página reescribiendo el documento (mismo origen, mismo localStorage); #panel muestra el panel.
+def para_unico(html):
+    html = html.replace('href="panel.html"', 'href="#panel"').replace('href="index.html"', 'href="#formulario"')
+    return html.replace("</body>", '<script>addEventListener("hashchange", function () { window.__mostrar(); });</script>\n</body>')
+
+paginas = json.dumps({"formulario": para_unico(armadas["app.js"]), "panel": para_unico(armadas["panel.js"])},
+                     ensure_ascii=False).replace("</", "<\\/")
+unico = f"""<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alta de eventos y panel (prueba)</title></head><body>
+<script>
+window.__PAGINAS = {paginas};
+window.__mostrar = function () {{
+  var k = location.hash === "#panel" ? "panel" : "formulario";
+  if (window.__actual === k) return;
+  window.__actual = k;
+  document.open(); document.write(window.__PAGINAS[k]); document.close();
+}};
+setTimeout(window.__mostrar, 0);
+</script></body></html>"""
+for viejo in ("Alta de eventos (prueba).html", "Panel de control (prueba).html"):
+    (RAIZ / "dist" / viejo).unlink(missing_ok=True)
+SALIDA = RAIZ / "dist" / "Alta de eventos y panel (prueba).html"
+SALIDA.write_text(unico, encoding="utf-8")
+print(f"Listo: {SALIDA} ({SALIDA.stat().st_size // 1024} KB)  ·  sueltas para las pruebas en dist/separados/")

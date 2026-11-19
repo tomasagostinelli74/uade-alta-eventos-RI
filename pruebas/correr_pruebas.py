@@ -25,8 +25,9 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from playwright.sync_api import expect, sync_playwright
 
 RAIZ = Path(__file__).resolve().parent.parent
-HTML = (RAIZ / "dist" / "Alta de eventos (prueba).html").as_uri()
-PANEL = (RAIZ / "dist" / "Panel de control (prueba).html").as_uri()
+HTML = (RAIZ / "dist" / "separados" / "Alta de eventos (prueba).html").as_uri()
+PANEL = (RAIZ / "dist" / "separados" / "Panel de control (prueba).html").as_uri()
+UNICO = (RAIZ / "dist" / "Alta de eventos y panel (prueba).html").as_uri()
 REAL = "http://localhost:8939/"
 CAPTURAS = RAIZ / "dist" / "capturas"
 SB_URL = "https://kigfmductmgcccvcploe.supabase.co"
@@ -862,6 +863,7 @@ NUEVOS = {
     "NUE-07": ("Panel de control", "Simulación de Intranet y de Umbraco", "Cada evento para revisar muestra los campos de Intranet y la carrera, School y Site que se aplican en Umbraco."),
     "NUE-08": ("Panel de control", "Corregir en el panel y devolver al REN", "Las mayúsculas se aplican con un clic; devolver exige comentario; el REN lo ve, corrige y vuelve a revisión."),
     "NUE-09": ("Panel de control", "Aprobar por evento o por tanda", "Lo que tiene errores no se puede aprobar; 'Aprobar los N listos' deja el resto para revisar; lo aprobado queda en cola de alta."),
+    "NUE-11": ("Panel de control", "Circuito completo en el HTML de prueba", "Formulario y panel en un solo archivo: el REN envía, el revisor aprueba y el REN ve el estado."),
     "NUE-10": ("Panel de control", "Permisos del panel en Supabase", "Modo real: un REN no entra al panel ni aprueba por API; un revisor aprueba y queda registrado quién."),
 }
 
@@ -940,6 +942,24 @@ def _(f):
     assert estados == [("aprobado", "alta"), ("para_revisar", None)], estados
     expect(f.p.locator("#filtros [data-f='proceso'] .muted")).to_have_text("1")
     return "El evento con fecha vencida queda bloqueado; 'Aprobar 1 de 2 (sin errores)' aprueba solo el bueno y lo deja en cola de alta."
+
+@caso("NUE-11")
+def _(f):
+    f.p.goto(UNICO); expect(f.p.locator("#view-nuevo")).to_be_visible()
+    f.p.route(LT, lt_vacio)
+    f.valido(); f.agregar_ok(); f.confirmar()
+    titulo = f"Reunión Informativa: Abogacía ({ddmm(dia(7))})"
+    f.p.click("#link-panel")
+    expect(f.p.locator("#view-panel")).to_be_visible()
+    t = tarjeta(f, titulo); expect(t).to_have_count(1)
+    t.locator("[data-acc='aprobar']").click(); f.dlg_boton("Aprobar")
+    expect(f.toast()).to_have_text("Aprobado: pasa a la cola de Intranet.")
+    f.p.click("text=Ir al formulario")
+    expect(f.p.locator("#view-nuevo")).to_be_visible()
+    f.p.click(".tab[data-view='mis']")
+    expect(f.p.locator("#tabla-mis tbody tr .estado")).to_have_text("Aprobado, en cola")
+    f.p.go_back(); expect(f.p.locator("#view-panel")).to_be_visible()
+    return "En un solo archivo: el REN envía a revisión, pasa al panel con el link, aprueba y al volver ve 'Aprobado, en cola'."
 
 
 @caso("NUE-01")
