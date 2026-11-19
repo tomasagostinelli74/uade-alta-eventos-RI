@@ -2,7 +2,7 @@ import {
   SEDES, TIPOS, CATEG, PERFIL, SECTORES, ORIGEN_CRM, CATEG_CRM, defaultsPara, copyGeneral,
   CUENTAS, CUENTA_DEFECTO, TIPOS_POR_NIVEL, perfilDe, requiereInscripcion, SECTOR_SIN_CARRERA,
 } from "./config.js";
-import { store, tanda as tandaStore, uid, modoPrueba } from "./store.js";
+import { store, tanda as tandaStore, uid, modoPrueba, soloMemoria } from "./store.js";
 import {
   $, $$, esc, norm, sedeLabel, hoyISO, ddmm, fechaLarga, aMin, aHHMM, HORAS, esRI, VAR_LABEL, toast, dialogo,
   tituloAuto, uadeMayus, uadeEnVivo, corregirMayusculas, revisarOrtografia, ESTADOS, chipEstado, CONECTORES,
@@ -709,12 +709,14 @@ function conectar() {
 }
 
 /* ================= arranque ================= */
+const AVISO_MEMORIA = '<div class="small">Este visor no deja guardar: lo que cargues se pierde al cerrar el archivo.</div>';
 async function init() {
   const horas = `<option value="">—</option>` + HORAS.map((h) => `<option>${h}</option>`).join("");
   $("#hora-ini").innerHTML = horas;
   $("#hora-fin").innerHTML = horas;
   $("#fecha").min = hoyISO();
   $("#banner-prueba").hidden = !modoPrueba;
+  if (modoPrueba && soloMemoria()) $("#banner-prueba").insertAdjacentHTML("beforeend", AVISO_MEMORIA);
   if (modoPrueba) { // en el modo prueba se elige qué cuenta simular
     const opciones = [["", CUENTA_DEFECTO.nombre], ...Object.entries(CUENTAS).map(([k, v]) => [k, v.nombre])];
     let guardada = ""; try { guardada = localStorage.getItem("uade_alta_simular") || ""; } catch { /* sin storage */ }

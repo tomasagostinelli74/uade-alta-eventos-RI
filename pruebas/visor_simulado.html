@@ -1,0 +1,9 @@
+﻿<!doctype html>
+<html><head><meta charset="utf-8"><title>Visor simulado</title></head>
+<body style="margin:0">
+<iframe id="f" sandbox="allow-scripts allow-forms allow-modals" style="width:100vw;height:100vh;border:0"></iframe>
+<script>
+// Como un visor de archivos: el HTML va en un iframe aislado (sin mismo origen → sin localStorage).
+fetch("../dist/Alta%20de%20eventos%20y%20panel%20(prueba).html", { cache: "reload" }).then(r => r.text()).then(t => { document.getElementById("f").srcdoc = t; });
+</script>
+</body></html>

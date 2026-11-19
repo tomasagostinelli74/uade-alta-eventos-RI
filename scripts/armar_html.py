@@ -88,10 +88,15 @@ for html_nombre, principal, salida_nombre in PAGINAS:
     salida.write_text(suelta, encoding="utf-8")
 
 # Un solo archivo con las dos páginas: así comparten lo guardado aunque se abra desde un adjunto o el celular.
-# Cambia de página reescribiendo el documento (mismo origen, mismo localStorage); #panel muestra el panel.
+# Cambia de página reescribiendo el documento: la ventana es la misma, así que se conserva lo guardado
+# (en localStorage o, si el visor no lo deja, en memoria). Los links no navegan: hay visores que los bloquean.
 def para_unico(html):
-    html = html.replace('href="panel.html"', 'href="#panel"').replace('href="index.html"', 'href="#formulario"')
-    return html.replace("</body>", '<script>addEventListener("hashchange", function () { window.__mostrar(); });</script>\n</body>')
+    html = html.replace('href="panel.html"', 'href="#" data-ir="panel"').replace('href="index.html"', 'href="#" data-ir="formulario"')
+    return html.replace("</body>", """<script>document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest("a[data-ir]");
+  if (a) { e.preventDefault(); e.stopPropagation(); window.__mostrar(a.getAttribute("data-ir")); }
+}, true);</script>
+</body>""")
 
 paginas = json.dumps({"formulario": para_unico(armadas["app.js"]), "panel": para_unico(armadas["panel.js"])},
                      ensure_ascii=False).replace("</", "<\\/")
@@ -100,13 +105,14 @@ unico = f"""<!doctype html>
 <title>Alta de eventos y panel (prueba)</title></head><body>
 <script>
 window.__PAGINAS = {paginas};
-window.__mostrar = function () {{
-  var k = location.hash === "#panel" ? "panel" : "formulario";
+window.__mostrar = function (k) {{
+  k = k === "panel" ? "panel" : "formulario";
   if (window.__actual === k) return;
   window.__actual = k;
   document.open(); document.write(window.__PAGINAS[k]); document.close();
+  window.scrollTo(0, 0);
 }};
-setTimeout(window.__mostrar, 0);
+setTimeout(function () {{ window.__mostrar("formulario"); }}, 0);
 </script></body></html>"""
 for viejo in ("Alta de eventos (prueba).html", "Panel de control (prueba).html"):
     (RAIZ / "dist" / viejo).unlink(missing_ok=True)

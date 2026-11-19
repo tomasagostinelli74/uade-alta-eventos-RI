@@ -1,7 +1,7 @@
 // Panel de control: los revisores de Marketing ven cómo va a quedar cada evento en Intranet y en Umbraco,
 // lo corrigen o lo devuelven al REN, y con un OK lo mandan a la cola de alta.
 import { SEDES, TIPOS, copyGeneral } from "./config.js";
-import { store, modoPrueba } from "./store.js";
+import { store, modoPrueba, soloMemoria } from "./store.js";
 import {
   $, $$, esc, norm, sedeLabel, fechaLarga, HORAS, esRI, VAR_LABEL, toast, dialogo, tituloAuto, uadeMayus,
   corregirMayusculas, revisarOrtografia, chipEstado, simularIntranet, simularUmbraco, alertasEvento,
@@ -408,6 +408,9 @@ async function entrar(u) {
 
 async function init() {
   $("#banner-prueba").hidden = !modoPrueba;
+  if (modoPrueba && soloMemoria()) {
+    $("#banner-prueba").insertAdjacentHTML("beforeend", '<div class="small">Este visor no deja guardar: lo que cargues se pierde al cerrar el archivo.</div>');
+  }
   const r = await fetch("data/carreras.json");
   CARRERAS = (await r.json()).carreras;
   conectar();

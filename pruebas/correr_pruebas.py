@@ -864,6 +864,7 @@ NUEVOS = {
     "NUE-08": ("Panel de control", "Corregir en el panel y devolver al REN", "Las mayúsculas se aplican con un clic; devolver exige comentario; el REN lo ve, corrige y vuelve a revisión."),
     "NUE-09": ("Panel de control", "Aprobar por evento o por tanda", "Lo que tiene errores no se puede aprobar; 'Aprobar los N listos' deja el resto para revisar; lo aprobado queda en cola de alta."),
     "NUE-11": ("Panel de control", "Circuito completo en el HTML de prueba", "Formulario y panel en un solo archivo: el REN envía, el revisor aprueba y el REN ve el estado."),
+    "NUE-12": ("Panel de control", "Circuito completo dentro del visor de Claude", "Abierto en un visor aislado (sin guardado ni navegación): el link al panel funciona y el panel ve lo cargado."),
     "NUE-10": ("Panel de control", "Permisos del panel en Supabase", "Modo real: un REN no entra al panel ni aprueba por API; un revisor aprueba y queda registrado quién."),
 }
 
@@ -954,12 +955,34 @@ def _(f):
     t = tarjeta(f, titulo); expect(t).to_have_count(1)
     t.locator("[data-acc='aprobar']").click(); f.dlg_boton("Aprobar")
     expect(f.toast()).to_have_text("Aprobado: pasa a la cola de Intranet.")
-    f.p.click("text=Ir al formulario")
+    f.p.click(".who [data-ir='formulario']")
     expect(f.p.locator("#view-nuevo")).to_be_visible()
     f.p.click(".tab[data-view='mis']")
     expect(f.p.locator("#tabla-mis tbody tr .estado")).to_have_text("Aprobado, en cola")
-    f.p.go_back(); expect(f.p.locator("#view-panel")).to_be_visible()
     return "En un solo archivo: el REN envía a revisión, pasa al panel con el link, aprueba y al volver ve 'Aprobado, en cola'."
+
+@caso("NUE-12")
+def _(f):
+    # El visor de archivos de Claude abre el HTML en un iframe aislado: sin localStorage y con links restringidos.
+    f.p.goto(REAL + "pruebas/visor_simulado.html")
+    fl = f.p.frame_locator("#f")
+    expect(fl.locator("#view-nuevo")).to_be_visible(timeout=15000)
+    g = F(f.p.query_selector("#f").content_frame())
+    expect(fl.locator("#banner-prueba")).to_contain_text("Este visor no deja guardar")
+    g.valido(); g.agregar_ok(); g.confirmar()
+    g.p.click("#link-panel")
+    expect(fl.locator("#view-panel")).to_be_visible()
+    titulo = f"Reunión Informativa: Abogacía ({ddmm(dia(7))})"
+    t = fl.locator(".rev-ev").filter(has=fl.locator("h3", has_text=re.compile("^" + re.escape(titulo) + "$")))
+    expect(t).to_have_count(1)
+    t.locator("[data-acc='aprobar']").click(); fl.locator("#dlg-actions button", has_text="Aprobar").click()
+    expect(fl.locator("#toast")).to_have_text("Aprobado: pasa a la cola de Intranet.")
+    fl.locator(".who [data-ir='formulario']").click()
+    expect(fl.locator("#view-nuevo")).to_be_visible()
+    fl.locator(".tab[data-view='mis']").click()
+    expect(fl.locator("#tabla-mis tbody tr .estado")).to_have_text("Aprobado, en cola")
+    return ("Dentro de un visor aislado como el de Claude (sin guardado en el navegador): el link al panel funciona, "
+            "el panel ve el evento cargado, se aprueba y el REN ve el estado. Lo cargado dura mientras el archivo esté abierto.")
 
 
 @caso("NUE-01")

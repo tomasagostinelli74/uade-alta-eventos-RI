@@ -5,11 +5,24 @@ import { SUPABASE } from "./config.js";
 const K_EVENTOS = "uade_alta_eventos";
 const K_TANDA = "uade_alta_tanda";
 
+// Algunos visores (adjuntos del chat, vistas previas) no dejan usar localStorage: ahí se guarda en memoria.
+// Dura mientras el archivo esté abierto; alcanza para probar formulario y panel en el HTML único.
+let usandoMemoria = false;
+try { localStorage.setItem("uade_alta_prueba", "1"); localStorage.removeItem("uade_alta_prueba"); } catch { usandoMemoria = true; }
+const memoria = (globalThis.__memoriaAlta = globalThis.__memoriaAlta || {});
+export const soloMemoria = () => usandoMemoria;
+
 function leer(k, def) {
-  try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; }
+  try {
+    const v = usandoMemoria ? memoria[k] : localStorage.getItem(k);
+    return (v == null ? def : JSON.parse(v)) ?? def;
+  } catch { return def; }
 }
 function escribir(k, v) {
-  try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* navegador sin storage: se pierde al recargar */ }
+  try {
+    if (usandoMemoria) memoria[k] = JSON.stringify(v);
+    else localStorage.setItem(k, JSON.stringify(v));
+  } catch { memoria[k] = JSON.stringify(v); usandoMemoria = true; }
 }
 
 export const uid = () =>
