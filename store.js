@@ -40,8 +40,9 @@ const local = {
     const ahora = new Date().toISOString();
     const tandaId = uid();
     const nuevos = eventos.map((e) => ({
-      ...soloRen(e), id: uid(), tanda_id: tandaId, estado: "confirmado", accion_pendiente: "alta",
+      ...soloRen(e), id: uid(), tanda_id: tandaId, estado: "para_revisar", accion_pendiente: null,
       confirmado_at: ahora, actualizado_at: ahora, id_actividad: null, creado_email: null, propio: true,
+      revision_comentario: null, revisado_por: null, revisado_at: null, aprobado_at: null,
     }));
     escribir(K_EVENTOS, [...nuevos, ...leer(K_EVENTOS, [])]);
     return nuevos;
@@ -50,9 +51,11 @@ const local = {
     const lista = leer(K_EVENTOS, []);
     const i = lista.findIndex((x) => x.id === ev.id);
     if (i < 0) throw new Error("No se encontró el evento.");
+    if (lista[i].estado === "cancelado") throw new Error("El evento está cancelado.");
+    const ahora = new Date().toISOString();
     lista[i] = {
-      ...lista[i], ...soloRen(ev), actualizado_at: new Date().toISOString(),
-      accion_pendiente: lista[i].id_actividad ? "modificar" : "alta",
+      ...lista[i], ...soloRen(ev), actualizado_at: ahora, confirmado_at: ahora,
+      estado: "para_revisar", accion_pendiente: null, error: null, aprobado_at: null,
     };
     escribir(K_EVENTOS, lista);
     return lista[i];
@@ -68,6 +71,42 @@ const local = {
     return ev;
   },
   escuchar() { return () => {}; },
+
+  // ---- panel de control ----
+  async esRevisor() { return true; },
+  async corregir(ev) { // el revisor corrige: sigue para revisar
+    const lista = leer(K_EVENTOS, []);
+    const x = lista.find((y) => y.id === ev.id);
+    if (!x) throw new Error("No se encontró el evento.");
+    if (x.estado !== "para_revisar") throw new Error("Este evento ya no está para revisar.");
+    Object.assign(x, soloRen(ev), { actualizado_at: new Date().toISOString() });
+    escribir(K_EVENTOS, lista);
+    return x;
+  },
+  async aprobar(ids) {
+    const lista = leer(K_EVENTOS, []);
+    const ahora = new Date().toISOString();
+    const hechos = [];
+    for (const x of lista) {
+      if (!ids.includes(x.id) || x.estado !== "para_revisar") continue;
+      Object.assign(x, { estado: "aprobado", accion_pendiente: x.id_actividad ? "modificar" : "alta",
+        aprobado_at: ahora, revisado_at: ahora, revisado_por: "modo prueba", actualizado_at: ahora, error: null });
+      hechos.push(x);
+    }
+    escribir(K_EVENTOS, lista);
+    return hechos;
+  },
+  async devolver(id, comentario) {
+    if (!String(comentario || "").trim()) throw new Error("Escribí un comentario para el REN.");
+    const lista = leer(K_EVENTOS, []);
+    const x = lista.find((y) => y.id === id);
+    if (!x || x.estado !== "para_revisar") throw new Error("Este evento ya no está para revisar.");
+    const ahora = new Date().toISOString();
+    Object.assign(x, { estado: "devuelto", accion_pendiente: null, revision_comentario: comentario.trim(),
+      revisado_at: ahora, revisado_por: "modo prueba", actualizado_at: ahora });
+    escribir(K_EVENTOS, lista);
+    return x;
+  },
 };
 
 /* ---------------- Supabase ---------------- */
@@ -115,6 +154,27 @@ function crearSupabase() {
     async cancelar(id) {
       return ok(await (await cliente()).from("eventos").update({ estado: "cancelado" }).eq("id", id).select())[0];
     },
+    // ---- panel de control (lo permite el trigger solo a los revisores) ----
+    async esRevisor() {
+      const c = await cliente();
+      const { data, error } = await c.rpc("es_revisor");
+      if (error) throw new Error(traducir(error.message));
+      return data === true;
+    },
+    async corregir(ev) {
+      return marcar(ok(await (await cliente()).from("eventos").update(soloRen(ev)).eq("id", ev.id).eq("estado", "para_revisar").select()))[0]
+        || Promise.reject(new Error("Este evento ya no está para revisar."));
+    },
+    async aprobar(ids) {
+      return marcar(ok(await (await cliente()).from("eventos").update({ estado: "aprobado" }).in("id", ids).eq("estado", "para_revisar").select()));
+    },
+    async devolver(id, comentario) {
+      if (!String(comentario || "").trim()) throw new Error("Escribí un comentario para el REN.");
+      const filas = ok(await (await cliente()).from("eventos")
+        .update({ estado: "devuelto", revision_comentario: comentario.trim() }).eq("id", id).eq("estado", "para_revisar").select());
+      if (!filas.length) throw new Error("Este evento ya no está para revisar.");
+      return filas[0];
+    },
     /** Avisa cuando el proceso automático cambia un estado (para refrescar "Mis eventos"). */
     escuchar(alCambiar) {
       let canal = null;
@@ -130,6 +190,7 @@ function traducir(msg) {
   if (/Invalid login credentials/i.test(msg)) return "Mail o contraseña incorrectos.";
   if (/Email not confirmed/i.test(msg)) return "La cuenta no está activada. Avisale al administrador.";
   if (/row-level security/i.test(msg)) return "No tenés permiso para esta acción.";
+  if (/function public\.es_revisor|es_revisor\(\) does not exist|Could not find the function/i.test(msg)) return "Falta instalar el panel en Supabase (sql/04_panel_revision.sql).";
   if (/Failed to fetch|NetworkError/i.test(msg)) return "Sin conexión. Probá de nuevo.";
   return msg;
 }

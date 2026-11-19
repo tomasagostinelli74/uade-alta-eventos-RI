@@ -26,6 +26,7 @@ from playwright.sync_api import expect, sync_playwright
 
 RAIZ = Path(__file__).resolve().parent.parent
 HTML = (RAIZ / "dist" / "Alta de eventos (prueba).html").as_uri()
+PANEL = (RAIZ / "dist" / "Panel de control (prueba).html").as_uri()
 REAL = "http://localhost:8939/"
 CAPTURAS = RAIZ / "dist" / "capturas"
 SB_URL = "https://kigfmductmgcccvcploe.supabase.co"
@@ -113,7 +114,7 @@ class F:
         s.agregar()
         expect(s.p.locator("#tanda-count")).to_have_text(str(n + 1))
     def confirmar(s):
-        s.p.click("#btn-confirmar"); s.dlg_boton("Confirmar")
+        s.p.click("#btn-confirmar"); s.dlg_boton("Enviar a revisión")
         expect(s.p.locator("#view-mis")).to_be_visible()
 
 
@@ -757,8 +758,8 @@ def _(f):
 
 @caso("CNF-01")
 def _(f):
-    f.valido(); f.agregar_ok(); expect(f.p.locator("#btn-confirmar")).to_have_text("Confirmar y dar de alta")
-    f.valido(fecha=dia(8)); f.agregar_ok(); expect(f.p.locator("#btn-confirmar")).to_have_text("Confirmar 2 eventos")
+    f.valido(); f.agregar_ok(); expect(f.p.locator("#btn-confirmar")).to_have_text("Enviar a revisión")
+    f.valido(fecha=dia(8)); f.agregar_ok(); expect(f.p.locator("#btn-confirmar")).to_have_text("Enviar 2 eventos a revisión")
 
 @caso("CNF-02")
 def _(f):
@@ -783,17 +784,19 @@ def _(f):
 def _(f):
     f.valido(); f.agregar_ok(); f.valido(fecha=dia(8)); f.agregar_ok()
     f.p.click("#btn-confirmar")
-    expect(f.p.locator("#dlg-title")).to_have_text("¿Confirmar 2 eventos?")
+    expect(f.p.locator("#dlg-title")).to_have_text("¿Enviar 2 eventos a revisión?")
     expect(f.p.locator("#dlg-content li")).to_have_count(2)
     expect(f.p.locator("#dlg-content")).to_contain_text("(modo prueba: no se envían)")
     f.dlg_boton("Volver"); assert f.tanda_n() == 2
 
 @caso("CNF-04")
 def _(f):
-    f.valido(); f.agregar_ok(); f.p.click("#btn-confirmar"); f.dlg_boton("Confirmar")
-    expect(f.toast()).to_have_text("Confirmado. Se están dando de alta en Intranet.")
+    f.valido(); f.agregar_ok(); f.p.click("#btn-confirmar"); f.dlg_boton("Enviar a revisión")
+    expect(f.toast()).to_have_text("Enviado a revisión.")
     expect(f.p.locator("#view-mis")).to_be_visible()
     assert f.tanda() == [] and f.p.locator("#tabla-mis tbody tr").count() == 1
+    assert f.eventos()[0]["estado"] == "para_revisar" and f.eventos()[0]["accion_pendiente"] is None
+    return "Cambio del panel de control: confirmar ahora envía a revisión (no va a Intranet hasta que Marketing lo aprueba)."
 
 @caso("CNF-05")
 def _(f):
@@ -827,10 +830,10 @@ def _(f):
     expect(f.p.locator("#btn-agregar")).to_have_text("Guardar y reenviar")
     expect(f.p.locator("#btn-agregar")).to_be_visible()
     f.ini("16:00"); f.agregar()
-    expect(f.toast()).to_have_text("Cambios guardados: se reenvían a Intranet.")
+    expect(f.toast()).to_have_text("Cambios guardados: vuelven a revisión.")
     expect(f.p.locator("#view-mis")).to_be_visible()
-    assert f.eventos()[0]["hora_ini"] == "16:00"
-    return "En modo prueba queda 'En cola' (todavía no tiene IdActividad). 'Cambios en cola' se prueba en modo real."
+    assert f.eventos()[0]["hora_ini"] == "16:00" and f.eventos()[0]["estado"] == "para_revisar"
+    return "Editar lo vuelve a 'Para revisar'. 'Cambios para revisar' (ya en Intranet) se prueba en modo real."
 
 @caso("EVT-10")
 def _(f):
@@ -856,7 +859,88 @@ NUEVOS = {
     "NUE-04": ("Textos", "UADE siempre en mayúsculas", "Al escribir 'uade' en título, copete o descripción queda 'UADE'; no toca mails ni webs."),
     "NUE-05": ("Taller OVO", "Taller OVO completo", "Sin inscripción, Origen OVO, Categoría CRM Taller Orientación Vocacional, sector Admisiones, carrera opcional."),
     "NUE-06": ("Taller OVO", "Taller OVO se graba en Supabase", "Modo real: el tipo 'ovo' se guarda con sus valores."),
+    "NUE-07": ("Panel de control", "Simulación de Intranet y de Umbraco", "Cada evento para revisar muestra los campos de Intranet y la carrera, School y Site que se aplican en Umbraco."),
+    "NUE-08": ("Panel de control", "Corregir en el panel y devolver al REN", "Las mayúsculas se aplican con un clic; devolver exige comentario; el REN lo ve, corrige y vuelve a revisión."),
+    "NUE-09": ("Panel de control", "Aprobar por evento o por tanda", "Lo que tiene errores no se puede aprobar; 'Aprobar los N listos' deja el resto para revisar; lo aprobado queda en cola de alta."),
+    "NUE-10": ("Panel de control", "Permisos del panel en Supabase", "Modo real: un REN no entra al panel ni aprueba por API; un revisor aprueba y queda registrado quién."),
 }
+
+def a_panel(f):
+    f.p.goto(PANEL); expect(f.p.locator("#view-panel")).to_be_visible()
+
+def tarjeta(f, titulo):
+    return f.p.locator(".rev-ev").filter(has=f.p.locator("h3", has_text=re.compile("^" + re.escape(titulo) + "$")))
+
+@caso("NUE-07")
+def _(f):
+    f.valido(sede="B"); f.descripcion("Te esperamos en Belgrano."); f.agregar_ok(); f.confirmar()
+    a_panel(f)
+    titulo = f"Reunión Informativa: Abogacía ({ddmm(dia(7))})"
+    t = tarjeta(f, titulo); expect(t).to_have_count(1)
+    expect(f.p.locator(".grupo h2")).to_have_text("Tanda de un REN (modo prueba)")
+    intra, umb = t.locator(".sim").nth(0), t.locator(".sim").nth(1)
+    expect(intra).to_contain_text("TitActiv"); expect(intra).to_contain_text("Belgrano (B)")
+    expect(intra).to_contain_text("Charlas (8)"); expect(intra).to_contain_text("Reuni. Infor. (12)")
+    expect(umb.locator("a")).to_have_text("ABOGACÍA"); expect(umb.locator("a")).to_have_attribute("href", re.compile(r"^https?://"))
+    expect(umb).to_contain_text("Facultad de Ciencias Jurídicas y de la Comunicación")
+    expect(umb).to_contain_text("Belgrano"); expect(umb).to_contain_text("Apagado")
+    expect(t.locator(".al-ok")).to_have_text("✓ Sin observaciones.")
+    expect(t.locator("[data-acc='aprobar']")).to_be_enabled()
+    return "Intranet: título, sede, categorías. Umbraco: página ABOGACÍA (link), Schools de la facultad, Sites Belgrano, switch apagado."
+
+@caso("NUE-08")
+def _(f):
+    f.otro(); f.escribir_titulo("charla abierta en la facultad"); f.agregar()
+    # el formulario también avisa las mayúsculas: el REN elige "Dejar así" y llega mal al panel
+    expect(f.dlg()).to_be_visible(timeout=8000)
+    f.p.locator("#dlg-content [data-rev='may'] .rev-opt", has_text="Dejar así").click()
+    f.dlg_boton("Aplicar y agregar"); expect(f.p.locator("#tanda-count")).to_have_text("1")
+    f.confirmar()
+    a_panel(f)
+    t = tarjeta(f, "charla abierta en la facultad")
+    expect(t.locator(".al-aviso", has_text="Mayúsculas")).to_contain_text('"Charla Abierta en la Facultad"')
+    t.locator("[data-fix='mayusculas']").click()
+    expect(f.toast()).to_have_text("Corrección aplicada.")
+    t = tarjeta(f, "Charla Abierta en la Facultad"); expect(t).to_have_count(1)
+    # devolver: sin comentario no se devuelve
+    t.locator("[data-acc='devolver']").click(); f.dlg_boton("Devolver")
+    expect(f.toast()).to_have_text("No se devolvió: escribí qué tiene que corregir.")
+    t.locator("[data-acc='devolver']").click(); f.p.fill("#comentario-dev", "Cambiá el horario a la tarde."); f.dlg_boton("Devolver")
+    expect(f.toast()).to_have_text("Devuelto al REN.")
+    expect(f.p.locator("#filtros [data-f='devuelto'] .muted")).to_have_text("1")
+    # el REN lo ve y lo corrige
+    f.p.goto(HTML); f.p.click(".tab[data-view='mis']")
+    fila_ = f.p.locator("#tabla-mis tbody tr").first
+    expect(fila_.locator(".estado")).to_have_text("Devuelto para corregir")
+    expect(fila_.locator(".comentario-rev")).to_have_text("Marketing: Cambiá el horario a la tarde.")
+    fila_.locator("[data-acc='editar']", has_text="Corregir").click()
+    f.ini("16:00"); f.agregar()
+    expect(f.toast()).to_have_text("Cambios guardados: vuelven a revisión.")
+    a_panel(f)
+    t = tarjeta(f, "Charla Abierta en la Facultad")
+    expect(t.locator(".comentario-rev")).to_have_text("Se lo habían devuelto: Cambiá el horario a la tarde.")
+    expect(t.locator(".rev-ev-head .muted")).to_contain_text("16:00")
+    return "Mayúsculas con un clic; devolver sin comentario no hace nada; el REN ve el comentario, corrige y vuelve al panel con el comentario anterior a la vista."
+
+@caso("NUE-09")
+def _(f):
+    f.valido(); f.agregar_ok(); f.valido(fecha=dia(8)); f.agregar_ok(); f.confirmar()
+    f.p.evaluate("d => { const t = JSON.parse(localStorage.getItem('uade_alta_eventos')); t[1].fecha = d; localStorage.setItem('uade_alta_eventos', JSON.stringify(t)); }", dia(-2))
+    a_panel(f)
+    expect(f.p.locator(".rev-ev.con-error")).to_have_count(1)
+    expect(f.p.locator(".rev-ev.con-error .al-bloquea")).to_contain_text("La fecha ya pasó.")
+    expect(f.p.locator(".rev-ev.con-error [data-acc='aprobar']")).to_be_disabled()
+    boton = f.p.locator("[data-acc='aprobar-tanda']")
+    expect(boton).to_have_text("Aprobar 1 de 2 (sin errores)")
+    boton.click()
+    expect(f.p.locator("#dlg-content li")).to_have_count(1)
+    f.dlg_boton("Aprobar")
+    expect(f.toast()).to_have_text("Aprobado: pasa a la cola de Intranet.")
+    estados = sorted((e["estado"], e["accion_pendiente"]) for e in f.eventos())
+    assert estados == [("aprobado", "alta"), ("para_revisar", None)], estados
+    expect(f.p.locator("#filtros [data-f='proceso'] .muted")).to_have_text("1")
+    return "El evento con fecha vencida queda bloqueado; 'Aprobar 1 de 2 (sin errores)' aprueba solo el bueno y lo deja en cola de alta."
+
 
 @caso("NUE-01")
 def _(f):
@@ -981,6 +1065,7 @@ def preparar_real():
     CTX["token"] = tok["access_token"]
 
 def limpiar_real():
+    revisor(False)
     if "yo" in CTX:
         svc("DELETE", f"/rest/v1/eventos?creado_por=eq.{CTX['yo']}")
     svc("DELETE", "/rest/v1/eventos?titulo=like.PRUEBA%20AUTO*")
@@ -1055,7 +1140,7 @@ def _(f):
 def _(f):
     for t, txt in [("En Intranet", "En Intranet #990000001"),  # títulos de las filas: 'PRUEBA AUTO · <t>' ("Alta manual", "En Intranet (a mano) #990000002"),
                    ("Publicado", "Publicado en la web #990000003"), ("Con error", "Error en Intranet"),
-                   ("Cancelado", "Cancelado"), ("Hace 10 días", "En cola")]:
+                   ("Cancelado", "Cancelado"), ("Hace 10 días", "Para revisar")]:
         expect(fila(f, t).locator("td").nth(3)).to_have_text(txt)
 
 @caso("EVT-04", modo="real")
@@ -1069,7 +1154,7 @@ def _(f):
 @caso("EVT-02", modo="real")
 def _(f):
     cuenta = lambda code: int(f.p.locator(f"#filtros [data-f='{code}'] .muted").inner_text())
-    esperado = {"todos": 6, "cola": 2, "intranet": 2, "web": 1, "error": 1, "cancelado": 1}
+    esperado = {"todos": 6, "revision": 1, "devuelto": 0, "cola": 0, "intranet": 2, "web": 1, "error": 1, "cancelado": 1}
     obtenido = {k: cuenta(k) for k in esperado}
     assert obtenido == esperado, obtenido
     f.p.click("#filtros [data-f='intranet']"); expect(f.p.locator("#tabla-mis tbody tr")).to_have_count(2)
@@ -1103,12 +1188,12 @@ def _(f):
     f.valido(fecha=dia(30), hora="10:00"); f.agregar_ok(); f.valido(fecha=dia(31), hora="10:00"); f.agregar_ok()
     f.p.click("#btn-confirmar")
     expect(f.p.locator("#dlg-content")).not_to_contain_text("modo prueba")
-    f.dlg_boton("Confirmar")
-    expect(f.toast()).to_have_text("Confirmado. Se están dando de alta en Intranet.", timeout=15000)
+    f.dlg_boton("Enviar a revisión")
+    expect(f.toast()).to_have_text("Enviado a revisión.", timeout=15000)
     st, r = svc("GET", f"/rest/v1/eventos?select=tanda_id,estado,accion_pendiente,creado_email&creado_por=eq.{CTX['yo']}&fecha=gte.{dia(30)}")
     assert len(r) == 2 and len({x["tanda_id"] for x in r}) == 1, r
-    assert all(x["estado"] == "confirmado" and x["accion_pendiente"] == "alta" and x["creado_email"] == MAIL_PRUEBA for x in r), r
-    return "Grabó 2 filas en Supabase con el mismo tanda_id, estado 'confirmado' y acción 'alta'."
+    assert all(x["estado"] == "para_revisar" and x["accion_pendiente"] is None and x["creado_email"] == MAIL_PRUEBA for x in r), r
+    return "Grabó 2 filas en Supabase con el mismo tanda_id, estado 'para_revisar' y sin acción (no va a Intranet hasta que se apruebe)."
 
 @caso("NUE-06", modo="real")
 def _(f):
@@ -1126,10 +1211,11 @@ def _(f):
     expect(f.p.locator("#btn-agregar")).to_have_text("Guardar y reenviar")
     f.p.route(LT, lt_vacio)
     f.ini("18:00"); f.agregar()
-    expect(f.toast()).to_have_text("Cambios guardados: se reenvían a Intranet.", timeout=15000)
-    expect(fila(f, "PRUEBA AUTO · En Intranet").locator("td").nth(3)).to_have_text("Cambios en cola #990000001")
-    st, r = svc("GET", f"/rest/v1/eventos?select=accion_pendiente,hora_ini,id_actividad&id=eq.{CTX['intranet']}")
-    assert r[0] == {"accion_pendiente": "modificar", "hora_ini": "18:00", "id_actividad": 990000001}, r
+    expect(f.toast()).to_have_text("Cambios guardados: vuelven a revisión.", timeout=15000)
+    expect(fila(f, "PRUEBA AUTO · En Intranet").locator("td").nth(3)).to_have_text("Cambios para revisar #990000001")
+    st, r = svc("GET", f"/rest/v1/eventos?select=estado,accion_pendiente,hora_ini,id_actividad&id=eq.{CTX['intranet']}")
+    assert r[0] == {"estado": "para_revisar", "accion_pendiente": None, "hora_ini": "18:00", "id_actividad": 990000001}, r
+    return "Editar algo que ya está en Intranet lo vuelve a revisión ('Cambios para revisar'); al aprobarlo se graba con MODIFICAR."
 
 @caso("EVT-06", modo="real")
 def _(f):
@@ -1137,7 +1223,7 @@ def _(f):
     expect(f.p.locator("#dlg-content")).to_contain_text("Se va a dar de baja en Intranet.")
     f.dlg_boton("Cancelar evento"); expect(f.toast()).to_have_text("Evento cancelado.", timeout=15000)
     expect(fila(f, "PRUEBA AUTO · Alta manual").locator("td").nth(3)).to_have_text("Baja en cola #990000002")
-    return "'Cambios en cola' (EVT-09) y 'Baja en cola' OK."
+    return "Cancelar algo que ya está en Intranet queda 'Baja en cola' (no pasa por revisión)."
 
 @caso("EVT-10", modo="real")
 def _(f):
@@ -1169,7 +1255,7 @@ def _(f):
     assert x[0]["titulo"] == "PRUEBA AUTO · Evento de otro REN", x
     st2, r2 = api_ren("PATCH", f"/rest/v1/eventos?id=eq.{CTX['otro']}", {"estado": "cancelado"})
     _, x = svc("GET", f"/rest/v1/eventos?select=estado&id=eq.{CTX['otro']}")
-    assert x[0]["estado"] == "confirmado", x
+    assert x[0]["estado"] == "para_revisar", x
     return f"Lo ve; editar ({st}, {len(r) if isinstance(r, list) else r} filas) y cancelar por API no cambian nada."
 
 @caso("SEG-03", modo="real")
@@ -1184,11 +1270,14 @@ def _(f):
 def _(f):
     st, r = api_ren("PATCH", f"/rest/v1/eventos?id=eq.{CTX['viejo']}", {"estado": "en_umbraco", "id_actividad": 123456, "creado_por": CTX["otro"]})
     _, x = svc("GET", f"/rest/v1/eventos?select=estado,id_actividad,creado_por&id=eq.{CTX['viejo']}")
-    assert x[0] == {"estado": "confirmado", "id_actividad": None, "creado_por": CTX["yo"]}, x
+    assert x[0] == {"estado": "para_revisar", "id_actividad": None, "creado_por": CTX["yo"]}, x
+    st, r = api_ren("PATCH", f"/rest/v1/eventos?id=eq.{CTX['viejo']}", {"estado": "aprobado"})
+    _, x = svc("GET", f"/rest/v1/eventos?select=estado,accion_pendiente&id=eq.{CTX['viejo']}")
+    assert x[0] == {"estado": "para_revisar", "accion_pendiente": None}, x
     st, r = api_ren("POST", "/rest/v1/eventos", fila_evento(fecha=dia(40), titulo="PRUEBA AUTO · Alta forzada", estado="en_umbraco", id_actividad=777777, creado_por=CTX["otro"]))
     assert st == 201, (st, r)
-    assert (r[0]["estado"], r[0]["id_actividad"], r[0]["creado_por"]) == ("confirmado", None, CTX["yo"]), r[0]
-    return "Por API no se puede cambiar estado, IdActividad ni dueño (ni al editar ni al crear): la base los pisa."
+    assert (r[0]["estado"], r[0]["id_actividad"], r[0]["creado_por"]) == ("para_revisar", None, CTX["yo"]), r[0]
+    return "Por API no se puede cambiar estado, IdActividad ni dueño (ni al editar ni al crear), ni autoaprobarse: la base los pisa."
 
 @caso("SEG-05", modo="real")
 def _(f):
@@ -1198,10 +1287,39 @@ def _(f):
 
 @caso("SEG-06", modo="real")
 def _(f):
-    st, r = api_ren("PATCH", f"/rest/v1/eventos?id=eq.{CTX['cancelado']}", {"titulo": "Revivido", "estado": "confirmado"})
+    st, r = api_ren("PATCH", f"/rest/v1/eventos?id=eq.{CTX['cancelado']}", {"titulo": "Revivido", "estado": "para_revisar"})
     _, x = svc("GET", f"/rest/v1/eventos?select=titulo,estado&id=eq.{CTX['cancelado']}")
     assert x[0]["estado"] == "cancelado" and x[0]["titulo"] == "PRUEBA AUTO · Cancelado", x
     return f"Rechazado ({st}): 'El evento está cancelado.' En pantalla el cancelado no tiene Editar."
+
+def revisor(si):
+    if si: svc("POST", "/rest/v1/revisores", {"email": MAIL_PRUEBA})
+    else: svc("DELETE", f"/rest/v1/revisores?email=eq.{MAIL_PRUEBA}")
+
+@caso("NUE-10", modo="real")
+def _(f):
+    p = f.p.context.new_page()
+    try:
+        p.goto(REAL + "panel.html")
+        expect(p.locator("#view-sin-permiso")).to_be_visible(timeout=15000)
+        revisor(True)
+        p.reload(); expect(p.locator("#view-panel")).to_be_visible(timeout=15000)
+        t = p.locator(".rev-ev").filter(has=p.locator("h3", has_text="PRUEBA AUTO · Evento de otro REN"))
+        expect(t).to_have_count(1)
+        expect(p.locator(".grupo h2").first).to_be_visible()
+        expect(t.locator(".sim").nth(1)).to_contain_text("ABOGACÍA")
+        # devolver sin comentario: la base lo rechaza
+        st, r = api_ren("PATCH", f"/rest/v1/eventos?id=eq.{CTX['otro']}", {"estado": "devuelto"})
+        assert st >= 400 and "comentario" in json.dumps(r, ensure_ascii=False), (st, r)
+        t.locator("[data-acc='aprobar']").click()
+        p.locator("#dlg-actions button", has_text="Aprobar").click()
+        expect(p.locator("#toast")).to_have_text("Aprobado: pasa a la cola de Intranet.", timeout=15000)
+        _, x = svc("GET", f"/rest/v1/eventos?select=estado,accion_pendiente,revisado_por,aprobado_at&id=eq.{CTX['otro']}")
+        assert x[0]["estado"] == "aprobado" and x[0]["accion_pendiente"] == "alta" and x[0]["revisado_por"] == MAIL_PRUEBA and x[0]["aprobado_at"], x
+    finally:
+        revisor(False); p.close()
+    return ("Sin ser revisor: 'No tenés acceso al panel'. Como revisor: ve el evento de otro REN con la simulación, "
+            "devolver sin comentario lo rechaza la base, y al aprobar queda 'aprobado', acción 'alta' y quién lo revisó.")
 
 @caso("LOG-07", modo="real")
 def _(f):
@@ -1309,7 +1427,7 @@ def escribir_excel(origen, destino):
         r = combinar(cid)
         if not r: continue
         ultima += 1
-        modo = "Real" if cid == "NUE-06" else "Ambos"
+        modo = "Real" if cid in ("NUE-06", "NUE-10") else "Ambos"
         for col, v in enumerate([cid, mod, tit, "Cambio pedido por el equipo", "", "", esp, "Alta", "Positivo", modo], 1):
             ws.cell(ultima, col, v).alignment = Alignment(wrap_text=True, vertical="top")
         ws.cell(ultima, 11, r[0]).fill = PatternFill("solid", fgColor=COLORES[r[0]]); ws.cell(ultima, 11).font = Font(bold=True)

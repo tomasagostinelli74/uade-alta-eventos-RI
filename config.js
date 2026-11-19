@@ -13,6 +13,9 @@ export const SEDES = [
   { code: "O", label: "Online" },
 ];
 
+// Sede del evento → sede que va en Sites de Umbraco. Monserrat y Online no llevan.
+export const SITES_UMBRACO = { C: "Costa Argentina", B: "Belgrano", R: "Recoleta" };
+
 export const TIPOS = [
   { code: "ri_grado", label: "RI de grado", hint: "Reunión Informativa de carreras de grado" },
   { code: "ri_posgrado", label: "RI de posgrado", hint: "MBA, especializaciones, maestrías" },

@@ -3,45 +3,13 @@ import {
   CUENTAS, CUENTA_DEFECTO, TIPOS_POR_NIVEL, perfilDe, requiereInscripcion, SECTOR_SIN_CARRERA,
 } from "./config.js";
 import { store, tanda as tandaStore, uid, modoPrueba } from "./store.js";
-
-/* ================= utilidades ================= */
-const $ = (s, el = document) => el.querySelector(s);
-const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const norm = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-const sedeLabel = (c) => SEDES.find((s) => s.code === c)?.label || c || "—";
-const hoyISO = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
-const ddmm = (iso) => (iso ? `${iso.slice(8, 10)}/${iso.slice(5, 7)}` : "dd/mm");
-const fechaLarga = (iso) => {
-  if (!iso) return "—";
-  const dia = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"][new Date(iso + "T12:00:00").getDay()];
-  return `${dia} ${ddmm(iso)}`;
-};
-const aMin = (hhmm) => { const [h, m] = hhmm.split(":").map(Number); return h * 60 + m; };
-const aHHMM = (min) => `${String(Math.floor(min / 60)).padStart(2, "0")}:${String(min % 60).padStart(2, "0")}`;
-const HORAS = []; for (let m = 7 * 60; m <= 23 * 60 + 45; m += 15) HORAS.push(aHHMM(m));
-
-function toast(msg) {
-  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
-  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 2600);
-}
-
-function dialogo({ titulo, html, botones }) {
-  return new Promise((res) => {
-    const d = $("#dlg");
-    $("#dlg-title").textContent = titulo;
-    $("#dlg-content").innerHTML = html;
-    $("#dlg-actions").innerHTML = botones.map((b, i) =>
-      `<button value="${i}" class="${b.primary ? "primary" : "ghost"}" style="${b.primary ? "" : "padding:10px 14px"}">${esc(b.label)}</button>`).join("");
-    d.onclose = () => res(d.returnValue === "" ? -1 : Number(d.returnValue));
-    d.returnValue = "";
-    d.showModal();
-  });
-}
+import {
+  $, $$, esc, norm, sedeLabel, hoyISO, ddmm, fechaLarga, aMin, aHHMM, HORAS, esRI, VAR_LABEL, toast, dialogo,
+  tituloAuto, uadeMayus, uadeEnVivo, corregirMayusculas, revisarOrtografia, ESTADOS, chipEstado, CONECTORES,
+} from "./comun.js";
 
 /* ================= catálogo de carreras ================= */
 let CARRERAS = [];
-const VAR_LABEL = { normal: "Presencial", online: "Online", costa: "Costa" };
 
 /**
  * Versión de la carrera (página de Umbraco) que se propone al elegirla. NO depende de dónde se hace la reunión:
@@ -95,7 +63,6 @@ function buscarCarreras(q, tipo, excluir) {
 /* ================= estado del formulario ================= */
 let perfil = CUENTA_DEFECTO; // qué puede cargar la cuenta (grado / posgrado / todos)
 const tiposPermitidos = () => TIPOS.filter((t) => TIPOS_POR_NIVEL[perfil.nivel].includes(t.code));
-const esRI = (tipo) => tipo === "ri_grado" || tipo === "ri_posgrado";
 
 const vacio = () => ({
   id: null, tipo: tiposPermitidos()[0].code, carreras: [], sede: "", fecha: "", hora_ini: "", hora_fin: "",
@@ -114,16 +81,6 @@ let paso = 1;          // paso visible del formulario (1 a 5)
 const PASOS = 5;
 // En qué paso está cada campo (para saltar al error)
 const PASO_DE = { carreras: 2, perfil: 3, sector: 3, sede: 4, fecha: 4, titulo: 5, copete: 5, descripcion: 5 };
-
-function tituloAuto(e) {
-  const fecha = ddmm(e.fecha);
-  if (!esRI(e.tipo)) return "";
-  const online = e.sede === "O";
-  const prefijo = online ? "Reunión Informativa Online" : "Reunión Informativa";
-  // la versión de la carrera se aclara solo si suma: "Online" no se repite si la reunión ya es online
-  const nombres = e.carreras.map((c) => c.corto + (c.variante === "costa" ? " Costa" : c.variante === "online" && !online ? " Online" : ""));
-  return `${prefijo}: ${nombres.join(" + ") || "[carrera]"} (${fecha})`;
-}
 
 function sectoresAuto(e) {
   const s = [...new Set(e.carreras.map((c) => c.sector).filter(Boolean))];
@@ -366,99 +323,6 @@ function limpiarError(k) {
   if (n && !$$(`.paso[data-paso="${n}"] .err`).some((x) => x.textContent)) $(`#pasos button[data-paso="${n}"]`)?.classList.remove("con-error");
 }
 
-/* ================= UADE siempre en mayúsculas ================= */
-// "uade" suelto → "UADE". No toca mails ni webs (face@uade.edu.ar, www.uade.edu.ar).
-const RX_UADE = /(?<![\p{L}\p{N}@./_-])uade(?![\p{L}\p{N}@_-]|\.[\p{L}])/giu;
-const uadeMayus = (s) => String(s ?? "").replace(RX_UADE, "UADE");
-/** Corrige "uade" mientras se escribe, sin mover el cursor (el largo no cambia). */
-function uadeEnVivo(el) {
-  const v = uadeMayus(el.value);
-  if (v === el.value) return;
-  const a = el.selectionStart, b = el.selectionEnd;
-  el.value = v;
-  try { el.setSelectionRange(a, b); } catch { /* campos sin cursor */ }
-}
-
-/* ================= revisión de mayúsculas y ortografía ================= */
-// Misma regla que usamos al cargar en Umbraco: cada palabra del título con mayúscula, salvo los conectores.
-const CONECTORES = new Set(["a", "al", "de", "del", "e", "el", "en", "la", "las", "lo", "los", "o", "u", "y", "con",
-  "para", "por", "sin", "sobre", "entre", "in", "of", "and", "the", "for"]);
-const PALABRA = /\p{L}[\p{L}\p{N}'.]*/gu;
-const esMinuscula = (c) => c !== c.toUpperCase() && c === c.toLowerCase();
-
-function corregirMayusculas(titulo) {
-  // Si el título es una pregunta o exclamación ("Charla: ¿Cómo ...?"), solo se corrige lo que va antes de ":".
-  let cabeza = titulo, frase = "";
-  if (/[¿?¡!]/.test(titulo)) {
-    const sep = [":", " - "].find((s) => titulo.includes(s));
-    if (!sep) return titulo;
-    const i = titulo.indexOf(sep);
-    cabeza = titulo.slice(0, i); frase = titulo.slice(i);
-  }
-  let primera = true;
-  return cabeza.replace(PALABRA, (w) => {
-    const esPrimera = primera; primera = false;
-    if (w.toLowerCase() === "uade") return "UADE";
-    if (esMinuscula(w[0]) && (esPrimera || !CONECTORES.has(w.toLowerCase().replace(/\.$/, "")))) return w[0].toUpperCase() + w.slice(1);
-    return w;
-  }) + frase;
-}
-
-const LT_URL = "https://api.languagetool.org/v2/check";
-const LT_TIPOS = new Set(["misspelling", "grammar", "inconsistency"]);
-const cacheLT = new Map();
-const K_AVISOS = "uade_alta_avisos_ortografia";
-let conocidas = null;
-
-/** Palabras que el corrector no conoce pero están bien (nombres de carreras, sedes, siglas propias). */
-function palabrasConocidas() {
-  if (conocidas) return conocidas;
-  conocidas = new Set(["uade", "ubs", "online", "campus", "webinar", "workshop"]);
-  const sumar = (s) => (String(s || "").match(PALABRA) || []).forEach((w) => conocidas.add(w.replace(/\.$/, "").toLowerCase()));
-  CARRERAS.forEach((c) => { sumar(c.base); sumar(c.corto); Object.values(c.variantes || {}).forEach((v) => sumar(v?.nombre)); });
-  SEDES.forEach((s) => sumar(s.label));
-  return conocidas;
-}
-
-/** Devuelve los errores de ortografía/gramática de cada campo, o null si el corrector no respondió. */
-async function revisarOrtografia(campos) {
-  const claves = Object.keys(campos).filter((k) => campos[k].trim());
-  if (!claves.length) return [];
-  let texto = ""; const inicio = {};
-  claves.forEach((k) => { inicio[k] = texto.length; texto += campos[k] + "\n\n"; });
-
-  let matches = cacheLT.get(texto);
-  if (!matches) {
-    const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 8000);
-    try {
-      const r = await fetch(LT_URL, { method: "POST", signal: ctrl.signal, body: new URLSearchParams({ language: "es-AR", text: texto }) });
-      if (!r.ok) return null;
-      matches = (await r.json()).matches || [];
-      cacheLT.set(texto, matches);
-    } catch { return null; } finally { clearTimeout(t); }
-  }
-
-  const conocidas = palabrasConocidas();
-  const errores = [];
-  for (const m of matches) {
-    if (!LT_TIPOS.has(m.rule?.issueType) || m.rule?.category?.id === "CASING" || !m.replacements?.length) continue;
-    const campo = [...claves].reverse().find((k) => inicio[k] <= m.offset);
-    const valor = campos[campo];
-    const ini = m.offset - inicio[campo];
-    if (ini + m.length > valor.length) continue;
-    const error = valor.slice(ini, ini + m.length);
-    const ortografia = m.rule.issueType === "misspelling";
-    if (ortografia && (/[\d@/]/.test(error) || /\p{Lu}.*\p{Lu}/u.test(error) || conocidas.has(error.toLowerCase()))) continue;
-    errores.push({
-      campo, ini, largo: m.length, error, ortografia,
-      sugerencias: [...new Set(m.replacements.slice(0, 3).map((r) => r.value))],
-      antes: valor.slice(Math.max(0, ini - 30), ini), despues: valor.slice(ini + m.length, ini + m.length + 30),
-      recorteIni: ini > 30, recorteFin: ini + m.length + 30 < valor.length,
-    });
-  }
-  return errores;
-}
-
 const CAMPO_LABEL = { titulo: "Título", copete: "Copete", descripcion: "Descripción" };
 
 /** Antes de agregar: avisa mayúsculas y errores de ortografía. true = seguir, false = volver a editar. */
@@ -469,7 +333,7 @@ async function revisarTextos() {
 
   const btn = $("#btn-agregar"), txt = btn.textContent;
   btn.disabled = true; btn.textContent = "Revisando ortografía…";
-  const errores = await revisarOrtografia(campos);
+  const errores = await revisarOrtografia(campos, CARRERAS);
   btn.disabled = false; btn.textContent = txt;
   if (errores === null) toast("No se pudo revisar la ortografía: revisala a ojo.");
 
@@ -500,7 +364,7 @@ async function revisarTextos() {
 
   // recordatorio sutil: cuenta cuántas veces se le marcaron errores en este navegador
   let veces = 1;
-  try { veces = Number(localStorage.getItem(K_AVISOS) || 0) + 1; localStorage.setItem(K_AVISOS, veces); } catch { /* sin storage */ }
+  try { veces = Number(localStorage.getItem("uade_alta_avisos_ortografia") || 0) + 1; localStorage.setItem("uade_alta_avisos_ortografia", veces); } catch { /* sin storage */ }
   const recordatorio = veces > 1
     ? `Ya te marcamos errores ${veces - 1 === 1 ? "una vez" : `${veces - 1} veces`}. Lo que cargás se publica tal cual en la web: prestá atención a la ortografía.`
     : "Lo que cargás se publica tal cual en la web: prestá atención a la ortografía.";
@@ -543,7 +407,7 @@ function renderTanda() {
   $("#tanda-empty").hidden = tanda.length > 0;
   $("#btn-vaciar").hidden = tanda.length === 0;
   $("#btn-confirmar").disabled = tanda.length === 0 || editando?.origen === "tanda";
-  $("#btn-confirmar").textContent = tanda.length > 1 ? `Confirmar ${tanda.length} eventos` : "Confirmar y dar de alta";
+  $("#btn-confirmar").textContent = tanda.length > 1 ? `Enviar ${tanda.length} eventos a revisión` : "Enviar a revisión";
   $("#tanda-list").innerHTML = tanda.map((e) => {
     const er = errorTanda(e);
     return `
@@ -596,7 +460,7 @@ async function onSubmit(evt) {
   if (editando?.origen === "mis") {
     try {
       await store.actualizar(limpio);
-      toast("Cambios guardados: se reenvían a Intranet.");
+      toast("Cambios guardados: vuelven a revisión.");
       await cargarMis();
       limpiarFormulario();
       irA("mis");
@@ -630,10 +494,10 @@ async function confirmarTanda() {
     return;
   }
   const r = await dialogo({
-    titulo: tanda.length > 1 ? `¿Confirmar ${tanda.length} eventos?` : "¿Confirmar el evento?",
-    html: `<p>Se dan de alta solos en Intranet${modoPrueba ? " <b>(modo prueba: no se envían)</b>" : ""}. Vas a ver el estado en <b>Mis eventos</b>.</p>
+    titulo: tanda.length > 1 ? `¿Enviar ${tanda.length} eventos a revisión?` : "¿Enviar el evento a revisión?",
+    html: `<p>Marketing los revisa y, cuando los aprueba, se dan de alta solos en Intranet${modoPrueba ? " <b>(modo prueba: no se envían)</b>" : ""}. Vas a ver el estado en <b>Mis eventos</b>.</p>
       <ul>${tanda.map((e) => `<li>${esc(e.titulo)} <span class="muted">· ${esc(resumenEvento(e))}</span></li>`).join("")}</ul>`,
-    botones: [{ label: "Volver" }, { label: "Confirmar", primary: true }],
+    botones: [{ label: "Volver" }, { label: "Enviar a revisión", primary: true }],
   });
   if (r !== 1) return;
   try {
@@ -641,7 +505,7 @@ async function confirmarTanda() {
     tanda = []; guardarTanda();
     await cargarMis();
     renderTanda();
-    toast("Confirmado. Se están dando de alta en Intranet.");
+    toast("Enviado a revisión.");
     irA("mis");
   } catch (e) {
     toast("No se pudo confirmar: " + e.message);
@@ -649,32 +513,16 @@ async function confirmarTanda() {
 }
 
 /* ================= mis eventos ================= */
-const ESTADOS = {
-  confirmado: { label: "En cola", cls: "e-cola" },
-  en_intranet: { label: "En Intranet", cls: "e-info" },
-  alta_manual: { label: "En Intranet (a mano)", cls: "e-info" },
-  en_umbraco: { label: "Publicado en la web", cls: "e-ok" },
-  error_intranet: { label: "Error en Intranet", cls: "e-err" },
-  error_umbraco: { label: "Error en Umbraco", cls: "e-err" },
-  cancelado: { label: "Cancelado", cls: "e-off" },
-};
 const FILTROS = [
   { code: "todos", label: "Todos", f: () => true },
-  { code: "cola", label: "En cola", f: (e) => e.estado === "confirmado" || !!e.accion_pendiente },
+  { code: "revision", label: "En revisión", f: (e) => e.estado === "para_revisar" },
+  { code: "devuelto", label: "Devueltos", f: (e) => e.estado === "devuelto" },
+  { code: "cola", label: "En cola", f: (e) => e.estado === "aprobado" || e.accion_pendiente === "baja" },
   { code: "intranet", label: "En Intranet", f: (e) => ["en_intranet", "alta_manual"].includes(e.estado) },
   { code: "web", label: "En la web", f: (e) => e.estado === "en_umbraco" },
   { code: "error", label: "Con error", f: (e) => e.estado.startsWith("error") },
   { code: "cancelado", label: "Cancelados", f: (e) => e.estado === "cancelado" },
 ];
-
-function chipEstado(e) {
-  const s = ESTADOS[e.estado] || { label: e.estado, cls: "e-off" };
-  let label = s.label;
-  if (e.accion_pendiente === "modificar") label = "Cambios en cola";
-  if (e.accion_pendiente === "baja") label = "Baja en cola";
-  const id = e.id_actividad ? ` <span class="muted">#${e.id_actividad}</span>` : "";
-  return `<span class="estado ${e.accion_pendiente && e.estado !== "confirmado" ? "e-cola" : s.cls}">${esc(label)}</span>${id}`;
-}
 
 async function cargarMis() {
   misEventos = await store.listar();
@@ -696,13 +544,14 @@ function renderMis() {
   $("#tabla-mis tbody").innerHTML = lista.map((e) => `
     <tr data-id="${e.id}">
       <td><div>${esc(e.titulo)}</div><div class="t-sub">${esc(e.carreras.map((c) => c.nombre).join(" · ") || "Sin carrera")}${alcance === "todos" && e.creado_email ? ` · cargó ${esc(e.creado_email.split("@")[0])}` : ""}</div>
-        ${e.error ? `<div class="t-sub" style="color:var(--err)">${esc(e.error)}</div>` : ""}</td>
+        ${e.error ? `<div class="t-sub" style="color:var(--err)">${esc(e.error)}</div>` : ""}
+        ${e.estado === "devuelto" && e.revision_comentario ? `<div class="comentario-rev"><b>Marketing:</b> ${esc(e.revision_comentario)}</div>` : ""}</td>
       <td>${esc(fechaLarga(e.fecha))}<div class="t-sub">${e.hora_ini}–${e.hora_fin}</div></td>
       <td>${esc(sedeLabel(e.sede))}</td>
       <td>${chipEstado(e)}</td>
       <td>
         <button type="button" class="link" data-acc="ver">Ver</button>
-        ${e.propio && e.estado !== "cancelado" && e.fecha >= hoyISO() ? `<button type="button" class="link" data-acc="editar">Editar</button>
+        ${e.propio && e.estado !== "cancelado" && e.fecha >= hoyISO() ? `<button type="button" class="link ${e.estado === "devuelto" ? "corregir" : ""}" data-acc="editar">${e.estado === "devuelto" ? "Corregir" : "Editar"}</button>
         <button type="button" class="link danger" data-acc="cancelar">Cancelar</button>` : ""}
       </td>
     </tr>`).join("");
@@ -712,6 +561,7 @@ function verEvento(e) {
   const lab = (lista, codes) => [].concat(codes).map((c) => lista.find((o) => o.code === c)?.label || c).join(", ");
   const filas = [
     ["Estado", (ESTADOS[e.estado]?.label || e.estado) + (e.id_actividad ? ` · IdActividad ${e.id_actividad}` : "")],
+    ...(e.revision_comentario ? [["Comentario de Marketing", e.revision_comentario]] : []),
     ["Carreras (Umbraco)", e.carreras.map((c) => c.nombre).join("\n") || "—"],
     ["Fecha", `${fechaLarga(e.fecha)} · ${e.hora_ini} a ${e.hora_fin}`],
     ["Sede", sedeLabel(e.sede)],
@@ -895,6 +745,7 @@ async function entrar(u) {
   if (u.email) { perfil = perfilDe(u.email); limpiarFormulario(); }
   $("#who").textContent = u.email || (modoPrueba ? "Modo prueba" : "");
   $("#btn-salir").hidden = modoPrueba;
+  store.esRevisor().then((ok) => { $("#link-panel").hidden = !ok; }).catch(() => {});
   irA("nuevo");
   await cargarMis();
   let t;
@@ -920,7 +771,7 @@ function conectarLogin() {
     dejarDeEscuchar();
     await store.salir();
     misEventos = [];
-    $("#who").textContent = ""; $("#btn-salir").hidden = true;
+    $("#who").textContent = ""; $("#btn-salir").hidden = true; $("#link-panel").hidden = true;
     irA("login");
   };
 }

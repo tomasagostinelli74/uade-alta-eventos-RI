@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel de control · Alta de eventos UADE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="panel">
+  <header class="top">
+    <div class="brand">
+      <span class="logo">UADE</span>
+      <span class="brand-sub">Panel de control</span>
+    </div>
+    <div class="who"><span id="who"></span> <button type="button" class="link" id="btn-salir" hidden>Salir</button></div>
+  </header>
+
+  <div class="banner" id="banner-prueba" hidden>
+    Modo prueba: ves los eventos que se cargaron en el formulario de este navegador. Aprobar no envía nada a Intranet.
+  </div>
+
+  <main>
+    <!-- ============ LOGIN ============ -->
+    <section class="view" id="view-login" hidden>
+      <form class="card login" id="form-login" novalidate>
+        <h1>Panel de control</h1>
+        <p class="muted">Ingresá con tu mail de UADE. Solo pueden entrar los revisores de Marketing.</p>
+        <label>Mail<input type="email" id="login-email" autocomplete="username" placeholder="nombre@uade.edu.ar" required></label>
+        <label>Contraseña<input type="password" id="login-clave" autocomplete="current-password" required></label>
+        <p class="err" id="login-err"></p>
+        <button type="submit" class="primary block" id="btn-entrar">Entrar</button>
+      </form>
+    </section>
+
+    <!-- ============ SIN PERMISO ============ -->
+    <section class="view" id="view-sin-permiso" hidden>
+      <div class="card login">
+        <h1>No tenés acceso al panel</h1>
+        <p class="muted">Tu cuenta puede cargar eventos, pero no aprobarlos. Si tendrías que ser revisor, pedíselo a Marketing.</p>
+        <a class="primary block boton-link" href="index.html">Ir al formulario</a>
+      </div>
+    </section>
+
+    <!-- ============ PANEL ============ -->
+    <section class="view" id="view-panel" hidden>
+      <div class="panel-head">
+        <div>
+          <h1>Eventos para revisar</h1>
+          <p class="muted small" id="panel-sub">Revisá cómo va a quedar cada evento en Intranet y en la web. Con tu OK se graba en Intranet, se sincroniza y se le asigna la carrera en Umbraco, sin más pasos.</p>
+        </div>
+        <div class="filtros" id="filtros"></div>
+      </div>
+      <div id="grupos"></div>
+      <div class="card empty" id="panel-empty" hidden><p id="panel-empty-txt">No hay eventos para revisar.</p></div>
+    </section>
+  </main>
+
+  <dialog id="dlg">
+    <form method="dialog" class="dlg-body">
+      <h3 id="dlg-title"></h3>
+      <div id="dlg-content"></div>
+      <div class="dlg-actions" id="dlg-actions"></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="panel.js"></script>
+</body>
+</html>

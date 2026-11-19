@@ -19,7 +19,7 @@
       <button class="tab is-active" data-view="nuevo" role="tab">Nuevo evento</button>
       <button class="tab" data-view="mis" role="tab">Mis eventos <span class="pill" id="mis-count">0</span></button>
     </nav>
-    <div class="who"><span id="who"></span> <button type="button" class="link" id="btn-salir" hidden>Salir</button></div>
+    <div class="who"><a href="panel.html" class="link-panel" id="link-panel" hidden>Panel de control</a><span id="who"></span> <button type="button" class="link" id="btn-salir" hidden>Salir</button></div>
   </header>
 
   <div class="banner" id="banner-prueba" hidden>
@@ -146,9 +146,9 @@
         <ol class="tanda-list" id="tanda-list"></ol>
         <div class="empty" id="tanda-empty">
           <p>Todavía no agregaste eventos.</p>
-          <p class="muted small">Completá el formulario y tocá <b>Agregar a la tanda</b>. Después confirmás todos juntos y se dan de alta solos en Intranet.</p>
+          <p class="muted small">Completá el formulario y tocá <b>Agregar a la tanda</b>. Después los enviás todos juntos a revisión: cuando Marketing los aprueba, se dan de alta solos en Intranet.</p>
         </div>
-        <button type="button" class="primary block" id="btn-confirmar" disabled>Confirmar y dar de alta</button>
+        <button type="button" class="primary block" id="btn-confirmar" disabled>Enviar a revisión</button>
       </aside>
     </section>
 
