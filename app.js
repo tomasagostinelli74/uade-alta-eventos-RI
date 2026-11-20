@@ -1,5 +1,5 @@
 import {
-  SEDES, TIPOS, CATEG, PERFIL, SECTORES, ORIGEN_CRM, CATEG_CRM, defaultsPara, copyGeneral,
+  SEDES, TIPOS, CATEG, PERFIL, SECTORES, ORIGEN_CRM, CATEG_CRM, CATEG_POR_ORIGEN, defaultsPara, copyGeneral,
   CUENTAS, CUENTA_DEFECTO, TIPOS_POR_NIVEL, perfilDe, requiereInscripcion, SECTOR_SIN_CARRERA,
 } from "./config.js";
 import { store, tanda as tandaStore, uid, modoPrueba, soloMemoria } from "./store.js";
@@ -645,7 +645,11 @@ function conectar() {
     $("#desc-count").textContent = `${ev.descripcion.length}/3000`;
     limpiarError("descripcion");
   });
-  $("#origen-crm").onchange = (e) => { ev.origen_crm = e.target.value; ev.tocados.push("origen_crm"); render(); };
+  $("#origen-crm").onchange = (e) => {
+    ev.origen_crm = e.target.value; ev.tocados.push("origen_crm");
+    if (CATEG_POR_ORIGEN[ev.origen_crm]) { ev.categ_crm = CATEG_POR_ORIGEN[ev.origen_crm]; ev.tocados.push("categ_crm"); }
+    render();
+  };
   $("#categ-crm").onchange = (e) => { ev.categ_crm = Number(e.target.value); ev.tocados.push("categ_crm"); render(); };
   $("#cupo").addEventListener("input", (e) => { const n = parseInt(e.target.value, 10); ev.cupo = n > 0 ? n : null; });
 

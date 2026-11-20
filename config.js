@@ -70,6 +70,8 @@ export const CATEG_CRM = [
   { code: 12, label: "Reuni. Infor." },
   { code: 38, label: "Taller Orientación Vocacional" },
 ];
+// Al elegir el Origen CRM, la Categoría CRM se completa sola (se puede cambiar después)
+export const CATEG_POR_ORIGEN = { R: 12, A: 8, O: 38 };
 
 // Valores propuestos por tipo de evento (el REN puede cambiar audiencia, sector y los de CRM en el paso 3)
 export function defaultsPara(tipo) {

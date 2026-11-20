@@ -150,9 +150,9 @@ def sb(metodo, ruta, cuerpo=None, token=None, key=ANON, prefer="return=represent
 def svc(metodo, ruta, cuerpo=None): return sb(metodo, ruta, cuerpo, key=SECRETA)
 
 def clave_prueba():
-    ultimo = sorted((RAIZ / "privado").glob("cuentas_*.xlsx"))[-1]
-    for r in openpyxl.load_workbook(ultimo).active.iter_rows(min_row=2, values_only=True):
-        if r[0] == MAIL_PRUEBA: return r[2]
+    for archivo in sorted((RAIZ / "privado").glob("cuentas_*.xlsx"), reverse=True):
+        for r in openpyxl.load_workbook(archivo).active.iter_rows(min_row=2, values_only=True):
+            if r[0] == MAIL_PRUEBA: return r[2]
     raise Bloqueado("No encontré la clave de la cuenta de prueba en privado/")
 
 ABOGACIA = {"key": "c1", "corto": "Abogacía", "base": "ABOGACÍA", "facultad": "", "sector": 182, "nivel": "grado",
@@ -460,6 +460,16 @@ def _(f):
     opciones = f.p.eval_on_selector_all("#categ-crm option", "l => l.map(o => o.text)")
     assert opciones == ["Charlas", "Reuni. Infor.", "Taller Orientación Vocacional"], opciones
     return "RI → RI / Reuni. Infor.; Evento → Actividades Agenda / Charlas; Taller OVO → OVO / Taller Orientación Vocacional. Categoría CRM solo con las 3 opciones pedidas."
+
+@caso("NUE-13")
+def _(f):
+    f.paso(3)
+    for origen, categ in (("A", "8"), ("O", "38"), ("R", "12")):
+        f.p.select_option("#origen-crm", origen)
+        assert f.p.input_value("#categ-crm") == categ, (origen, f.p.input_value("#categ-crm"))
+    f.p.select_option("#categ-crm", "8")
+    assert f.p.input_value("#origen-crm") == "R" and f.p.input_value("#categ-crm") == "8"
+    return "Origen RI → Reuni. Infor.; Actividades Agenda → Charlas; OVO → Taller Orientación Vocacional. La categoría se puede cambiar a mano después."
 
 @caso("OPT-05")
 def _(f):
@@ -865,6 +875,7 @@ NUEVOS = {
     "NUE-09": ("Panel de control", "Aprobar por evento o por tanda", "Lo que tiene errores no se puede aprobar; 'Aprobar los N listos' deja el resto para revisar; lo aprobado queda en cola de alta."),
     "NUE-11": ("Panel de control", "Circuito completo en el HTML de prueba", "Formulario y panel en un solo archivo: el REN envía, el revisor aprueba y el REN ve el estado."),
     "NUE-12": ("Panel de control", "Circuito completo dentro del visor de Claude", "Abierto en un visor aislado (sin guardado ni navegación): el link al panel funciona y el panel ve lo cargado."),
+    "NUE-13": ("Opciones del evento", "Categoría CRM según Origen CRM", "Al elegir el Origen CRM, la Categoría CRM se completa sola y se puede cambiar."),
     "NUE-10": ("Panel de control", "Permisos del panel en Supabase", "Modo real: un REN no entra al panel ni aprueba por API; un revisor aprueba y queda registrado quién."),
 }
 
