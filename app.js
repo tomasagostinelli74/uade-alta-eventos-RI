@@ -1,6 +1,6 @@
 import {
   SEDES, TIPOS, CATEG, PERFIL, SECTORES, ORIGEN_CRM, CATEG_CRM, CATEG_POR_ORIGEN, defaultsPara, copyGeneral,
-  CUENTAS, CUENTA_DEFECTO, TIPOS_POR_NIVEL, perfilDe, requiereInscripcion, SECTOR_SIN_CARRERA,
+  CUENTAS, CUENTA_DEFECTO, TIPOS_POR_NIVEL, requiereInscripcion, SECTOR_SIN_CARRERA,
 } from "./config.js";
 import { store, tanda as tandaStore, uid, modoPrueba, soloMemoria } from "./store.js";
 import {
@@ -583,8 +583,9 @@ function verEvento(e) {
 /* ================= navegación y eventos ================= */
 function irA(vista) {
   $$(".tab").forEach((t) => t.classList.toggle("is-active", t.dataset.view === vista));
-  $("#tabs").hidden = vista === "login";
+  $("#tabs").hidden = vista === "login" || vista === "sin-cuenta";
   $("#view-login").hidden = vista !== "login";
+  $("#view-sin-cuenta").hidden = vista !== "sin-cuenta";
   $("#view-nuevo").hidden = vista !== "nuevo";
   $("#view-mis").hidden = vista !== "mis";
   if (vista === "mis") renderMis();
@@ -748,7 +749,13 @@ async function init() {
 
 let dejarDeEscuchar = () => {};
 async function entrar(u) {
-  if (u.email) { perfil = perfilDe(u.email); limpiarFormulario(); }
+  if (!modoPrueba) { // qué puede cargar sale de la tabla de cuentas de Supabase
+    const cuenta = await store.miCuenta();
+    if (!cuenta) return sinCuenta(u);
+    perfil = { nivel: cuenta.nivel, variante: cuenta.variante, nombre: cuenta.nombre };
+    limpiarFormulario();
+  }
+  $("#who").title = perfil.nombre || "";
   $("#who").textContent = u.email || (modoPrueba ? "Modo prueba" : "");
   $("#btn-salir").hidden = modoPrueba;
   store.esRevisor().then((ok) => { $("#link-panel").hidden = !ok; }).catch(() => {});
@@ -758,7 +765,22 @@ async function entrar(u) {
   dejarDeEscuchar = store.escuchar(() => { clearTimeout(t); t = setTimeout(cargarMis, 400); });
 }
 
+// Logueado pero sin cuenta activa: no carga. Si es revisor, se lo manda al panel.
+async function sinCuenta(u) {
+  const revisor = await store.esRevisor().catch(() => false);
+  $("#who").textContent = u.email || "";
+  $("#btn-salir").hidden = false;
+  $("#link-panel").hidden = !revisor;
+  $("#sin-cuenta-panel").hidden = !revisor;
+  $("#sin-cuenta-tit").textContent = revisor ? "Tu cuenta es de revisión" : "Tu cuenta no está habilitada";
+  $("#sin-cuenta-txt").textContent = revisor
+    ? "No carga eventos: entrá al panel de control para revisarlos."
+    : "Esta cuenta no puede cargar eventos. Pedile acceso a Marketing.";
+  irA("sin-cuenta");
+}
+
 function conectarLogin() {
+  $("#sin-cuenta-salir").onclick = () => $("#btn-salir").click();
   $("#form-login").addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = $("#btn-entrar");

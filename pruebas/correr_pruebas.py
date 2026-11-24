@@ -876,6 +876,7 @@ NUEVOS = {
     "NUE-11": ("Panel de control", "Circuito completo en el HTML de prueba", "Formulario y panel en un solo archivo: el REN envía, el revisor aprueba y el REN ve el estado."),
     "NUE-12": ("Panel de control", "Circuito completo dentro del visor de Claude", "Abierto en un visor aislado (sin guardado ni navegación): el link al panel funciona y el panel ve lo cargado."),
     "NUE-13": ("Opciones del evento", "Categoría CRM según Origen CRM", "Al elegir el Origen CRM, la Categoría CRM se completa sola y se puede cambiar."),
+    "NUE-14": ("Login", "Cuentas habilitadas desde Supabase", "Modo real: lo que carga cada REN sale de la tabla de cuentas; sin cuenta activa no entra ni carga, aunque use la API."),
     "NUE-10": ("Panel de control", "Permisos del panel en Supabase", "Modo real: un REN no entra al panel ni aprueba por API; un revisor aprueba y queda registrado quién."),
 }
 
@@ -1119,7 +1120,7 @@ def preparar_real():
     CTX["token"] = tok["access_token"]
 
 def limpiar_real():
-    revisor(False)
+    revisor(False); cuenta_prueba()
     if "yo" in CTX:
         svc("DELETE", f"/rest/v1/eventos?creado_por=eq.{CTX['yo']}")
     svc("DELETE", "/rest/v1/eventos?titulo=like.PRUEBA%20AUTO*")
@@ -1374,6 +1375,42 @@ def _(f):
         revisor(False); p.close()
     return ("Sin ser revisor: 'No tenés acceso al panel'. Como revisor: ve el evento de otro REN con la simulación, "
             "devolver sin comentario lo rechaza la base, y al aprobar queda 'aprobado', acción 'alta' y quién lo revisó.")
+
+def cuenta_prueba(**k):
+    """Cambia la fila de la cuenta de prueba en public.cuentas; sin argumentos la deja como corresponde."""
+    svc("PATCH", f"/rest/v1/cuentas?email=eq.{MAIL_PRUEBA}", {"nivel": "todos", "activa": True, **k})
+
+@caso("NUE-14", modo="real")
+def _(f):
+    p = f.p.context.new_page()
+    try:
+        # nivel grado: la base no deja cargar una RI de posgrado aunque se llame a la API a mano
+        cuenta_prueba(nivel="grado")
+        st, r = api_ren("POST", "/rest/v1/eventos", fila_evento(tipo="ri_posgrado", titulo="PRUEBA AUTO · Posgrado no permitido"))
+        assert st >= 400 and "no puede cargar este tipo" in json.dumps(r, ensure_ascii=False), (st, r)
+        # cuenta desactivada: no entra al formulario, no lee ni carga
+        cuenta_prueba(activa=False)
+        p.goto(REAL + "index.html")
+        expect(p.locator("#view-sin-cuenta")).to_be_visible(timeout=15000)
+        expect(p.locator("#sin-cuenta-tit")).to_have_text("Tu cuenta no está habilitada")
+        assert p.is_hidden("#sin-cuenta-panel") and p.is_hidden("#tabs") and p.is_hidden("#view-nuevo")
+        st, r = api_ren("GET", "/rest/v1/eventos?select=id&limit=5")
+        assert st == 200 and r == [], (st, r)
+        st, r = api_ren("POST", "/rest/v1/eventos", fila_evento(titulo="PRUEBA AUTO · Sin cuenta"))
+        assert st >= 400 and "no está habilitada" in json.dumps(r, ensure_ascii=False), (st, r)
+        # revisor sin cuenta de carga: lo manda al panel
+        revisor(True)
+        p.reload(); expect(p.locator("#sin-cuenta-tit")).to_have_text("Tu cuenta es de revisión", timeout=15000)
+        expect(p.locator("#sin-cuenta-panel")).to_be_visible()
+        revisor(False)
+        # cuenta activa de nuevo: entra y toma el nombre de la tabla
+        cuenta_prueba()
+        p.reload(); expect(p.locator("#view-nuevo")).to_be_visible(timeout=15000)
+        assert p.get_attribute("#who", "title") == "Cuenta de prueba (para tests)"
+    finally:
+        revisor(False); cuenta_prueba(); p.close()
+    return ("La cuenta sale de la tabla de Supabase: con nivel grado la base rechaza una RI de posgrado; desactivada ve "
+            "'Tu cuenta no está habilitada', no lee eventos y la base no le deja cargar; un revisor sin cuenta va al panel.")
 
 @caso("LOG-07", modo="real")
 def _(f):

@@ -23,7 +23,7 @@ export const TIPOS = [
   { code: "otro", label: "Evento", hint: "Charlas, talleres, experiencias" },
 ];
 
-// Qué puede cargar cada cuenta (la parte del mail antes de @). Las facultades no están: usan CUENTA_DEFECTO.
+// Cuentas para SIMULAR en el modo prueba. Las reales están en la tabla public.cuentas de Supabase (sql/05_cuentas.sql).
 // nivel: grado | posgrado | todos · variante: versión de la carrera que se propone primero.
 export const CUENTAS = {
   ubs: { nivel: "posgrado", variante: "normal", nombre: "UBS (posgrado)" },
@@ -37,7 +37,6 @@ export const TIPOS_POR_NIVEL = {
   posgrado: ["ri_posgrado", "otro"],
   todos: ["ri_grado", "ri_posgrado", "ovo", "otro"],
 };
-export const perfilDe = (email) => CUENTAS[String(email || "").split("@")[0].toLowerCase()] || CUENTA_DEFECTO;
 
 // Opciones de Intranet (código = valor que espera GRABA_ACTIV.ASP)
 // Categoría de Intranet: el equipo pidió "Charlas" para todos los eventos (fija, no se elige).

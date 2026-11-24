@@ -87,6 +87,7 @@ const local = {
 
   // ---- panel de control ----
   async esRevisor() { return true; },
+  async miCuenta() { return null; }, // en modo prueba la cuenta se simula con el selector
   async corregir(ev) { // el revisor corrige: sigue para revisar
     const lista = leer(K_EVENTOS, []);
     const x = lista.find((y) => y.id === ev.id);
@@ -168,6 +169,12 @@ function crearSupabase() {
       return ok(await (await cliente()).from("eventos").update({ estado: "cancelado" }).eq("id", id).select())[0];
     },
     // ---- panel de control (lo permite el trigger solo a los revisores) ----
+    async miCuenta() { // la fila de public.cuentas del que está logueado, o null si no tiene
+      const c = await cliente();
+      const { data, error } = await c.rpc("mi_cuenta");
+      if (error) throw new Error(traducir(error.message));
+      return (data && data[0]) || null;
+    },
     async esRevisor() {
       const c = await cliente();
       const { data, error } = await c.rpc("es_revisor");
@@ -203,6 +210,7 @@ function traducir(msg) {
   if (/Invalid login credentials/i.test(msg)) return "Mail o contraseña incorrectos.";
   if (/Email not confirmed/i.test(msg)) return "La cuenta no está activada. Avisale al administrador.";
   if (/row-level security/i.test(msg)) return "No tenés permiso para esta acción.";
+  if (/mi_cuenta/i.test(msg) && /does not exist|Could not find/i.test(msg)) return "Falta instalar las cuentas en Supabase (sql/05_cuentas.sql).";
   if (/function public\.es_revisor|es_revisor\(\) does not exist|Could not find the function/i.test(msg)) return "Falta instalar el panel en Supabase (sql/04_panel_revision.sql).";
   if (/Failed to fetch|NetworkError/i.test(msg)) return "Sin conexión. Probá de nuevo.";
   return msg;
