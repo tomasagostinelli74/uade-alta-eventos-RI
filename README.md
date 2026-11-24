@@ -3,6 +3,9 @@
 Formulario web para que los RENs carguen eventos (Reuniones Informativas de grado y posgrado, Talleres OVO y otros
 eventos). Reemplaza la carga manual en Intranet + Excel.
 
+Publicado en https://uade-alta-eventos.vercel.app (se actualiza solo con cada push a `main`). El panel está en
+`/panel.html`. Cada REN entra con su mail si tiene una fila activa en la tabla `cuentas` de Supabase.
+
 1. El REN carga los eventos y los **envía a revisión**.
 2. En el **panel de control** (`panel.html`) un revisor de Marketing ve cómo va a quedar cada evento en Intranet y
    en la web (carrera, School y Site de Umbraco), lo corrige o lo devuelve al REN con un comentario.
